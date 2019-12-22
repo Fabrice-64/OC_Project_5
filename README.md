@@ -11,3 +11,6 @@ The core functionalities can be described as follows:
   * and a link to OFF DB towards the current data of this item
 2.  The item is NOT in the DB:
   it sends back an invitation for a new request
+
+## Content of the files
+1. Overall_Design.bpmn gives a rough description of the process
