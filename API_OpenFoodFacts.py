@@ -33,7 +33,7 @@ def download_category_products_OFF():
     r = requests.get('https://fr.openfoodfacts.org/cgi/search.pl?search_simple=1', headers = headers, params = payload)
 
     #print(r)
-    print(r.url)
+    #print(r.url)
     #print(r.headers)
     data = r.json()
 
@@ -42,10 +42,10 @@ def download_category_products_OFF():
     #print(type(data['products']))
     #print(data)
     #print(data['products'])
-    id = 0
+    #id = 0
     with open('response_API.txt', 'w') as output_file:
         for product in data['products']:
-            id+= 1
+            #id+= 1
             brand = product.get('brands', 'NaN')
             name = product.get('product_name', 'NaN')
             categorie = config.categories[5]
@@ -53,10 +53,10 @@ def download_category_products_OFF():
             nutrition_grade = product.get('nutrition_grade_fr', 'NaN')
             stores = product.get('stores', 'NaN')
             ingredients = product.get('ingredients_text','NaN')
-            row = f"\"{brand}\";\"{name}\";\"{categorie}\";\"{code}\";\"{nutrition_grade}\";\"{stores}\";\"{ingredients}\";\"https://world.openfoodfacts.org/product/{code}\";\n"
-            print(row)
-            output_file.write(row)
-    print("Nombre d'items importés: {}".format(id))
+            row = f" \"{brand}\";\"{name}\";\"{categorie}\";\"{code}\";\"{nutrition_grade}\";\"{stores}\";\"{ingredients}\";\"https://world.openfoodfacts.org/product/{code}\";\n"
+            #print(id,"  ",row)
+            #output_file.write(row)
+    #print("Nombre d'items importés: {}".format(id))
 
 if __name__ == "__main__":
     download_category_products_OFF()
