@@ -24,39 +24,45 @@ import requests
 import json
 import config
 
+def check_data_special_characters(value):
+    if value is None:
+        #print("Observation : ", value, "est vide")
+        result = "NaN"
+    elif '"' in value:
+        #print ("Risque à la ligne : ", value)
+        new_value = value
+        result = new_value.replace('"', '')
+    else:
+        result = value
+    return result
 
 def download_category_products_OFF():
-    OFF_page = 1
-    payload = {'search_terms': config.categories[5],'json': 1, 'action' : "process", \
-    'fields' : "brands,product_name,code,stores,nutrition_grade_fr,ingredients_text","page_size": 1000, "page": OFF_page}
-    headers = {'User-Agent': 'python-requests/2.22.0'}
-    r = requests.get('https://fr.openfoodfacts.org/cgi/search.pl?search_simple=1', headers = headers, params = payload)
+    r = requests.get(config.url, headers = config.headers, params = config.payload)
 
     #print(r)
     #print(r.url)
     #print(r.headers)
     data = r.json()
 
-
     #print(type(data))
     #print(type(data['products']))
     #print(data)
     #print(data['products'])
-    #id = 0
+    id = 0
     with open('response_API.txt', 'w') as output_file:
         for product in data['products']:
-            #id+= 1
-            brand = product.get('brands', 'NaN')
-            name = product.get('product_name', 'NaN')
-            categorie = config.categories[5]
+            id+= 1
+            brand = check_data_special_characters(product.get('brands'))
+            name = check_data_special_characters(product.get('product_name'))
+            categorie = config.category_choice +1
             code = product.get('code', 'NaN')
             nutrition_grade = product.get('nutrition_grade_fr', 'NaN')
-            stores = product.get('stores', 'NaN')
-            ingredients = product.get('ingredients_text','NaN')
+            stores = check_data_special_characters(product.get('stores'))
+            ingredients = check_data_special_characters(product.get('ingredients_text'))
             row = f" \"{brand}\";\"{name}\";\"{categorie}\";\"{code}\";\"{nutrition_grade}\";\"{stores}\";\"{ingredients}\";\"https://world.openfoodfacts.org/product/{code}\";\n"
-            #print(id,"  ",row)
-            #output_file.write(row)
-    #print("Nombre d'items importés: {}".format(id))
+            output_file.write(row)
+            print(id," : ", row)
+    print("Nombre d'items importés: {}".format(id))
 
 if __name__ == "__main__":
     download_category_products_OFF()
