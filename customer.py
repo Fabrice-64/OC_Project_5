@@ -9,29 +9,33 @@ They can be described as follows:
 """
 def input_selected_category():
 #Function to choose the category
-pass
+    pass
 
-def input_selected_item():
-#Function to choose the item
-pass
+def compare_item():
+#Function to select the item based on category, name and nutrition grade
+    pass
 
-def input_select_nutrition_grade():
-# The selection of the nutrition_grade is required to order the DB to be explored
-pass
-
-def ask_launch_research():
+def ask_launch_search():
 # Once the required fields are filled, gives the order to look into the DB.
 # This function is directly linked to the module named 'connect_to_my_sql.py"
-pass
+    pass
 
-def input_new_item_to_db()
-# Function to add an item to the database and record it
-pass
+def input_new_item():
+# Function to add an item to the database and record it 
+    pass
 
 def amend_existing_item_in_db():
-# Function to amend an already existing item
-pass
+# Amend an item should occur after a realizing that an item is not full.
+# Therefore, the item is first called
+    pass
 
-def select_interaction_with_db():
+def find_archived_search():
+# Request to get archived queries
+    pass
+
+def select_user_interaction_with_db():
 # First step for the user iot select the desired functionality
-pass
+    pass
+
+if __name__ == "__main__":
+    select_interaction_with_db()

@@ -26,7 +26,6 @@ import config
 
 def check_data_special_characters(value):
     if value is None:
-        #print("Observation : ", value, "est vide")
         result = "NaN"
     elif '"' in value:
         #print ("Risque à la ligne : ", value)
@@ -36,7 +35,9 @@ def check_data_special_characters(value):
         result = value
     return result
 
-def download_category_products_OFF():
+
+
+def import_products():
     r = requests.get(config.url, headers = config.headers, params = config.payload)
 
     #print(r)
@@ -49,20 +50,25 @@ def download_category_products_OFF():
     #print(data)
     #print(data['products'])
     id = 0
+    row_left_apart = 0
     with open('response_API.txt', 'w') as output_file:
         for product in data['products']:
             id+= 1
             brand = check_data_special_characters(product.get('brands'))
             name = check_data_special_characters(product.get('product_name'))
             categorie = config.category_choice +1
-            code = product.get('code', 'NaN')
-            nutrition_grade = product.get('nutrition_grade_fr', 'NaN')
+            code = product.get('code')
+            nutrition_grade = product.get('nutrition_grade_fr')
             stores = check_data_special_characters(product.get('stores'))
             ingredients = check_data_special_characters(product.get('ingredients_text'))
-            row = f" \"{brand}\";\"{name}\";\"{categorie}\";\"{code}\";\"{nutrition_grade}\";\"{stores}\";\"{ingredients}\";\"https://world.openfoodfacts.org/product/{code}\";\n"
+            if brand != "NaN" and name != "NaN" and nutrition_grade != "":
+                row = f" \"{brand}\";\"{name}\";\"{categorie}\";\"{code}\";\"{nutrition_grade}\";\"{stores}\";\"{ingredients}\" "
+            else:
+                row_left_apart += 1
             output_file.write(row)
             print(id," : ", row)
     print("Nombre d'items importés: {}".format(id))
+    print("Nombre d'items écartés : {}".format(row_left_apart))
 
 if __name__ == "__main__":
-    download_category_products_OFF()
+    import_products()
