@@ -4,9 +4,25 @@ This module is the starting point for the application based on Open Food Facts D
 It displays a welcome message and the  Open Food Facts disclaimer. It then jumps onto the next module
 
 """
-import dialog_with_user
+import interface_management as im
+import config as cfg
+import time
 
-if __name__ =="__main__":
-   dialog_with_user.display_welcome_message()
+class UserDialog:
+   def __init__(self):
+        self.interface = im.Interface()
+        
 
-dialog_with_user.read_OFF_warning()
+def main(user):
+   user.interface.display_message(cfg.WELCOME_MESSAGE)
+   time.sleep(3)
+   user.interface.split_screen()
+   
+
+   
+if __name__ == "__main__":
+   user = UserDialog()
+   main(user)
+
+
+
