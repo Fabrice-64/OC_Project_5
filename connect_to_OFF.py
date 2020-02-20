@@ -24,51 +24,44 @@ import requests
 import json
 import config
 
-def check_data_special_characters(value):
-    if value is None:
-        result = "NaN"
-    elif '"' in value:
-        #print ("Risque à la ligne : ", value)
-        new_value = value
-        result = new_value.replace('"', '')
-    else:
-        result = value
-    return result
+class ConnectToOFF:
+
+    def check_special_characters(self, value):
+        if value is None:
+            result = "NaN"
+        elif '"' in value:
+            new_value = value
+            result = new_value.replace('"', '')
+        else:
+            result = value
+        return result
 
 
-
-def import_products():
-    r = requests.get(config.url, headers = config.headers, params = config.payload)
-
-    #print(r)
-    #print(r.url)
-    #print(r.headers)
-    data = r.json()
-
-    #print(type(data))
-    #print(type(data['products']))
-    #print(data)
-    #print(data['products'])
-    id = 0
-    row_left_apart = 0
-    with open('response_API.txt', 'w') as output_file:
-        for product in data['products']:
-            id+= 1
-            brand = check_data_special_characters(product.get('brands'))
-            name = check_data_special_characters(product.get('product_name'))
-            categorie = config.category_choice +1
-            code = product.get('code')
-            nutrition_grade = product.get('nutrition_grade_fr')
-            stores = check_data_special_characters(product.get('stores'))
-            ingredients = check_data_special_characters(product.get('ingredients_text'))
-            if brand != "NaN" and name != "NaN" and nutrition_grade != "":
-                row = f" \"{brand}\";\"{name}\";\"{categorie}\";\"{code}\";\"{nutrition_grade}\";\"{stores}\";\"{ingredients}\" "
-            else:
-                row_left_apart += 1
-            output_file.write(row)
-            print(id," : ", row)
-    print("Nombre d'items importés: {}".format(id))
-    print("Nombre d'items écartés : {}".format(row_left_apart))
+    def import_products(self):
+        r = requests.get(config.url, headers = config.headers, params = config.payload)
+        data = r.json()
+        row_left_apart = 0
+        counter = 0
+        row = ""
+        with open('response_API.txt', 'w') as output_file:
+            for product in data['products']:
+                brand = check_special_characters(product.get('brands'))
+                name = check_special_characters(product.get('product_name'))
+                categorie = config.category_choice +1
+                code = product.get('code')
+                nutrition_grade = product.get('nutrition_grade_fr')
+                stores = check_special_characters(product.get('stores'))
+                ingredients = check_special_characters(product.get('ingredients_text'))
+                if brand != "NaN" and name != "NaN" and nutrition_grade in ["a","b","c","d","e"]:
+                    counter += 1
+                    row = f" \"{brand}\";\"{name}\";\"{categorie}\";\"{code}\";\"{nutrition_grade}\";\"{stores}\";\"{ingredients}\"\n"
+                else:
+                    row_left_apart += 1
+                output_file.write(row)
+                print(counter,":", row)
+        print("Nombre d'items importés: {}".format(counter))
+        print("Nombre d'items écartés : {}".format(row_left_apart))
 
 if __name__ == "__main__":
-    import_products()
+    connection = ConnectToOFF()
+    connection.import_products()

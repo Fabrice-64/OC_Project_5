@@ -10,21 +10,35 @@ Administrator role:
 import mysql.connector
 import config
 
-def initiate_connexion(cnx_db):
-    print('link established')
-    cnx = mysql.connector.connect(**cnx_db)
-    return(cnx)
+class MySQLQueries:
+    def __init__(self):
+        self.cnx = mysql.connector.connect(**config.db_connection_parameters)
+        self.cursor = self.cnx.cursor()
+        self.test_outside = self.cnx.is_connected()
+        print("externe :", self.test_outside)
 
-def get_categories(cursor):
-# Purpose of this function is to send a query to the DB and fetch the required data
-    query = ("select * from Categories")
-    cursor.execute(query)
-    for (id, category) in cursor:
-        print("{}:  {}".format(id, category))
+    def get_categories(self):
+    # Purpose of this function is to send a query to the DB and fetch the required data
+        query = ("select * from Categories")
+        self.cursor.execute(query)
+        for (id, category) in self.cursor:
+            print("{}:  {}".format(id, category))
+    
+    def upload_products(self):
+        query = ("""LOAD DATA INFILE 
+        '/Users/fabricejaouen/DepotLocalGIT/OC_Project_5/Response_API.txt' 
+        INTO TABLE Products 
+        FIELDS TERMINATED BY ';' ENCLOSED BY '"' 
+        LINES STARTING BY ' ' TERMINATED BY '\n'
+        (brands, name, category_id, code, nutrition_grade, stores, ingredients)""")
+        self.cursor.execute(query)
+        self.cnx.commit()
 
+    def close_connection(self):
+        self.cursor.close()
 
-
-
+query = MySQLQueries()
+query.upload_products()
 
 
 
