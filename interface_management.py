@@ -34,10 +34,9 @@ class Interface:
         self.screen.addstr(curses.LINES -1, 0, "Type Q to quit" )
         self.screen.refresh()
         time.sleep(3)
-        
+
     def display_message(self, message):
         curses.curs_set(0)
-        message = " ".join(message)
         self.x_center = self.x_center - len(message)//2
         self.screen.addstr(self.y_center, self.x_center, message, curses.A_BOLD)
         self.screen.refresh()
