@@ -23,7 +23,11 @@ class MySQLQueries:
         self.cursor.execute(query)
         for (id, category) in self.cursor:
             print("{}:  {}".format(id, category))
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> d98a87a2854a09812d1bcf0b543c6aa822ddc6e9
     def upload_products(self):
         query = ("""LOAD DATA INFILE 
         '/Users/fabricejaouen/DepotLocalGIT/OC_Project_5/Response_API.txt' 
