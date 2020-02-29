@@ -22,7 +22,7 @@ class Interface:
         self.y, self.x = self.screen.getmaxyx()
         self.y_center = self.y//2
         self.x_center = self.x//2
-    
+
     def split_screen(self):
         self.half_win_height = self.y-3
         self.half_win_length = self.x_center -4
@@ -31,14 +31,27 @@ class Interface:
         title = "Fenêtre de Titre"
         self.screen.chgat(curses.A_REVERSE)
         self.screen.addstr(0, (self.x_center -len(title)//2), title, curses.A_REVERSE)
-        self.screen.addstr(curses.LINES -1, 0, "Type Q to quit" )
+        self.screen.addstr(curses.LINES -1, 0, "Copyright Moi" )
         self.screen.refresh()
         time.sleep(3)
+        """
+        self.left_window = curses.newwin(self.half_win_height, self.half_win_length, 1, 2)
+        self.left_window.box()
+        self.inner_left_window = self.left_window.subwin(self.half_win_height -2, self.half_win_length -2,2,3)
+        self.left_window.noutrefresh()
 
+        self.right_window = curses.newwin(self.half_win_height, self.half_win_length, 1, self.x_center +3)
+        self.right_window.box()
+        self.inner_right_window = self.right_window.subwin(self.half_win_height -2, self.half_win_length -2,2,self.x_center +4)
+        self.right_window.noutrefresh()
+        
+        self.screen.refresh()
+        """
     def display_message(self, message):
         curses.curs_set(0)
-        self.x_center = self.x_center - len(message)//2
-        self.screen.addstr(self.y_center, self.x_center, message, curses.A_BOLD)
+        self.message = " ".join(message)
+        self.x_center = self.x_center - len(self.message)//2
+        self.screen.addstr(self.y_center, self.x_center, self.message, curses.A_BOLD)
         self.screen.refresh()
         time.sleep(3)
         curses.beep()
@@ -124,18 +137,3 @@ class UserDialog:
         file_location = str('file:'+ cwd + '/terms_conditions_users.pdf')
         webbrowser.open(file_location,new=1)
         
-    def authenticate_user(self):
-        pass
-
-
-def main():
-    dialog = UserDialog()
-    dialog.interface.display_message(config.welcome_message)
-    dialog.request_registered_user(config.reply_yes_no_quit, config.registered_user_y_n)
-
-if __name__ == "__main__":
-    main()
-
-
-    
-
