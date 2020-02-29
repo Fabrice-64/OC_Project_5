@@ -6,15 +6,11 @@ import webbrowser
 import os
 import curses
 import config
-<<<<<<< HEAD
 from curses import textpad
-=======
->>>>>>> d98a87a2854a09812d1bcf0b543c6aa822ddc6e9
 
 class Interface:
     def __init__(self):
         self.screen = curses.initscr()
-<<<<<<< HEAD
         # Setting up the Curses parameters to use the screen
         curses.start_color()
         curses.noecho()
@@ -38,21 +34,10 @@ class Interface:
         self.screen.addstr(curses.LINES -1, 0, "Type Q to quit" )
         self.screen.refresh()
         time.sleep(3)
-
+        
     def display_message(self, message):
         curses.curs_set(0)
         message = " ".join(message)
-=======
-        curses.noecho()
-        curses.cbreak()
-        self.screen.keypad(True)
-        y,x = self.screen.getmaxyx()
-        self.y_center = y//2
-        self.x_center = x//2
-
-    def display_message(self, message):
-        curses.curs_set(0)
->>>>>>> d98a87a2854a09812d1bcf0b543c6aa822ddc6e9
         self.x_center = self.x_center - len(message)//2
         self.screen.addstr(self.y_center, self.x_center, message, curses.A_BOLD)
         self.screen.refresh()
@@ -81,10 +66,7 @@ class Interface:
 
     def set_up_drop_down(self, drop_down_list, question):
         curses.curs_set(0)
-<<<<<<< HEAD
-=======
         curses.start_color()
->>>>>>> d98a87a2854a09812d1bcf0b543c6aa822ddc6e9
         curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_GREEN)
         current_row = 0
         self.display_menu(current_row, drop_down_list, question)
@@ -113,10 +95,8 @@ class Interface:
         curses.endwin()
         exit()
 
-<<<<<<< HEAD
 
 
-=======
 class UserDialog:
     def __init__(self):
         self.interface = Interface()
@@ -156,7 +136,6 @@ def main():
 
 if __name__ == "__main__":
     main()
->>>>>>> d98a87a2854a09812d1bcf0b543c6aa822ddc6e9
 
 
     

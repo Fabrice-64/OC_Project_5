@@ -19,14 +19,9 @@ url = 'https://fr.openfoodfacts.org/cgi/search.pl?search_simple=1'
 
 db_connection_parameters = {'user' :'root', 'host' : 'localhost', 'database' : 'Project_5_OC'}
 
-<<<<<<< HEAD
 #Message displayed when launching the programm. Used by the method display_message()
 WELCOME_MESSAGE = "WELCOME TO 'GET A BETTER DIET' APP \n"
 
-=======
-welcome_message = "WELCOME TO 'GET A BETTER DIET' PROGRAM"
-
 registered_user_y_n = "Are you a registered user?"
->>>>>>> d98a87a2854a09812d1bcf0b543c6aa822ddc6e9
 
 reply_yes_no_quit = ["Yes","No","Quit"]
