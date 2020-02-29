@@ -6,15 +6,11 @@ import webbrowser
 import os
 import curses
 import config
-<<<<<<< HEAD
 from curses import textpad
-=======
->>>>>>> d98a87a2854a09812d1bcf0b543c6aa822ddc6e9
 
 class Interface:
     def __init__(self):
         self.screen = curses.initscr()
-<<<<<<< HEAD
         # Setting up the Curses parameters to use the screen
         curses.start_color()
         curses.noecho()
@@ -42,7 +38,6 @@ class Interface:
     def display_message(self, message):
         curses.curs_set(0)
         message = " ".join(message)
-=======
         curses.noecho()
         curses.cbreak()
         self.screen.keypad(True)
@@ -52,7 +47,6 @@ class Interface:
 
     def display_message(self, message):
         curses.curs_set(0)
->>>>>>> d98a87a2854a09812d1bcf0b543c6aa822ddc6e9
         self.x_center = self.x_center - len(message)//2
         self.screen.addstr(self.y_center, self.x_center, message, curses.A_BOLD)
         self.screen.refresh()
