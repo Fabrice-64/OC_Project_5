@@ -5,7 +5,6 @@ It displays a welcome message and the  Open Food Facts disclaimer. It then jumps
 
 """
 import interface_management as im
-<<<<<<< HEAD
 import config as cfg
 import time
 
@@ -24,11 +23,3 @@ def main(user):
 if __name__ == "__main__":
    user = UserDialog()
    main(user)
-
-
-=======
-
-if __name__ =="__main__":
-   user = im.UserDialog()
->>>>>>> d98a87a2854a09812d1bcf0b543c6aa822ddc6e9
-
