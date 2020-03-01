@@ -16,7 +16,7 @@ class UserDialog:
 def main(user):
    user.interface.display_message(cfg.WELCOME_MESSAGE)
    time.sleep(3)
-   user.interface.split_screen()
+   user.interface.split_screen(cfg.TITLE_0)
    
 
    

@@ -1,5 +1,4 @@
 import curses
-<<<<<<< HEAD
 import time
 from curses import textpad
 
@@ -97,7 +96,6 @@ def main(self):
 if __name__ == "__main__":
     curses.wrapper(main)
 
-=======
 from curses import textpad as tp
 import config
 import time
@@ -113,4 +111,3 @@ def main(self):
 
 if __name__ == "__main__":
     curses.wrapper(main)
->>>>>>> d98a87a2854a09812d1bcf0b543c6aa822ddc6e9

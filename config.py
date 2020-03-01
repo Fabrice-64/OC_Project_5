@@ -22,6 +22,9 @@ db_connection_parameters = {'user' :'root', 'host' : 'localhost', 'database' : '
 #Message displayed when launching the programm. Used by the method display_message()
 WELCOME_MESSAGE = "WELCOME TO 'GET A BETTER DIET' APP \n"
 
+TITLE_0 = "Initial Window"
+TITLE_1 = "Open Food Facts Terms and Conditions"
+
 registered_user_y_n = "Are you a registered user?"
 
 reply_yes_no_quit = ["Yes","No","Quit"]
