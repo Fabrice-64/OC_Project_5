@@ -24,17 +24,18 @@ class Interface:
         self.y_center = self.y//2
         self.x_center = self.x//2
 
+    # Setting up a title bar for the main window
+    def title_bar(self, title):
+        self.title = title
+        self.screen.bkgd(' ',curses.color_pair(1))
+        self.screen.chgat(curses.A_REVERSE)
+        self.screen.addstr(0, (self.x_center-len(self.title)//2), self.title, curses.A_REVERSE)
+        self.screen.refresh()
+
     def split_screen(self, title):
         # Setting up the parameters to get 2 split sub-windows
         self.half_win_height = self.y-2
         self.half_win_width = self.x_center -2
-        self.screen.bkgd(' ',curses.color_pair(1))
-
-        # Settings for the window title bar
-        self.title = title
-        self.screen.chgat(curses.A_REVERSE)
-        self.screen.addstr(0, (self.x_center-len(self.title)//2), self.title, curses.A_REVERSE)
-        self.screen.refresh()
 
         #create a left window and an innner window to display text
         self.left_window = curses.newwin(self.half_win_height, self.half_win_width, 1, 2)
@@ -49,8 +50,7 @@ class Interface:
         self.right_window.noutrefresh()
         
         self.screen.refresh()
-        self.screen.getch()
-
+    
     def display_message(self, message):
         curses.curs_set(0)
         self.message = " ".join(message)
@@ -60,6 +60,24 @@ class Interface:
         time.sleep(1)
         curses.beep()
         self.screen.clear()
+    
+    def left_window_display_string(self, y, string):
+        self.inner_left_window.addstr(y,0,string)
+        self.inner_left_window.refresh()
+    
+    def display_file_right_window(self, file):
+        with open(file, "rb") as file:
+            self.inner_right_window.scrollok(True)
+            curses.curs_set(1)
+            file = file.readlines()
+            self.inner_right_window.addstr(file[0])
+            self.inner_right_window.refresh()
+            for line in file[1:]:
+                self.inner_right_window.scrollok(1)
+                self.inner_right_window.getch()
+                self.inner_right_window.addstr(line)
+                self.inner_right_window.refresh()
+        self.inner_left_window.clear()
 
     def display_menu(self, selected_row_idx, drop_down_list, question):
         self.screen.clear()
@@ -86,7 +104,7 @@ class Interface:
         curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_GREEN)
         current_row = 0
         self.display_menu(current_row, drop_down_list, question)
-
+        
         while True:
             key = self.screen.getch()
             if key == curses.KEY_UP and current_row> 0:
@@ -110,34 +128,8 @@ class Interface:
         curses.nocbreak()
         curses.endwin()
         exit()
-
-
-
-class UserDialog:
-    def __init__(self):
-        self.interface = Interface()
-
-    def request_registered_user(self, drop_down_list, question):
-        answer = self.interface.set_up_drop_down(drop_down_list, question)
-        if answer == "No":
-            self.interface.screen.addstr(0,0, "You first ought to approve the Terms & Conditions of use")
-            
-            display_terms_conditions()
-        elif answer == "Yes":
-            authenticate_user()
-            self.interface.screen.addstr(0,0, "You chose to identify")
-            self.interface.screen.refresh()
-            time.sleep(3)
-        else:
-            self.interface.screen.addstr(0,0, "You chose to quit")
-            self.interface.screen.refresh()
-            time.sleep(3)
-            self.interface.quit_display()
-            
-        time.sleep(3)
     
-    def display_terms_conditions(self):
-        cwd = os.getcwd()
-        file_location = str('file:'+ cwd + '/terms_conditions_users.pdf')
-        webbrowser.open(file_location,new=1)
-        
+def display_terms_conditions(self):
+    cwd = os.getcwd()
+    file_location = str('file:'+ cwd + '/terms_conditions_users.pdf')
+    webbrowser.open(file_location,new=1)

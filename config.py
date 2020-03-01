@@ -23,7 +23,11 @@ db_connection_parameters = {'user' :'root', 'host' : 'localhost', 'database' : '
 WELCOME_MESSAGE = "WELCOME TO 'GET A BETTER DIET' APP \n"
 
 TITLE_0 = "Initial Window"
+
+# These are the dialog strings related to the step dealing with the Terms and Conditions
 TITLE_1 = "Open Food Facts Terms and Conditions"
+T_C_LINE_1 = "Please first scroll down the Terms and Conditions!"
+T_C_LINE_2 = "You can press any key..."
 
 registered_user_y_n = "Are you a registered user?"
 

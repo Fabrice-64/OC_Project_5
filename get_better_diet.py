@@ -11,14 +11,19 @@ import time
 class UserDialog:
    def __init__(self):
         self.interface = im.Interface()
+
+   def step_terms_and_conditions(self, file):
+      self.interface.title_bar(cfg.TITLE_1)
+      self.interface.left_window_display_string(0, cfg.T_C_LINE_1)
+      self.interface.left_window_display_string(1, cfg.T_C_LINE_2)
+      self.interface.display_file_right_window(file)
         
 
 def main(user):
    user.interface.display_message(cfg.WELCOME_MESSAGE)
    time.sleep(3)
    user.interface.split_screen(cfg.TITLE_0)
-   
-
+   user.step_terms_and_conditions("Documentation/texte_T&C.txt")
    
 if __name__ == "__main__":
    user = UserDialog()
