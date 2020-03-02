@@ -17,7 +17,13 @@ class UserDialog:
       self.interface.left_window_display_string(0, cfg.T_C_LINE_1)
       self.interface.left_window_display_string(1, cfg.T_C_LINE_2)
       self.interface.display_file_right_window(file)
-        
+      self.interface.clear_window("left")
+      self.interface.left_window_display_string(0, cfg.T_C_QUESTION_ACCEPT_T_C)
+      self.interface.left_window_display_string(1, cfg.T_C_IF_REFUSAL)
+      self.interface.set_up_drop_down(cfg.REPLY_YES_NO, cfg.SELECT_ANSWER)
+
+   def select_action(self):
+      pass     
 
 def main(user):
    user.interface.display_message(cfg.WELCOME_MESSAGE)

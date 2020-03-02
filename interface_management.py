@@ -65,6 +65,12 @@ class Interface:
         self.inner_left_window.addstr(y,0,string)
         self.inner_left_window.refresh()
     
+    def clear_window(self, window):
+        if window == "left":
+            self.inner_left_window.clear()
+        elif window == "right":
+            self.inner_right_window.clear()
+
     def display_file_right_window(self, file):
         with open(file, "rb") as file:
             self.inner_right_window.scrollok(True)
@@ -80,31 +86,31 @@ class Interface:
         self.inner_left_window.clear()
 
     def display_menu(self, selected_row_idx, drop_down_list, question):
-        self.screen.clear()
+        self.inner_left_window.clear()
+        y, x = self.inner_left_window.getmaxyx()
         guideline = "Please give a response to this request:"
-        x = self.x_center
-        y = self.y_center - len(drop_down_list)//2
-        self.screen.addstr(y -4 , x - (len(guideline)//2), guideline)
-        self.screen.addstr(y -2, x - (len(question)//2), question)
-        self.screen.refresh()
+        self.y_inner_left_window = y//2 - len(drop_down_list)//2
+        self.x_inner_left_window = x//2
+        self.inner_left_window.addstr(0 , 0, guideline)
+        self.inner_left_window.addstr(1, 0, question)
+        self.inner_left_window.refresh()
         for idx,row in enumerate(drop_down_list):
-            y_temp = y + idx
+            y_temp = self.y_inner_left_window + idx
             if idx == selected_row_idx:
-                self.screen.attron(curses.color_pair(1))
-                self.screen.addstr(y_temp, x, row)
-                self.screen.attroff(curses.color_pair(1))
-                self.screen.refresh()
+                self.inner_left_window.attron(curses.color_pair(2))
+                self.inner_left_window.addstr(y_temp, x, row)
+                self.x_inner_left_window.attroff(curses.color_pair(2))
+                self.inner_left_window.refresh()
             else:
-                self.screen.addstr(y_temp, x, row)
+                self.inner_left_window.addstr(y_temp, x, row)
         self.screen.refresh()
 
     def set_up_drop_down(self, drop_down_list, question):
         curses.curs_set(0)
-        curses.start_color()
         curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_GREEN)
         current_row = 0
         self.display_menu(current_row, drop_down_list, question)
-        
+        """
         while True:
             key = self.screen.getch()
             if key == curses.KEY_UP and current_row> 0:
@@ -120,7 +126,7 @@ class Interface:
                     self.quit_display()
             self.display_menu(current_row, drop_down_list, question)
         return(answer)
-
+    """
     def quit_display(self):
         self.screen.clear()
         curses.curs_set(1)

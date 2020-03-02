@@ -28,7 +28,10 @@ TITLE_0 = "Initial Window"
 TITLE_1 = "Open Food Facts Terms and Conditions"
 T_C_LINE_1 = "Please first scroll down the Terms and Conditions!"
 T_C_LINE_2 = "You can press any key..."
+T_C_QUESTION_ACCEPT_T_C = "Do you accept the Terms and Conditions?"
+T_C_IF_REFUSAL = "If you do not accept the Terms and Conditions, you'll quit automatically\n"
 
 registered_user_y_n = "Are you a registered user?"
 
-reply_yes_no_quit = ["Yes","No","Quit"]
+SELECT_ANSWER = "Please select the appropriate answer and press ENTER"
+REPLY_YES_NO = ["Yes","No"]
