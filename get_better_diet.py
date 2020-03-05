@@ -33,6 +33,9 @@ class UserDialog:
          self.interface.quit_display()
 
    def select_action(self):
+      self.interface.title_bar()
+      self.interface.left_window_display_string(0, "Please select in the list below the item you are interested in")
+      time.sleep(3)
       pass     
 
 def main(user):
@@ -40,6 +43,7 @@ def main(user):
    time.sleep(3)
    user.interface.split_screen(cfg.TITLE_0)
    user.step_terms_and_conditions("Documentation/texte_T&C.txt")
+   user.select_action()
    
 if __name__ == "__main__":
    user = UserDialog()

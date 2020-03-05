@@ -26,6 +26,10 @@ class Interface:
 
     # Setting up a title bar for the main window
     def title_bar(self, title):
+        """ A new title bar is displayed for each and every step of the program. This method is called through the module get_better_diet.py
+            Attribute : title
+            The constant pair of colors, background and characters, are set in the __init__ method of this class.
+        """
         self.title = title
         self.screen.bkgd(' ',curses.color_pair(1))
         self.screen.chgat(curses.A_REVERSE)
@@ -105,7 +109,6 @@ class Interface:
         self.inner_left_window.keypad(True)
         active_row_idx = 0
         self.higlight_selection(active_row_idx, drop_down_list)
-        #self.inner_left_window.clear()
         while True:
             key = self.inner_left_window.getch()
             if key == curses.KEY_UP and active_row_idx >0:
@@ -114,11 +117,12 @@ class Interface:
                 active_row_idx +=1
             elif key == curses.KEY_ENTER or key in [10,13]:
                 self.inner_left_window.clear()
-                self.inner_left_window.addstr(0,0, "You selected {}".format(drop_down_list[active_row_idx]))
+                answer = drop_down_list[active_row_idx]
+                self.inner_left_window.addstr(0,0, "You selected {}".format(answer))
                 break
             self.higlight_selection(active_row_idx, drop_down_list)
         self.inner_left_window.refresh()
-        return drop_down_list[active_row_idx]
+        return answer
 
     def quit_display(self):
         self.screen.clear()
