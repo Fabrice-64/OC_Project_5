@@ -1,5 +1,33 @@
 """
-This module is intended to deal with the dialog with the user
+This module intends to play the role of an interface with the user when navigating in the program.
+
+This module is fed with orders coming form get_better_diet.py module.
+It encompasses only one class, named Interface.
+Methods:
+    title_bar(): displays a title in the bar at the top of the main window. This title is updated in accordance with the step of the program.
+    
+    split_screen(): splits the screen in two separate windows. In fact each window includes a sub-window in which the text is displayed. 
+    This is demanded when using curses in order to avoid having the text stepping over the borders of the window.
+    
+    display_message(): this method displays a message on the main window, at the center of the screen. Is used for welcome message and for goodbye.
+
+    left_window_display_string() : this method is set to display an instruction on the left screen.
+
+    clear_window():  is needed to reinitialize the sub-window and remove the useless text.
+
+    display_file_right_window(): the right window is used for displaying larger files for which this method allows to scroll them down.
+
+    right_window_display_result(): the results of the queries sent to the DB are displayed on this window. The outcome is formatted by this method
+
+    highlight_selection(): when using a drop-down list, this methods highlights the selected item
+
+    set_up_drop_down(): this method is used in connexion with the method highlight_selection, as it provides the latter with the relevant index. 
+    It activates the key UP and DOWN iot iterate in the menu displayed.
+
+    quit_display(): as the module Curses activate many features of the shell, this method intends to desactivate all the features activated by the script.
+
+Attributes:
+
 """
 import time
 import webbrowser
