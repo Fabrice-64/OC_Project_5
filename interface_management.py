@@ -30,6 +30,7 @@ class Interface:
             Attribute : title
             The constant pair of colors, background and characters, are set in the __init__ method of this class.
         """
+        self.screen.clear()
         self.title = title
         self.screen.bkgd(' ',curses.color_pair(1))
         self.screen.chgat(curses.A_REVERSE)
@@ -72,7 +73,6 @@ class Interface:
     def clear_window(self, window):
         if window == "left":
             self.inner_left_window.clear()
-            self.inner_left_window.refresh()
         elif window == "right":
             self.inner_right_window.clear()
 
@@ -88,20 +88,24 @@ class Interface:
                 self.inner_right_window.getch()
                 self.inner_right_window.addstr(line)
                 self.inner_right_window.refresh()
+    
+    def right_window_display_result(self, y, string):
+        self.inner_right_window.addstr(y,0,string)
+        self.inner_right_window.refresh()
 
 
     def highlight_selection(self, active_row_idx, drop_down_list):
         h,w = self.inner_left_window.getmaxyx()
         curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_GREEN)
         for idx, row in enumerate(drop_down_list):
-            self.x_center = w//2
-            self.y_center = h//2 - len(drop_down_list)//2 +idx
+            self.x_center_half_l_win = w//2
+            self.y_center_half_l_win = h//2 - len(drop_down_list)//2 +idx
             if idx == active_row_idx:
                 self.inner_left_window.attron(curses.color_pair(2))
-                self.inner_left_window.addstr(self.y_center, self.x_center, row)
+                self.inner_left_window.addstr(self.y_center_half_l_win, self.x_center_half_l_win, row)
                 self.inner_left_window.attroff(curses.color_pair(2))
             else:
-                self.inner_left_window.addstr(self.y_center, self.x_center, row)
+                self.inner_left_window.addstr(self.y_center_half_l_win, self.x_center_half_l_win, row)
             self.inner_left_window.refresh()
         
     def set_up_drop_down(self, drop_down_list, question):

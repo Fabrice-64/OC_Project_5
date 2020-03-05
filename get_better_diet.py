@@ -34,7 +34,10 @@ class UserDialog:
 
    def step_select_action(self):
       self.interface.title_bar(cfg.TITLE_2)
+      self.interface.clear_window('left')
+      self.interface.clear_window('right')
       self.interface.left_window_display_string(0, cfg.S_A_INFO_LINE_1)
+      self.interface.right_window_display_result(0, "The results will be displayed in this window\n")
       time.sleep(3)
       pass     
 
