@@ -1,7 +1,7 @@
 """
 This module is the starting point for the application based on Open Food Facts Data and aiming at finding a better nutrition grade
 
-It displays a welcome message and the  Open Food Facts disclaimer. It then jumps onto the next module
+It displays a welcome message and the  Open Food Facts disclaimer. It then jumps onto the next module.
 
 """
 import interface_management as im
@@ -32,7 +32,10 @@ class UserDialog:
          time.sleep(3)
          self.interface.quit_display()
 
-   def select_action(self):
+   def step_select_action(self):
+      self.interface.title_bar()
+      self.interface.left_window_display_string(0, "Please select in the list below the item you are interested in")
+      time.sleep(3)
       pass     
 
 def main(user):
@@ -40,6 +43,7 @@ def main(user):
    time.sleep(3)
    user.interface.split_screen(cfg.TITLE_0)
    user.step_terms_and_conditions("Documentation/texte_T&C.txt")
+   user.step_select_action()
    
 if __name__ == "__main__":
    user = UserDialog()
