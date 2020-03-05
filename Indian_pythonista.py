@@ -21,8 +21,6 @@ def print_menu(stdscr, selected_row_idx):
 def main(stdscr):
     curses.curs_set(0)
     curses.init_pair(1, curses.COLOR_BLUE, curses.COLOR_WHITE)
-    
-    h,w = stdscr.getmaxyx()
     current_row_idx = 0
     print_menu(stdscr, current_row_idx)
 

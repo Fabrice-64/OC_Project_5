@@ -20,7 +20,17 @@ class UserDialog:
       self.interface.clear_window("left")
       self.interface.left_window_display_string(0, cfg.T_C_QUESTION_ACCEPT_T_C)
       self.interface.left_window_display_string(1, cfg.T_C_IF_REFUSAL)
-      self.interface.set_up_drop_down(cfg.REPLY_YES_NO, cfg.SELECT_ANSWER)
+      answer = self.interface.set_up_drop_down(cfg.REPLY_YES_NO, cfg.SELECT_ANSWER)
+      if answer == "Yes":
+         self.interface.clear_window('left')
+         self.interface.left_window_display_string(0, "You have decided to go on with the program")
+         time.sleep(3)
+      elif answer == "No":
+         self.interface.clear_window('left')
+         self.interface.clear_window('right')
+         self.interface.left_window_display_string(0, "The program will quit in a few seconds")
+         time.sleep(3)
+         self.interface.quit_display()
 
    def select_action(self):
       pass     

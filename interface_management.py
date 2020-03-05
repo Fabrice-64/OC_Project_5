@@ -68,6 +68,7 @@ class Interface:
     def clear_window(self, window):
         if window == "left":
             self.inner_left_window.clear()
+            self.inner_left_window.refresh()
         elif window == "right":
             self.inner_right_window.clear()
 
@@ -88,9 +89,9 @@ class Interface:
     def higlight_selection(self, active_row_idx, drop_down_list):
         h,w = self.inner_left_window.getmaxyx()
         curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_GREEN)
-        row = drop_down_list[0]
         for idx, row in enumerate(drop_down_list):
-            self.y_center = self.y_center +idx
+            self.x_center = w//2
+            self.y_center = h//2 - len(drop_down_list)//2 +idx
             if idx == active_row_idx:
                 self.inner_left_window.attron(curses.color_pair(2))
                 self.inner_left_window.addstr(self.y_center, self.x_center, row)
@@ -100,26 +101,24 @@ class Interface:
             self.inner_left_window.refresh()
         
     def set_up_drop_down(self, drop_down_list, question):
+        curses.curs_set(0)
         self.inner_left_window.keypad(True)
-        h,w = self.inner_left_window.getmaxyx()
-        self.y_center = h//2
-        self.x_center = w//2
         active_row_idx = 0
         self.higlight_selection(active_row_idx, drop_down_list)
-        
         #self.inner_left_window.clear()
-        row = drop_down_list[0]
-
         while True:
             key = self.inner_left_window.getch()
-            if key == curses.KEY_UP:
-                self.inner_left_window.addstr(h-1, 0, "You pressed UP key")
-            elif key == curses.KEY_DOWN:
-                self.inner_left_window.addstr(h-1, 0,"You pressed DOWN key")
+            if key == curses.KEY_UP and active_row_idx >0:
+                active_row_idx -= 1
+            elif key == curses.KEY_DOWN and active_row_idx < len(drop_down_list)-1:
+                active_row_idx +=1
             elif key == curses.KEY_ENTER or key in [10,13]:
-                self.inner_left_window.addstr(0,0, "You pressed ENTER")
-            self.inner_left_window.refresh()
-
+                self.inner_left_window.clear()
+                self.inner_left_window.addstr(0,0, "You selected {}".format(drop_down_list[active_row_idx]))
+                break
+            self.higlight_selection(active_row_idx, drop_down_list)
+        self.inner_left_window.refresh()
+        return drop_down_list[active_row_idx]
 
     def quit_display(self):
         self.screen.clear()
