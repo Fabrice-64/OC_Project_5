@@ -31,7 +31,9 @@ T_C_LINE_2 = "You can press any key..."
 T_C_QUESTION_ACCEPT_T_C = "Do you accept the Terms and Conditions?"
 T_C_IF_REFUSAL = "If you do not accept the Terms and Conditions, you'll quit automatically\n"
 
-registered_user_y_n = "Are you a registered user?"
+# These are the dialog strings related to the step dealing with the actions to be conducted
+TITLE_2 = "Working with the Databases"
+S_A_INFO_LINE_1 = "Please select in the list below the item you are interested in\n"
 
 SELECT_ANSWER = "Please select the appropriate answer and press ENTER"
 REPLY_YES_NO = ["Yes","No"]

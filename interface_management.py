@@ -20,9 +20,9 @@ class Interface:
         # Setting up the parameters used to design the windows
         curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLUE)
         self.screen.addstr(curses.LINES -1, 0, "Copyright Moi" )
-        self.y, self.x = self.screen.getmaxyx()
-        self.y_center = self.y//2
-        self.x_center = self.x//2
+        self.height, self.width = self.screen.getmaxyx()
+        self.y_center = self.height//2
+        self.x_center = self.width//2
 
     # Setting up a title bar for the main window
     def title_bar(self, title):
@@ -38,7 +38,7 @@ class Interface:
 
     def split_screen(self, title):
         # Setting up the parameters to get 2 split sub-windows
-        self.half_win_height = self.y-2
+        self.half_win_height = self.height-2
         self.half_win_width = self.x_center -2
 
         #create a left window and an innner window to display text
@@ -90,7 +90,7 @@ class Interface:
                 self.inner_right_window.refresh()
 
 
-    def higlight_selection(self, active_row_idx, drop_down_list):
+    def highlight_selection(self, active_row_idx, drop_down_list):
         h,w = self.inner_left_window.getmaxyx()
         curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_GREEN)
         for idx, row in enumerate(drop_down_list):
@@ -108,7 +108,7 @@ class Interface:
         curses.curs_set(0)
         self.inner_left_window.keypad(True)
         active_row_idx = 0
-        self.higlight_selection(active_row_idx, drop_down_list)
+        self.highlight_selection(active_row_idx, drop_down_list)
         while True:
             key = self.inner_left_window.getch()
             if key == curses.KEY_UP and active_row_idx >0:
@@ -120,7 +120,7 @@ class Interface:
                 answer = drop_down_list[active_row_idx]
                 self.inner_left_window.addstr(0,0, "You selected {}".format(answer))
                 break
-            self.higlight_selection(active_row_idx, drop_down_list)
+            self.highlight_selection(active_row_idx, drop_down_list)
         self.inner_left_window.refresh()
         return answer
 

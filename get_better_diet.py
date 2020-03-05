@@ -33,8 +33,8 @@ class UserDialog:
          self.interface.quit_display()
 
    def step_select_action(self):
-      self.interface.title_bar()
-      self.interface.left_window_display_string(0, "Please select in the list below the item you are interested in")
+      self.interface.title_bar(cfg.TITLE_2)
+      self.interface.left_window_display_string(0, cfg.S_A_INFO_LINE_1)
       time.sleep(3)
       pass     
 
