@@ -83,50 +83,44 @@ class Interface:
                 self.inner_right_window.getch()
                 self.inner_right_window.addstr(line)
                 self.inner_right_window.refresh()
-        self.inner_left_window.clear()
 
-    def display_menu(self, selected_row_idx, drop_down_list, question):
-        self.inner_left_window.clear()
-        y, x = self.inner_left_window.getmaxyx()
-        guideline = "Please give a response to this request:"
-        self.y_inner_left_window = y//2 - len(drop_down_list)//2
-        self.x_inner_left_window = x//2
-        self.inner_left_window.addstr(0 , 0, guideline)
-        self.inner_left_window.addstr(1, 0, question)
-        self.inner_left_window.refresh()
-        for idx,row in enumerate(drop_down_list):
-            y_temp = self.y_inner_left_window + idx
-            if idx == selected_row_idx:
+
+    def higlight_selection(self, active_row_idx, drop_down_list):
+        h,w = self.inner_left_window.getmaxyx()
+        curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_GREEN)
+        row = drop_down_list[0]
+        for idx, row in enumerate(drop_down_list):
+            self.y_center = self.y_center +idx
+            if idx == active_row_idx:
                 self.inner_left_window.attron(curses.color_pair(2))
-                self.inner_left_window.addstr(y_temp, x, row)
-                self.x_inner_left_window.attroff(curses.color_pair(2))
-                self.inner_left_window.refresh()
+                self.inner_left_window.addstr(self.y_center, self.x_center, row)
+                self.inner_left_window.attroff(curses.color_pair(2))
             else:
-                self.inner_left_window.addstr(y_temp, x, row)
-        self.screen.refresh()
-
+                self.inner_left_window.addstr(self.y_center, self.x_center, row)
+            self.inner_left_window.refresh()
+        
     def set_up_drop_down(self, drop_down_list, question):
-        curses.curs_set(0)
-        curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_GREEN)
-        current_row = 0
-        self.display_menu(current_row, drop_down_list, question)
-        """
+        self.inner_left_window.keypad(True)
+        h,w = self.inner_left_window.getmaxyx()
+        self.y_center = h//2
+        self.x_center = w//2
+        active_row_idx = 0
+        self.higlight_selection(active_row_idx, drop_down_list)
+        
+        #self.inner_left_window.clear()
+        row = drop_down_list[0]
+
         while True:
-            key = self.screen.getch()
-            if key == curses.KEY_UP and current_row> 0:
-                current_row -= 1
-            elif key == curses.KEY_DOWN and current_row < len(drop_down_list) -1:
-                current_row  += 1
-            elif key == curses.KEY_ENTER or key in [10, 13]:
-                self.screen.addstr(0,0, "You selected {}".format(drop_down_list[current_row]))
-                self.screen.refresh()
-                answer = drop_down_list[current_row]
-                break
-                if current_row == len(drop_down_list) - 1:
-                    self.quit_display()
-            self.display_menu(current_row, drop_down_list, question)
-        return(answer)
-    """
+            key = self.inner_left_window.getch()
+            if key == curses.KEY_UP:
+                self.inner_left_window.addstr(h-1, 0, "You pressed UP key")
+            elif key == curses.KEY_DOWN:
+                self.inner_left_window.addstr(h-1, 0,"You pressed DOWN key")
+            elif key == curses.KEY_ENTER or key in [10,13]:
+                self.inner_left_window.addstr(0,0, "You pressed ENTER")
+            self.inner_left_window.refresh()
+
+
     def quit_display(self):
         self.screen.clear()
         curses.curs_set(1)
