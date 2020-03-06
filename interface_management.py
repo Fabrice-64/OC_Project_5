@@ -1,32 +1,32 @@
 """
-This module intends to play the role of an interface with the user when navigating in the program.
+    This module intends to play the role of an interface with the user when navigating in the program.
 
-This module is fed with orders coming form get_better_diet.py module.
-It encompasses only one class, named Interface.
+    This module is fed with orders coming form get_better_diet.py module.
+    It encompasses only one class, named Interface.
 Methods:
     title_bar(): displays a title in the bar at the top of the main window. This title is updated in accordance with the step of the program.
-    
     split_screen(): splits the screen in two separate windows. In fact each window includes a sub-window in which the text is displayed. 
     This is demanded when using curses in order to avoid having the text stepping over the borders of the window.
-    
     display_message(): this method displays a message on the main window, at the center of the screen. Is used for welcome message and for goodbye.
-
     left_window_display_string() : this method is set to display an instruction on the left screen.
-
     clear_window():  is needed to reinitialize the sub-window and remove the useless text.
-
     display_file_right_window(): the right window is used for displaying larger files for which this method allows to scroll them down.
-
     right_window_display_result(): the results of the queries sent to the DB are displayed on this window. The outcome is formatted by this method
-
     highlight_selection(): when using a drop-down list, this methods highlights the selected item
-
     set_up_drop_down(): this method is used in connexion with the method highlight_selection, as it provides the latter with the relevant index. 
     It activates the key UP and DOWN iot iterate in the menu displayed.
-
     quit_display(): as the module Curses activate many features of the shell, this method intends to desactivate all the features activated by the script.
 
 Attributes:
+    Most attributes are used to set coordinates useful for displaying the content.
+    title:  used to display a title in the bar set at the top of the main window
+    half_win_height & half_win_width:   when the main window is split in 2, it sets the size of each half window
+    left_window & right_window: cover half of the main window
+    inner_left_window and inner_right_window: are inside the half windows and are uses to better manage the displayed text.
+    message:    used to display a message at the center of the screen at welcome and in a future version by exiting the program
+    y_center & x_center: set the center of the main screen
+    screen_x_center: used to get the x of the center of the main window, whatever the length of the string to be displayed is
+    x_center_half_l_window & y_center_half_l_window:    y & x of the center of the left half window
 
 """
 import time
@@ -54,7 +54,8 @@ class Interface:
 
     # Setting up a title bar for the main window
     def title_bar(self, title):
-        """ A new title bar is displayed for each and every step of the program. This method is called through the module get_better_diet.py
+        """ 
+            A new title bar is displayed for each and every step of the program. This method is called through the module get_better_diet.py
             Attribute : title
             The constant pair of colors, background and characters, are set in the __init__ method of this class.
         """
@@ -137,6 +138,17 @@ class Interface:
             self.inner_left_window.refresh()
         
     def set_up_drop_down(self, drop_down_list, question):
+        """
+            This method manages the cursor movements within a drop-down list, in order to highlight the selected item of the list.
+            Therefore it interacts closely with the method highlight_selection() of the same class.
+
+            Args:
+            drop_down_list is set in the config.py module and is conceived as a list.
+            question is set in the config.py module and is to be looked at either as a request to the user or an advice so that he can better understand the purpose of this list.
+
+            Returns:
+            The answer returned is subsequently used in the get_better_diet_py module to operate the program.
+        """
         curses.curs_set(0)
         self.inner_left_window.keypad(True)
         active_row_idx = 0
@@ -157,6 +169,15 @@ class Interface:
         return answer
 
     def quit_display(self):
+        """
+            This method is used to properly quit the Curses module and reinitialize the shell.
+
+            Args:
+            It takes no argument
+
+            Returns:
+            It doesn't return anything
+        """
         self.screen.clear()
         curses.curs_set(1)
         curses.echo()
