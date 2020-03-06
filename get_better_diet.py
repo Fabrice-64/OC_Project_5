@@ -26,10 +26,6 @@ class UserDialog:
          self.interface.left_window_display_string(0, "You have decided to go on with the program")
          time.sleep(3)
       elif answer == "No":
-         self.interface.clear_window('left')
-         self.interface.clear_window('right')
-         self.interface.left_window_display_string(0, "The program will quit in a few seconds")
-         time.sleep(3)
          self.interface.quit_display()
 
    def step_select_action(self):
@@ -38,8 +34,21 @@ class UserDialog:
       self.interface.clear_window('right')
       self.interface.left_window_display_string(0, cfg.S_A_INFO_LINE_1)
       self.interface.right_window_display_result(0, "The results will be displayed in this window\n")
+      answer = self.interface.set_up_drop_down(cfg.S_A_OPERATE_ON_DB,cfg.SELECT_ANSWER)
+      if answer == cfg.S_A_OPERATE_ON_DB[0]:
+         # Fill the required fields to find the aliment
+         # Query for a substitution aliment
+         pass
+      elif answer == cfg.S_A_OPERATE_ON_DB[1]:
+         # Query for getting a recorded aliment
+         pass
+      elif answer == cfg.S_A_OPERATE_ON_DB[2]:
+         # Upload new category from OFF
+         pass
+      elif answer == cfg.S_A_OPERATE_ON_DB[3]:
+         self.interface.quit_display()
+
       time.sleep(3)
-      pass     
 
 def main(user):
    user.interface.display_message(cfg.WELCOME_MESSAGE)

@@ -124,10 +124,20 @@ class Interface:
 
 
     def highlight_selection(self, active_row_idx, drop_down_list):
+        """
+            This method depends on set_up_drop_down() method and is solely used for highlighting the selected row.
+
+            Args:
+            active_row_idx (int): gives the index of the row to be highlighted.
+            drop_down_list (list); used to display the list in the center of the inner left window.
+
+            Returns:
+            This method does not return anything.
+        """
         h,w = self.inner_left_window.getmaxyx()
         curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_GREEN)
         for idx, row in enumerate(drop_down_list):
-            self.x_center_half_l_win = w//2
+            self.x_center_half_l_win = w//2 - len(row)//2
             self.y_center_half_l_win = h//2 - len(drop_down_list)//2 +idx
             if idx == active_row_idx:
                 self.inner_left_window.attron(curses.color_pair(2))
@@ -178,6 +188,10 @@ class Interface:
             Returns:
             It doesn't return anything
         """
+        self.clear_window('left')
+        self.clear_window('right')
+        self.left_window_display_string(0, "The program will quit in a few seconds")
+        time.sleep(3)
         self.screen.clear()
         curses.curs_set(1)
         curses.echo()
