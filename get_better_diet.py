@@ -36,11 +36,11 @@ class UserDialog:
       self.interface.right_window_display_result(0, "The results will be displayed in this window\n")
       answer = self.interface.set_up_drop_down(cfg.S_A_OPERATE_ON_DB,cfg.SELECT_ANSWER)
       if answer == cfg.S_A_OPERATE_ON_DB[0]:
-         # Fill the required fields to find the aliment
+         # Fill the required fields to characterize the food item the user is looking for
          # Query for a substitution aliment
          pass
       elif answer == cfg.S_A_OPERATE_ON_DB[1]:
-         # Query for getting a recorded aliment
+         # Query for getting a recorded food item
          pass
       elif answer == cfg.S_A_OPERATE_ON_DB[2]:
          # Upload new category from OFF
