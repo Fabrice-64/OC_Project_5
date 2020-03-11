@@ -73,16 +73,13 @@ class Interface:
 
         #create a left window and an innner window to display text
         self.left_window = curses.newwin(self.half_win_height, self.half_win_width, 1, 2)
-        self.left_window.box()
         self.inner_left_window = self.left_window.subwin(self.half_win_height -2, self.half_win_width -2,2,3)
         self.left_window.noutrefresh()
         
         # Create a right window and an inner window to display results
         self.right_window = curses.newwin(self.half_win_height, self.half_win_width-2, 1, self.x_center +3)
-        self.right_window.box()
         self.inner_right_window = self.right_window.subwin(self.half_win_height -2, self.half_win_width -4,2,self.x_center +4)
         self.right_window.noutrefresh()
-        
         self.screen.refresh()
     
     def display_message(self, message):
@@ -178,6 +175,26 @@ class Interface:
         self.inner_left_window.refresh()
         return answer
 
+    def display_text_pad(self, upper_left_y, nblines, nbcols):
+        y,x = self.inner_left_window.getmaxyx()
+        self.inner_left_window.addstr(y-1, 0, config.KEYBOARD_INFO_1)
+        self.inner_left_window.addstr(y-2, 0, config.KEYBOARD_INFO_2)
+        self.inner_left_window.addstr(y-3, 0, config.KEYBOARD_INFO_3)
+        self.inner_left_window.addstr(y-4, 0, config.KEYBOARD_INFO_4)
+        self.inner_left_window.addstr(y-5,0 , config.KEYBOARD_INFO_5)
+        self.inner_left_window.addstr(y-6, 0, config.KEYBOARD_INFO_0)
+        textpad.rectangle(self.inner_left_window, upper_left_y, 0, upper_left_y + nblines+1, nbcols+1)
+        y,x = curses.getsyx()
+        win = self.inner_left_window.derwin(nblines , nbcols, y, 1)
+        box = textpad.Textbox(win, insert_mode= True)
+        self.inner_left_window.refresh()
+        contents = box.edit()
+        self.inner_left_window.addstr("\n")
+        self.inner_left_window.addstr("Text entered in the box\n")
+        self.inner_left_window.addstr(repr(contents))
+        self.inner_left_window.refresh()
+        self.inner_left_window.getch()
+
     def quit_display(self):
         """
             This method is used to properly quit the Curses module and reinitialize the shell.
@@ -191,7 +208,7 @@ class Interface:
         self.clear_window('left')
         self.clear_window('right')
         self.left_window_display_string(0, "The program will quit in a few seconds")
-        time.sleep(3)
+        time.sleep(1)
         self.screen.clear()
         curses.curs_set(1)
         curses.echo()

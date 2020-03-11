@@ -39,6 +39,20 @@ TITLE_2 = "Working with the Databases"
 S_A_INFO_LINE_1 = "Please select in the list below the action you are interested in\n"
 S_A_OPERATE_ON_DB = ["Search for substitution food", "Find a previous search", "Upload a new category", "Quit"]
 
+# These are the dialog string to select a substition food item
+S_A_SELECT_CATEGORY = "Please type the number of the selected category:"
+
+# These are the keyboard information lines to deal with the textpad
+KEYBOARD_INFO_0 = "User's Guide:"
+KEYBOARD_INFO_1 = "Press Ctrl+B to have the cursor go left"
+KEYBOARD_INFO_2 = "Press Ctrl+D to delete the character under the cursor"
+KEYBOARD_INFO_3 = "Press Ctrl+H to delete a character backwards"
+KEYBOARD_INFO_4 = "Press Ctrl+E to go to the end of line"
+KEYBOARD_INFO_5 = "Press Ctrl+G or ENTER to terminate the operation"
+
+#These are the instructions displayed when using the keypad
+KEYPAD_INSTRUCTION_1 = "Please input your selection in the box below"
+
 
 SELECT_ANSWER = "Please select the appropriate answer and press ENTER"
 REPLY_YES_NO = ["Yes","No"]
