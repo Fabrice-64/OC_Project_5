@@ -101,6 +101,7 @@ class Interface:
             self.inner_left_window.clear()
         elif window == "right":
             self.inner_right_window.clear()
+            self.inner_right_window.refresh()
 
     def display_file_right_window(self, file):
         with open(file, "rb") as file:
@@ -183,7 +184,8 @@ class Interface:
         self.inner_left_window.addstr(y-4, 0, config.KEYBOARD_INFO_4)
         self.inner_left_window.addstr(y-5,0 , config.KEYBOARD_INFO_5)
         self.inner_left_window.addstr(y-6, 0, config.KEYBOARD_INFO_0)
-        textpad.rectangle(self.inner_left_window, upper_left_y, 0, upper_left_y + nblines+1, nbcols+1)
+        
+        textpad.rectangle(self.inner_left_window, upper_left_y-1, 0, upper_left_y + nblines+1, nbcols+1)
         y,x = curses.getsyx()
         win = self.inner_left_window.derwin(nblines , nbcols, y, 1)
         box = textpad.Textbox(win, insert_mode= True)

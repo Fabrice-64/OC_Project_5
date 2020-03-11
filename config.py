@@ -20,7 +20,7 @@ url = 'https://fr.openfoodfacts.org/cgi/search.pl?search_simple=1'
 
 
 
-db_connection_parameters = {'user' :'root', 'host' : 'localhost', 'database' : 'Project_5_OC'}
+db_connection_parameters = {'user' :'root', 'host' : 'localhost', 'database' : 'get_better_diet'}
 
 #Message displayed when launching the programm. Used by the method display_message()
 WELCOME_MESSAGE = "WELCOME TO 'GET A BETTER DIET' APP \n"

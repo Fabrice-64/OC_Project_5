@@ -5,12 +5,14 @@ It displays a welcome message and the  Open Food Facts disclaimer. It then jumps
 
 """
 import interface_management as im
+import connect_to_mysql as sql
 import config as cfg
 import time
 
 class UserDialog:
    def __init__(self):
         self.interface = im.Interface()
+        self.queries = sql.MySQLQueries()
 
    def step_terms_and_conditions(self, file):
       self.interface.title_bar(cfg.TITLE_1)
@@ -38,6 +40,10 @@ class UserDialog:
       if answer == cfg.S_A_OPERATE_ON_DB[0]:
          self.interface.left_window_display_string(0, cfg.KEYPAD_INSTRUCTION_1)
          self.interface.left_window_display_string(1, cfg.S_A_SELECT_CATEGORY)
+         self.interface.clear_window("right")
+         self.queries.get_categories()
+         for (id, category) in self.queries.cursor:
+            self.interface.right_window_display_result("{}:  {}".format(id, category))
          self.interface.display_text_pad(2,1,2)
          # Fill the required fields to characterize the food item the user is looking for
          # Query for a substitution aliment

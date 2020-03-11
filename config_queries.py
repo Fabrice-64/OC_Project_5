@@ -1,0 +1,1 @@
+query_categories = "select * from Category"
