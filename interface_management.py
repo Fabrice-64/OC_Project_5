@@ -192,6 +192,7 @@ class Interface:
         self.inner_left_window.addstr("\n")
         self.inner_left_window.addstr("Text entered in the box\n")
         self.inner_left_window.addstr(repr(contents))
+        textpad.rectangle(self.inner_left_window, upper_left_y, 0, upper_left_y + nblines+1, nbcols+1)
         self.inner_left_window.refresh()
         self.inner_left_window.getch()
 
