@@ -49,7 +49,7 @@ class UserDialog:
          self.interface.display_users_guide_textpad()
          # In interface.display_textpad(y, nblines, nbcols), the y is incremented by 1 for every new line
          # The y is where the texpad starts, the number of lines and cols to select the category
-         answer = self.interface.display_textpad(2,1,2)
+         answer = self.interface.display_textpad(2,1,3)
          if answer not in available_categories:
             #METHOD FOR A WARNING: Text in COLOR RIGHT WINDOW
             pass
