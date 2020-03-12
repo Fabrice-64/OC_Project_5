@@ -31,6 +31,7 @@ class UserDialog:
          self.interface.quit_display()
 
    def step_select_action(self):
+      available_categories = []
       self.interface.title_bar(cfg.TITLE_2)
       self.interface.clear_window('left')
       self.interface.clear_window('right')
@@ -43,8 +44,15 @@ class UserDialog:
          self.interface.clear_window("right")
          self.queries.get_categories()
          for (id, category) in self.queries.cursor:
+            available_categories.append(id)
             self.interface.right_window_display_result("{}:  {}".format(id, category))
-         self.interface.display_text_pad(2,1,2)
+         self.interface.display_users_guide_textpad()
+         # In interface.display_textpad(y, nblines, nbcols), the y is incremented by 1 for every new line
+         # The y is where the texpad starts, the number of lines and cols to select the category
+         answer = self.interface.display_textpad(2,1,2)
+         if answer not in available_categories:
+            #METHOD FOR A WARNING: Text in COLOR RIGHT WINDOW
+            pass
          # Fill the required fields to characterize the food item the user is looking for
          # Query for a substitution aliment
       elif answer == cfg.S_A_OPERATE_ON_DB[1]:

@@ -176,7 +176,11 @@ class Interface:
         self.inner_left_window.refresh()
         return answer
 
-    def display_text_pad(self, upper_left_y, nblines, nbcols):
+    def display_users_guide_textpad(self):
+        """
+        This method displays the list of keyboard shortcuts to be used with the keypad.
+        It doesn't return anything
+        """
         y,x = self.inner_left_window.getmaxyx()
         self.inner_left_window.addstr(y-1, 0, config.KEYBOARD_INFO_1)
         self.inner_left_window.addstr(y-2, 0, config.KEYBOARD_INFO_2)
@@ -184,18 +188,18 @@ class Interface:
         self.inner_left_window.addstr(y-4, 0, config.KEYBOARD_INFO_4)
         self.inner_left_window.addstr(y-5,0 , config.KEYBOARD_INFO_5)
         self.inner_left_window.addstr(y-6, 0, config.KEYBOARD_INFO_0)
-        
-        textpad.rectangle(self.inner_left_window, upper_left_y-1, 0, upper_left_y + nblines+1, nbcols+1)
-        y,x = curses.getsyx()
-        win = self.inner_left_window.derwin(nblines , nbcols, y, 1)
-        box = textpad.Textbox(win, insert_mode= True)
+        self.inner_left_window.addstr(y-7, 0, config.KEYBOARD_INFO_00)
         self.inner_left_window.refresh()
-        contents = box.edit()
-        self.inner_left_window.addstr("\n")
-        self.inner_left_window.addstr("Text entered in the box\n")
-        self.inner_left_window.addstr(repr(contents))
-        textpad.rectangle(self.inner_left_window, upper_left_y, 0, upper_left_y + nblines+1, nbcols+1)
+
+    def display_textpad(self, upper_left_y, nblines, nbcols):
+        self.win = self.inner_left_window.derwin(nblines , nbcols, upper_left_y+1, 1)
+        textpad.rectangle(self.inner_left_window, upper_left_y, 0, upper_left_y +1 + nblines, nbcols+1)
+        self.win.refresh()
         self.inner_left_window.refresh()
+        box = textpad.Textbox(self.win, insert_mode= True)
+        self.contents = box.edit()
+        return self.contents
+
         self.inner_left_window.getch()
 
     def quit_display(self):

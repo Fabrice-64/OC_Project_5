@@ -43,7 +43,8 @@ S_A_OPERATE_ON_DB = ["Search for substitution food", "Find a previous search", "
 S_A_SELECT_CATEGORY = "Please type the number of the selected category:"
 
 # These are the keyboard information lines to deal with the textpad
-KEYBOARD_INFO_0 = "User's Guide:"
+KEYBOARD_INFO_00 = "User's Guide:"
+KEYBOARD_INFO_0 = "THE NUMERIC KEYPAD IS NOT ACTIVATED" 
 KEYBOARD_INFO_1 = "Press Ctrl+B to have the cursor go left"
 KEYBOARD_INFO_2 = "Press Ctrl+D to delete the character under the cursor"
 KEYBOARD_INFO_3 = "Press Ctrl+H to delete a character backwards"
