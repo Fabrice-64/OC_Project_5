@@ -47,6 +47,8 @@ class Interface:
 
         # Setting up the parameters used to design the windows
         curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLUE)
+        curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_GREEN)
+        curses.init_pair(3, curses.COLOR_WHITE, curses.COLOR_RED)
         self.screen.addstr(curses.LINES -1, 0, "Copyright Moi" )
         self.height, self.width = self.screen.getmaxyx()
         self.y_center = self.height//2
@@ -88,7 +90,6 @@ class Interface:
         self.screen_x_center = self.x_center - len(self.message)//2
         self.screen.addstr(self.y_center, self.screen_x_center, self.message, curses.A_BOLD)
         self.screen.refresh()
-        time.sleep(1)
         curses.beep()
         self.screen.clear()
     
@@ -120,6 +121,13 @@ class Interface:
         self.inner_right_window.addstr(y,0,string)
         self.inner_right_window.refresh()
 
+    def right_window_display_warning(self):
+        y, x = self.inner_right_window.getmaxyx()
+        self.inner_right_window.attron(curses.color_pair(3))
+        self.inner_right_window.addstr(y-1, 0, "PLEASE ENTER A CORRECT VALUE")
+        self.inner_right_window.attroff(curses.color_pair(3))
+        self.inner_right_window.refresh()
+        self.inner_right_window.getch()
 
     def highlight_selection(self, active_row_idx, drop_down_list):
         """
@@ -133,7 +141,6 @@ class Interface:
             This method does not return anything.
         """
         h,w = self.inner_left_window.getmaxyx()
-        curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_GREEN)
         for idx, row in enumerate(drop_down_list):
             self.x_center_half_l_win = w//2 - len(row)//2
             self.y_center_half_l_win = h//2 - len(drop_down_list)//2 +idx

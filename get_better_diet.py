@@ -51,8 +51,7 @@ class UserDialog:
          # The y is where the texpad starts, the number of lines and cols to select the category
          answer = self.interface.display_textpad(2,1,3)
          if answer not in available_categories:
-            #METHOD FOR A WARNING: Text in COLOR RIGHT WINDOW
-            pass
+            self.interface.right_window_display_warning()
          # Fill the required fields to characterize the food item the user is looking for
          # Query for a substitution aliment
       elif answer == cfg.S_A_OPERATE_ON_DB[1]:
