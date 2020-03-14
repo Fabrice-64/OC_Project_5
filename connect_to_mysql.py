@@ -21,11 +21,12 @@ class MySQLQueries:
     def get_categories(self):
     # Purpose of this function is to send a query to the DB and fetch the required data
         query = cq.query_categories
-        liste = []
+        categories = {}
         self.cursor.execute(query)
-        for (id, category) in self.cursor:
-            liste.append((id, category))
-        return liste
+        for (key, category) in self.cursor:
+            categories.update({int(key) : category})
+            #print(key, "::", category)
+        return categories
 
     def upload_products(self):
         query = ("""LOAD DATA INFILE 

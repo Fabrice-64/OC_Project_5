@@ -23,9 +23,12 @@ TITLE_2 = "Working with the Databases"
 S_A_INFO_LINE_1 = "Please select in the list below the action you are interested in\n"
 S_A_OPERATE_ON_DB = ["Search for substitution food", "Find a previous search", "Upload a new category", "Quit"]
 
-# These are the dialog string to select a substition food item
+# These are the dialog strings to select a substition food item
 S_A_SELECT_CATEGORY = "Please type the number of the selected category:"
-S_A_DESCRIBE_FOOD_ITEM = """Please describe the food item for which you are looking for a substitution:"""
+S_A_DESCRIBE_FOOD_ITEM = "Please describe the food item for which you are looking for a substitution:"
+
+# These are the dialog strings to download and upload an excerpt of Open Food Facts DB
+S_A_INFO_ADD_NEW_CATEGORY = "You ought to look into Open Food Facts which category you want to add to your local DB"
 
 # These are the keyboard information lines to deal with the textpad
 KEYBOARD_INFO_00 = "User's Guide:"

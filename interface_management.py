@@ -100,6 +100,7 @@ class Interface:
     def clear_window(self, window):
         if window == "left":
             self.inner_left_window.clear()
+            self.inner_left_window.refresh()
         elif window == "right":
             self.inner_right_window.clear()
             self.inner_right_window.refresh()

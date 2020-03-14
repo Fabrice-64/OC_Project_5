@@ -32,7 +32,6 @@ class UserDialog:
 
    def step_select_action(self):
       y = 0
-      categories_list = []
       self.interface.title_bar(cfg.TITLE_2)
       self.interface.clear_window('left')
       self.interface.clear_window('right')
@@ -43,19 +42,24 @@ class UserDialog:
          self.interface.left_window_display_string(y, cfg.KEYPAD_INSTRUCTION_1)
          self.interface.left_window_display_string(y+1, cfg.S_A_SELECT_CATEGORY)
          self.interface.clear_window("right")
-         liste = self.queries.get_categories()
-         for idx, category in liste:
-            self.interface.right_window_display_result(y+1,"{}:  {}\n".format(idx, category))
-            categories_list.append(int(idx))
+         categories = self.queries.get_categories()
+         for (key, category) in categories.items():
+            self.interface.right_window_display_result(y+1,"{}:  {}\n".format(key, category))
             y += 1
          self.interface.display_users_guide_textpad()
          # In interface.display_textpad(y, nblines, nbcols), the y is incremented by 1 for every new line
          # The y is where the texpad starts, the number of lines and cols to select the category
          answer_category = self.interface.display_textpad(2,1,3)
          answer_category = int(answer_category)
-         while answer_category not in categories_list:
-            self.interface.right_window_display_warning()
-            answer_category = self.interface.display_textpad(2,1,3)
+         running = True
+         while running:
+            if int(answer_category) in categories.keys():
+               running = False
+            else:
+               self.interface.right_window_display_warning()               
+               answer_category = self.interface.display_textpad(2,1,3)
+               running = True
+         
          self.interface.left_window_display_string(5,cfg.S_A_DESCRIBE_FOOD_ITEM)
          answer_description = self.interface.display_textpad(7,1,40)
          # Fill the required fields to characterize the food item the user is looking for
@@ -64,6 +68,8 @@ class UserDialog:
          # Query for getting a recorded food item
          pass
       elif answer == cfg.S_A_OPERATE_ON_DB[2]:
+         self.interface.clear_window("left")
+         self.interface.left_window_display_string(0,cfg.S_A_INFO_ADD_NEW_CATEGORY)
          # Upload new category from OFF
          # First designate a category to be uploaded
          # Fetch the category from OFF
@@ -71,7 +77,7 @@ class UserDialog:
          pass
       elif answer == cfg.S_A_OPERATE_ON_DB[3]:
          self.interface.quit_display()
-      
+
       time.sleep(2)
 
 def main(user):
