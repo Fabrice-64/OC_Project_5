@@ -7,6 +7,6 @@ LOAD DATA INFILE
         
 INSERT INTO Category VALUES (1,'Yaourts');
 
-SELECT * FROM Category;
+SELECT * FROM Product WHERE name = "Yaourt";
 
 SELECT * FROM Product;

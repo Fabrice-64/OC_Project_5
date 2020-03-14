@@ -4,22 +4,6 @@ Purpose of this module is to set the constant datas used all along this program
 payload, headers and url are used fetch data from the Open Food Facts DB
 
 """
-
-# Updload data from Open Food Facts
-categories = ["yaourts","pizzas", "beverages", "snacks", "dairies", "groceries","canned_foods","desserts"]
-
-category_choice = 0
-OFF_PAGE = 1
-# The headers are required to get access to the DB. They are defined by OFF administrators.
-headers = {'User-Agent': 'python-requests/2.22.0'}
-# The payload is used in the API to get selected data.
-payload = {'search_terms': categories[category_choice],'json': 1, 'action' : "process", \
-    'fields' : "brands,product_name,code,stores,nutrition_grade_fr,ingredients_text","page_size": 1000, "page": OFF_PAGE}
-# This url is where the OFF DB is to be found. It is completed by other components, as the payload, the headers, categories, etc.
-url = 'https://fr.openfoodfacts.org/cgi/search.pl?search_simple=1'
-
-
-
 db_connection_parameters = {'user' :'root', 'host' : 'localhost', 'database' : 'get_better_diet'}
 
 #Message displayed when launching the programm. Used by the method display_message()
@@ -41,6 +25,7 @@ S_A_OPERATE_ON_DB = ["Search for substitution food", "Find a previous search", "
 
 # These are the dialog string to select a substition food item
 S_A_SELECT_CATEGORY = "Please type the number of the selected category:"
+S_A_DESCRIBE_FOOD_ITEM = """Please describe the food item for which you are looking for a substitution:"""
 
 # These are the keyboard information lines to deal with the textpad
 KEYBOARD_INFO_00 = "User's Guide:"

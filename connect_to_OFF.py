@@ -22,7 +22,7 @@ Then the url for this product is rebuilt and recorded in the exchange file.
 """
 import requests
 import json
-import config
+import config_open_food_facts as coff
 
 class ConnectToOFF:
 
@@ -38,20 +38,20 @@ class ConnectToOFF:
 
 
     def import_products(self):
-        r = requests.get(config.url, headers = config.headers, params = config.payload)
+        r = requests.get(coff.URL, headers = coff.HEADERS, params = coff.PAYLOAD)
         data = r.json()
         row_left_apart = 0
         counter = 0
         row = ""
         with open('response_API.txt', 'w') as output_file:
             for product in data['products']:
-                brand = check_special_characters(product.get('brands'))
-                name = check_special_characters(product.get('product_name'))
-                categorie = config.category_choice +1
+                brand = self.check_special_characters(product.get('brands'))
+                name = self.check_special_characters(product.get('product_name'))
+                categorie = coff.category_choice +1
                 code = product.get('code')
                 nutrition_grade = product.get('nutrition_grade_fr')
-                stores = check_special_characters(product.get('stores'))
-                ingredients = check_special_characters(product.get('ingredients_text'))
+                stores = self.check_special_characters(product.get('stores'))
+                ingredients = self.check_special_characters(product.get('ingredients_text'))
                 if brand != "NaN" and name != "NaN" and nutrition_grade in ["a","b","c","d","e"]:
                     counter += 1
                     row = f" \"{brand}\";\"{name}\";\"{categorie}\";\"{code}\";\"{nutrition_grade}\";\"{stores}\";\"{ingredients}\"\n"

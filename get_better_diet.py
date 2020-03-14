@@ -31,7 +31,8 @@ class UserDialog:
          self.interface.quit_display()
 
    def step_select_action(self):
-      available_categories = []
+      y = 0
+      categories_list = []
       self.interface.title_bar(cfg.TITLE_2)
       self.interface.clear_window('left')
       self.interface.clear_window('right')
@@ -39,19 +40,24 @@ class UserDialog:
       self.interface.right_window_display_result(0, "The results will be displayed in this window\n")
       answer = self.interface.set_up_drop_down(cfg.S_A_OPERATE_ON_DB,cfg.SELECT_ANSWER)
       if answer == cfg.S_A_OPERATE_ON_DB[0]:
-         self.interface.left_window_display_string(0, cfg.KEYPAD_INSTRUCTION_1)
-         self.interface.left_window_display_string(1, cfg.S_A_SELECT_CATEGORY)
+         self.interface.left_window_display_string(y, cfg.KEYPAD_INSTRUCTION_1)
+         self.interface.left_window_display_string(y+1, cfg.S_A_SELECT_CATEGORY)
          self.interface.clear_window("right")
-         self.queries.get_categories()
-         for (id, category) in self.queries.cursor:
-            available_categories.append(id)
-            self.interface.right_window_display_result("{}:  {}".format(id, category))
+         liste = self.queries.get_categories()
+         for idx, category in liste:
+            self.interface.right_window_display_result(y+1,"{}:  {}\n".format(idx, category))
+            categories_list.append(int(idx))
+            y += 1
          self.interface.display_users_guide_textpad()
          # In interface.display_textpad(y, nblines, nbcols), the y is incremented by 1 for every new line
          # The y is where the texpad starts, the number of lines and cols to select the category
-         answer = self.interface.display_textpad(2,1,3)
-         if answer not in available_categories:
+         answer_category = self.interface.display_textpad(2,1,3)
+         answer_category = int(answer_category)
+         while answer_category not in categories_list:
             self.interface.right_window_display_warning()
+            answer_category = self.interface.display_textpad(2,1,3)
+         self.interface.left_window_display_string(5,cfg.S_A_DESCRIBE_FOOD_ITEM)
+         answer_description = self.interface.display_textpad(7,1,40)
          # Fill the required fields to characterize the food item the user is looking for
          # Query for a substitution aliment
       elif answer == cfg.S_A_OPERATE_ON_DB[1]:
@@ -65,7 +71,7 @@ class UserDialog:
          pass
       elif answer == cfg.S_A_OPERATE_ON_DB[3]:
          self.interface.quit_display()
-
+      
       time.sleep(2)
 
 def main(user):
