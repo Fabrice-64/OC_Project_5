@@ -6,6 +6,7 @@ It displays a welcome message and the  Open Food Facts disclaimer. It then jumps
 """
 import interface_management as im
 import connect_to_mysql as sql
+import connect_to_OFF
 import config as cfg
 import time
 
@@ -68,8 +69,14 @@ class UserDialog:
          # Query for getting a recorded food item
          pass
       elif answer == cfg.S_A_OPERATE_ON_DB[2]:
+         self.OFF = connect_to_OFF.ConnectToOFF()
          self.interface.clear_window("left")
+         self.interface.clear_window("right")
          self.interface.left_window_display_string(0,cfg.S_A_INFO_ADD_NEW_CATEGORY)
+         self.OFF.import_static_data()
+         for (key, value) in self.OFF.OFF_category_dict.items():
+            self.interface.right_window_display_result(y+1,"{}:  {}\n".format(key, value))
+            y += 1
          # Upload new category from OFF
          # First designate a category to be uploaded
          # Fetch the category from OFF

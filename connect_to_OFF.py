@@ -81,8 +81,6 @@ class ConnectToOFF:
                     dict_k_v = {counter : name}
                     self.OFF_category_dict.update(dict_k_v)
             counter += 1
-        print(self.OFF_category_dict)
-       
 
 if __name__ == "__main__":
     connection = ConnectToOFF()
