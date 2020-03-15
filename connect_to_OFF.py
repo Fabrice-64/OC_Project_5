@@ -68,12 +68,33 @@ class ConnectToOFF:
         print('Noms génériques vides: {}'.format(gen_counter))
 
     def import_static_data(self):
+        """
+            This method import static data and therefore doesn't include the parameters needed in an API.
+            In the current application, it imports an excerpt of the Open Food Facts DB categories.
+            Parameters are set as constants in the module "config_open_food_facts" module.
+
+            Constants:
+            URL_STATIC :  url of the target website and data to be downloaded.
+
+            Attributes:
+            self.OFF_category_dict : this is a dictionary containing the downloaded categories from OFF.
+            the key is an index ranging from 1 to n, the value is the French name of the category.
+            This dictionary is subsequently used in the Controller, get_better_diet, to be displayed and help select new category to be downloaded.
+
+            Args:
+            It takes no argument
+
+            Returns:
+            It doesn't return anything
+        """
         self.OFF_category_dict = {}
         r = requests.get(coff.URL_STATIC)
         data = r.json()        
         counter = 1
         for tag in data[coff.STATIC_TAG]:
             name = tag.get(coff.STATIC_FIELD_0)
+            # OFF DB categories names contain some mistakes, as a language code,\
+            # followed by : and then the category. This is therefore a rough filter.
             if ":" not in name and counter <= coff.STATIC_VOLUME:
                 if name not in self.OFF_category_dict.values():
                     name = str(name)
