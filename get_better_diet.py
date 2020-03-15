@@ -77,6 +77,20 @@ class UserDialog:
          for (key, value) in self.OFF.OFF_category_dict.items():
             self.interface.right_window_display_result(y+1,"{}:  {}\n".format(key, value))
             y += 1
+         self.interface.display_users_guide_textpad()
+         # In interface.display_textpad(y, nblines, nbcols), the y is incremented by 1 for every new line
+         # The y is where the texpad starts, the number of lines and cols to select the category
+         answer_category = self.interface.display_textpad(2,1,3)
+         answer_category = int(answer_category)
+         running = True
+         while running:
+            if int(answer_category) in self.OFF.OFF_category_dict.keys():
+               running = False
+            else:
+               self.interface.right_window_display_warning()               
+               answer_category = self.interface.display_textpad(2,1,3)
+               running = True
+         
          # Upload new category from OFF
          # First designate a category to be uploaded
          # Fetch the category from OFF
