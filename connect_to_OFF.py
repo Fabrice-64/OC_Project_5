@@ -42,26 +42,49 @@ class ConnectToOFF:
         data = r.json()
         row_left_apart = 0
         counter = 0
+        gen_counter = 0
         row = ""
         with open('response_API.txt', 'w') as output_file:
             for product in data['products']:
                 brand = self.check_special_characters(product.get('brands'))
                 name = self.check_special_characters(product.get('product_name'))
-                categorie = coff.category_choice +1
+                generic_name = self.check_special_characters(product.get('generic_name_fr'))
+                categorie = coff.category_choice
                 code = product.get('code')
                 nutrition_grade = product.get('nutrition_grade_fr')
                 stores = self.check_special_characters(product.get('stores'))
                 ingredients = self.check_special_characters(product.get('ingredients_text'))
                 if brand != "NaN" and name != "NaN" and nutrition_grade in ["a","b","c","d","e"]:
                     counter += 1
-                    row = f" \"{brand}\";\"{name}\";\"{categorie}\";\"{code}\";\"{nutrition_grade}\";\"{stores}\";\"{ingredients}\"\n"
+                    if generic_name == "NaN":
+                        gen_counter +=1
+                    row = f" \"{brand}\";\"{name}\";\"{generic_name}\";\"{categorie}\";\"{code}\";\"{nutrition_grade}\";\"{stores}\";\"{ingredients}\"\n"
                 else:
                     row_left_apart += 1
                 output_file.write(row)
                 print(counter,":", row)
         print("Nombre d'items importés: {}".format(counter))
         print("Nombre d'items écartés : {}".format(row_left_apart))
+        print('Noms génériques vides: {}'.format(gen_counter))
+
+    def import_static_data(self):
+        self.OFF_category_dict = {}
+        r = requests.get(coff.URL_STATIC)
+        data = r.json()        
+        counter = 1
+        for tag in data[coff.STATIC_TAG]:
+            name = tag.get(coff.STATIC_FIELD_0)
+            if ":" not in name and counter <= coff.STATIC_VOLUME:
+                if name not in self.OFF_category_dict.values():
+                    name = str(name)
+                    counter = int(counter)
+                    dict_k_v = {counter : name}
+                    self.OFF_category_dict.update(dict_k_v)
+            counter += 1
+        print(self.OFF_category_dict)
+       
 
 if __name__ == "__main__":
     connection = ConnectToOFF()
-    connection.import_products()
+    #connection.import_products()
+    connection.import_static_data()
