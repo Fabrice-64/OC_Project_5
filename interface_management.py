@@ -132,6 +132,15 @@ class Interface:
         self.inner_right_window.move(y-1,0)
         self.inner_right_window.clrtoeol()
         self.inner_right_window.refresh()
+    
+    def right_window_display_info(self, info_string):
+        y, x = self.inner_right_window.getmaxyx()
+        self.inner_right_window.addstr(y-1, 0, info_string)
+        self.inner_right_window.refresh()
+        self.inner_right_window.getch()
+        self.inner_right_window.move(y-1,0)
+        self.inner_right_window.clrtoeol()
+        self.inner_right_window.refresh()
 
     def highlight_selection(self, active_row_idx, drop_down_list):
         """
@@ -204,15 +213,14 @@ class Interface:
 
     def display_textpad(self, upper_left_y, nblines, nbcols):
         self.win = self.inner_left_window.derwin(nblines , nbcols, upper_left_y+1, 1)
-        self.win.keypad(True)
+        self.win.keypad(False)
         textpad.rectangle(self.inner_left_window, upper_left_y, 0, upper_left_y +1 + nblines, nbcols+1)
         self.win.refresh()
         self.inner_left_window.refresh()
         box = textpad.Textbox(self.win, insert_mode= True)
-        contents = box.edit()
-        return contents
+        content = box.edit()
+        return content
 
-        self.inner_left_window.getch()
     def quit_display(self):
         """
             This method is used to properly quit the Curses module and reinitialize the shell.

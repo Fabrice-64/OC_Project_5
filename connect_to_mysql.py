@@ -27,6 +27,11 @@ class MySQLQueries:
             categories.update({int(key) : category})
             #print(key, "::", category)
         return categories
+    
+    def get_numbers_on_DB(self,query):
+        self.cursor.execute(query)
+        result = self.cursor.fetchmany()
+        return result[0][0]
 
     def upload_products(self):
         query = ("""LOAD DATA INFILE 
@@ -43,5 +48,7 @@ class MySQLQueries:
 
 query = MySQLQueries()
 #query.upload_products()
-query.get_categories()
+#query.get_categories()
+result = query.get_numbers_on_DB(cq.query_count_rows)
+print(result)
 

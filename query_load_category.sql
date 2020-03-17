@@ -10,3 +10,5 @@ INSERT INTO Category VALUES (1,'Yaourts');
 SELECT * FROM Product WHERE name = "Yaourt";
 
 SELECT * FROM Product;
+
+SELECT COUNT(*) FROM Product;

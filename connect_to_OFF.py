@@ -37,35 +37,30 @@ class ConnectToOFF:
         return result
 
 
-    def import_products(self):
+    def import_products(self, category):
+        desired_category = {'tag_0': category}
+        coff.PAYLOAD.update(desired_category)
         r = requests.get(coff.URL, headers = coff.HEADERS, params = coff.PAYLOAD)
         data = r.json()
-        row_left_apart = 0
-        counter = 0
-        gen_counter = 0
+        items_left_apart = 0
+        nb_imported_items = 0
         row = ""
         with open('response_API.txt', 'w') as output_file:
             for product in data['products']:
                 brand = self.check_special_characters(product.get('brands'))
                 name = self.check_special_characters(product.get('product_name'))
-                generic_name = self.check_special_characters(product.get('generic_name_fr'))
-                categorie = coff.category_choice
+                category = category
                 code = product.get('code')
                 nutrition_grade = product.get('nutrition_grade_fr')
                 stores = self.check_special_characters(product.get('stores'))
                 ingredients = self.check_special_characters(product.get('ingredients_text'))
                 if brand != "NaN" and name != "NaN" and nutrition_grade in ["a","b","c","d","e"]:
-                    counter += 1
-                    if generic_name == "NaN":
-                        gen_counter +=1
-                    row = f" \"{brand}\";\"{name}\";\"{generic_name}\";\"{categorie}\";\"{code}\";\"{nutrition_grade}\";\"{stores}\";\"{ingredients}\"\n"
+                    nb_imported_items += 1
+                    row = f" \"{brand}\";\"{name}\";\"{category}\";\"{code}\";\"{nutrition_grade}\";\"{stores}\";\"{ingredients}\"\n"
                 else:
-                    row_left_apart += 1
+                    items_left_apart += 1
                 output_file.write(row)
-                print(counter,":", row)
-        print("Nombre d'items importés: {}".format(counter))
-        print("Nombre d'items écartés : {}".format(row_left_apart))
-        print('Noms génériques vides: {}'.format(gen_counter))
+        return (nb_imported_items, items_left_apart)
 
     def import_static_data(self):
         """
@@ -93,8 +88,9 @@ class ConnectToOFF:
         counter = 1
         for tag in data[coff.STATIC_TAG]:
             name = tag.get(coff.STATIC_FIELD_0)
-            # OFF DB categories names contain some mistakes, as a language code,\
-            # followed by : and then the category. This is therefore a rough filter.
+            # OFF categories contain mistakes, as a language code,\
+            # followed by ':' & then the category. Therefore this rough filter.
+            # choice has been made to limit the display of categories
             if ":" not in name and counter <= coff.STATIC_VOLUME:
                 if name not in self.OFF_category_dict.values():
                     name = str(name)
@@ -105,5 +101,5 @@ class ConnectToOFF:
 
 if __name__ == "__main__":
     connection = ConnectToOFF()
-    #connection.import_products()
-    connection.import_static_data()
+    connection.import_products()
+    #connection.import_static_data()
