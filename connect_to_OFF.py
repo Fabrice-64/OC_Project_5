@@ -36,7 +36,6 @@ class ConnectToOFF:
             result = value
         return result
 
-
     def import_products(self, category):
         desired_category = {'tag_0': category}
         coff.PAYLOAD.update(desired_category)
@@ -62,6 +61,29 @@ class ConnectToOFF:
                 output_file.write(row)
         return (nb_imported_items, items_left_apart)
 
+    def import_products_list(self, category):
+        desired_category = {'tag_0': category}
+        coff.PAYLOAD.update(desired_category)
+        r = requests.get(coff.URL, headers = coff.HEADERS, params = coff.PAYLOAD)
+        data = r.json()
+        items_left_apart = 0
+        nb_imported_items = 0
+        self.list_products = []
+        for product in data['products']:
+            brand = self.check_special_characters(product.get('brands'))
+            name = self.check_special_characters(product.get('product_name'))
+            category = category
+            code = product.get('code')
+            nutrition_grade = product.get('nutrition_grade_fr')
+            stores = self.check_special_characters(product.get('stores'))
+            ingredients = self.check_special_characters(product.get('ingredients_text'))
+            if brand != "NaN" and name != "NaN" and nutrition_grade in ["a","b","c","d","e"]:
+                nb_imported_items += 1
+                self.list_products.append((brand,name,category,code,nutrition_grade,stores,ingredients))
+            else:
+                items_left_apart += 1
+        return (nb_imported_items, items_left_apart)
+        
     def import_static_data(self):
         """
             This method import static data and therefore doesn't include the parameters needed in an API.
@@ -101,5 +123,8 @@ class ConnectToOFF:
 
 if __name__ == "__main__":
     connection = ConnectToOFF()
-    connection.import_products()
+    connection.import_products_list("Snacks")
     #connection.import_static_data()
+    print(len(connection.list_products))
+    for item in connection.list_products:
+        print(item)

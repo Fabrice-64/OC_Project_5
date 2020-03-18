@@ -5,10 +5,14 @@ LOAD DATA INFILE
         LINES STARTING BY ' ' TERMINATED BY '\n'
         (brand, name, category_id, code, nutrition_grade, stores, ingredients);
         
-INSERT INTO Category VALUES (1,'Yaourts');
+INSERT INTO category (name) VALUES ('Yaourts');
 
 SELECT * FROM Product WHERE name = "Yaourt";
 
-SELECT * FROM Product;
+SELECT * FROM category;
 
 SELECT COUNT(*) FROM Product;
+
+DELETE FROM category WHERE name = 'Produits laitiers fermentés';
+
+ALTER TABLE category ADD UNIQUE (idcategory,name);

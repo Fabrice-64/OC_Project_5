@@ -25,7 +25,6 @@ class MySQLQueries:
         self.cursor.execute(query)
         for (key, category) in self.cursor:
             categories.update({int(key) : category})
-            #print(key, "::", category)
         return categories
     
     def get_numbers_on_DB(self,query):
@@ -33,13 +32,9 @@ class MySQLQueries:
         result = self.cursor.fetchmany()
         return result[0][0]
 
-    def upload_products(self):
-        query = ("""LOAD DATA INFILE 
-        '/Users/fabricejaouen/DepotLocalGIT/OC_Project_5/Response_API.txt' 
-        INTO TABLE Products 
-        FIELDS TERMINATED BY ';' ENCLOSED BY '"' 
-        LINES STARTING BY ' ' TERMINATED BY '\n'
-        (brands, name, category_id, code, nutrition_grade, stores, ingredients)""")
+    # Method used to upload only ONE item in the local DB
+    def upload_product(self, query, item):
+        query = query.format(item)
         self.cursor.execute(query)
         self.cnx.commit()
 

@@ -98,28 +98,34 @@ class UserDialog:
          
          running = True
          while running:
-            if answer_category.isdigit():
-               self.interface.right_window_display_info("Test OK")
+            if answer_category.isdigit() and int(answer_category) in self.OFF.OFF_category_dict.keys():
+               selected_category = self.OFF.OFF_category_dict.get(int(answer_category))
+               display_chosen_category = "You will import : " + str(selected_category)
+               self.interface.right_window_display_info(display_chosen_category)
                running = False 
             else:
                self.interface.right_window_display_warning()               
                answer_category = self.interface.display_textpad(2,1,3)
+               answer_category = self.ascii_to_string(answer_category)
                running = True
 
-         self.interface.right_window_display_info("Ready to import result of query")           
          # This methods fetches a range of data from Open Food Facts
-         (nb_imported_items, items_left_apart) = self.OFF.import_products(answer_category)
+         (nb_imported_items, items_left_apart) = self.OFF.import_products(selected_category)
          self.interface.right_window_display_info('{} food items have rejected because of bad data'.format(items_left_apart))
          self.interface.right_window_display_info('{} food items have been downloaded from Open Food Facts'.format(nb_imported_items))
         
+        # This method implements the selected category into the local DB
+         test = "Now to be implemented:" + selected_category
+         self.interface.right_window_display_info(test)
+         # This is where the excerpt of OFF is uploaded in the local DB
+         self.queries.upload_product(cq.query_upload_new_category, selected_category)
          nb_rows = self.queries.get_numbers_on_DB(cq.query_count_rows)
-         self.interface.right_window_display_info('Currently your locals database counts {} food items'.format(nb_rows))
-         # Insert the result into the local DB
-         time.sleep(2)
+         self.interface.right_window_display_info('Now your local database counts {} food items'.format(nb_rows))
+         time.sleep(1)
       elif answer == cfg.S_A_OPERATE_ON_DB[3]:
          self.interface.quit_display()
 
-      time.sleep(2)
+      time.sleep(1)
 
 def main(user):
    user.interface.display_message(cfg.WELCOME_MESSAGE)
