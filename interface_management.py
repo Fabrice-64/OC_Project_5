@@ -83,7 +83,7 @@ class Interface:
         self.inner_right_window = self.right_window.subwin(self.half_win_height -2, self.half_win_width -4,2,self.x_center +4)
         self.right_window.noutrefresh()
         self.screen.refresh()
-    
+      
     def display_message(self, message):
         curses.curs_set(0)
         self.message = " ".join(message)
@@ -117,9 +117,8 @@ class Interface:
                 self.inner_right_window.addstr(line)
                 self.inner_right_window.refresh()
     
-    def right_window_display_result(self, y, string):
-        curses.curs_set(1)
-        self.inner_right_window.addstr(y,0,string)
+    def right_window_display_result(self,string):
+        self.inner_right_window.addstr(string)
         self.inner_right_window.refresh()
 
     def right_window_display_warning(self):
@@ -213,12 +212,15 @@ class Interface:
 
     def display_textpad(self, upper_left_y, nblines, nbcols):
         self.win = self.inner_left_window.derwin(nblines , nbcols, upper_left_y+1, 1)
+        self.win.clear()
         self.win.keypad(False)
         textpad.rectangle(self.inner_left_window, upper_left_y, 0, upper_left_y +1 + nblines, nbcols+1)
+        curses.curs_set(1)
         self.win.refresh()
         self.inner_left_window.refresh()
         box = textpad.Textbox(self.win, insert_mode= True)
         content = box.edit()
+        curses.curs_set(0)
         return content
 
     def quit_display(self):
