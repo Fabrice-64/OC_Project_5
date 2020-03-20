@@ -10,6 +10,7 @@ Administrator role:
 import mysql.connector
 import config 
 import config_queries as cq
+import time
 
 class MySQLQueries:
     def __init__(self):
@@ -32,18 +33,31 @@ class MySQLQueries:
         result = self.cursor.fetchmany()
         return result[0][0]
 
-    # Method used to upload only ONE item in the local DB
+    # Method used to upload only ONE item in the local DB.
     def upload_product(self, query, item):
         query = query.format(item)
         self.cursor.execute(query)
         self.cnx.commit()
 
+    # Method used to upload a series of food items.
+    def upload_dataset(self, query,item_list):
+        #print(query)
+        #time.sleep(5)
+        self.cursor.executemany(query, item_list)
+        self.cnx.commit()
+
     def close_connection(self):
         self.cursor.close()
 
-query = MySQLQueries()
 #query.upload_products()
 #query.get_categories()
-result = query.get_numbers_on_DB(cq.query_count_rows)
-print(result)
 
+
+
+if __name__ == "__main__":
+    requete = MySQLQueries()
+    query = cq.query_upload_new_category
+    item = "Aliments d\'origine végétale"
+    query = query.format(item)
+    print(query)
+    requete.upload_product(query)

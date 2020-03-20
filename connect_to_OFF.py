@@ -25,6 +25,8 @@ import json
 import config_open_food_facts as coff
 
 class ConnectToOFF:
+    def __init__(self):
+        self.list_products = []
 
     def check_special_characters(self, value):
         if value is None:
@@ -32,6 +34,9 @@ class ConnectToOFF:
         elif '"' in value:
             new_value = value
             result = new_value.replace('"', '')
+        elif "'" in value:
+            new_value = value
+            result = new_value.replace("'","\'")
         else:
             result = value
         return result
@@ -48,7 +53,7 @@ class ConnectToOFF:
             for product in data['products']:
                 brand = self.check_special_characters(product.get('brands'))
                 name = self.check_special_characters(product.get('product_name'))
-                category = category
+                category = self.check_special_character(product.get('category'))
                 code = product.get('code')
                 nutrition_grade = product.get('nutrition_grade_fr')
                 stores = self.check_special_characters(product.get('stores'))
@@ -68,11 +73,11 @@ class ConnectToOFF:
         data = r.json()
         items_left_apart = 0
         nb_imported_items = 0
-        self.list_products = []
+        #Original location of self.list_products = []
         for product in data['products']:
             brand = self.check_special_characters(product.get('brands'))
             name = self.check_special_characters(product.get('product_name'))
-            category = category
+            category = self.check_special_characters(category)
             code = product.get('code')
             nutrition_grade = product.get('nutrition_grade_fr')
             stores = self.check_special_characters(product.get('stores'))
@@ -104,7 +109,7 @@ class ConnectToOFF:
             Returns:
             It doesn't return anything
         """
-        self.OFF_category_dict = {}
+        self.OFF_category_list = []
         r = requests.get(coff.URL_STATIC)
         data = r.json()        
         counter = 1
@@ -114,17 +119,16 @@ class ConnectToOFF:
             # followed by ':' & then the category. Therefore this rough filter.
             # choice has been made to limit the display of categories
             if ":" not in name and counter <= coff.STATIC_VOLUME:
-                if name not in self.OFF_category_dict.values():
+                if name not in self.OFF_category_list:
                     name = str(name)
-                    counter = int(counter)
-                    dict_k_v = {counter : name}
-                    self.OFF_category_dict.update(dict_k_v)
-            counter += 1
+                    self.OFF_category_list.append(name)
+                    counter += 1     
+        return self.OFF_category_list
 
 if __name__ == "__main__":
     connection = ConnectToOFF()
-    connection.import_products_list("Snacks")
+    apostrophe = connection.check_special_characters("Aliments d'origine végétale")
     #connection.import_static_data()
-    print(len(connection.list_products))
-    for item in connection.list_products:
-        print(item)
+    print(apostrophe)
+    #for item in connection.list_products:
+        #print(item)

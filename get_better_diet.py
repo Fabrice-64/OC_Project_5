@@ -6,7 +6,7 @@ It displays a welcome message and the  Open Food Facts disclaimer. It then jumps
 """
 import interface_management as im
 import connect_to_mysql as sql
-import connect_to_OFF
+import connect_to_OFF as OFF
 import config_open_food_facts as coff
 import config_queries as cq
 import config as cfg
@@ -14,8 +14,9 @@ import time
 
 class UserDialog:
    def __init__(self):
-        self.interface = im.Interface()
-        self.queries = sql.MySQLQueries()
+      self.interface = im.Interface()
+      self.queries = sql.MySQLQueries()
+      self.OFF = OFF.ConnectToOFF()
 
    def step_terms_and_conditions(self, file):
       self.interface.title_bar(cfg.TITLE_1)
@@ -82,7 +83,6 @@ class UserDialog:
          # Query for getting a recorded food item
          pass
       elif answer == cfg.S_A_OPERATE_ON_DB[2]:
-         self.OFF = connect_to_OFF.ConnectToOFF()
          self.interface.clear_window("left")
          self.interface.clear_window("right")
          self.interface.left_window_display_string(0,cfg.S_A_INFO_ADD_NEW_CATEGORY)
@@ -110,7 +110,7 @@ class UserDialog:
                running = True
 
          # This methods fetches a range of data from Open Food Facts
-         (nb_imported_items, items_left_apart) = self.OFF.import_products(selected_category)
+         (nb_imported_items, items_left_apart) = self.OFF.import_products_list(selected_category)
          self.interface.right_window_display_info('{} food items have rejected because of bad data'.format(items_left_apart))
          self.interface.right_window_display_info('{} food items have been downloaded from Open Food Facts'.format(nb_imported_items))
         
@@ -120,6 +120,7 @@ class UserDialog:
          # This is where the excerpt of OFF is uploaded in the local DB
          self.queries.upload_product(cq.query_upload_new_category, selected_category)
          nb_rows = self.queries.get_numbers_on_DB(cq.query_count_rows)
+         self.queries.upload_dataset(cq.query_upload_new_category_products, self.OFF.list_products)
          self.interface.right_window_display_info('Now your local database counts {} food items'.format(nb_rows))
          time.sleep(1)
       elif answer == cfg.S_A_OPERATE_ON_DB[3]:
