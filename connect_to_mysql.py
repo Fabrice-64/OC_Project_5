@@ -10,7 +10,6 @@ Administrator role:
 import mysql.connector
 import config 
 import config_queries as cq
-import time
 
 class MySQLQueries:
     def __init__(self):
@@ -41,8 +40,6 @@ class MySQLQueries:
 
     # Method used to upload a series of food items.
     def upload_dataset(self, query,item_list):
-        #print(query)
-        #time.sleep(5)
         self.cursor.executemany(query, item_list)
         self.cnx.commit()
 

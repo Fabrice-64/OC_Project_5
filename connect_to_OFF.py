@@ -26,7 +26,7 @@ import config_open_food_facts as coff
 
 class ConnectToOFF:
     def __init__(self):
-        self.list_products = []
+        self.list_items = []
 
     def check_special_characters(self, value):
         if value is None:
@@ -40,32 +40,7 @@ class ConnectToOFF:
         else:
             result = value
         return result
-
-    def import_products(self, category):
-        desired_category = {'tag_0': category}
-        coff.PAYLOAD.update(desired_category)
-        r = requests.get(coff.URL, headers = coff.HEADERS, params = coff.PAYLOAD)
-        data = r.json()
-        items_left_apart = 0
-        nb_imported_items = 0
-        row = ""
-        with open('response_API.txt', 'w') as output_file:
-            for product in data['products']:
-                brand = self.check_special_characters(product.get('brands'))
-                name = self.check_special_characters(product.get('product_name'))
-                category = self.check_special_character(product.get('category'))
-                code = product.get('code')
-                nutrition_grade = product.get('nutrition_grade_fr')
-                stores = self.check_special_characters(product.get('stores'))
-                ingredients = self.check_special_characters(product.get('ingredients_text'))
-                if brand != "NaN" and name != "NaN" and nutrition_grade in ["a","b","c","d","e"]:
-                    nb_imported_items += 1
-                    row = f" \"{brand}\";\"{name}\";\"{category}\";\"{code}\";\"{nutrition_grade}\";\"{stores}\";\"{ingredients}\"\n"
-                else:
-                    items_left_apart += 1
-                output_file.write(row)
-        return (nb_imported_items, items_left_apart)
-
+   
     def import_products_list(self, category):
         desired_category = {'tag_0': category}
         coff.PAYLOAD.update(desired_category)
@@ -73,7 +48,7 @@ class ConnectToOFF:
         data = r.json()
         items_left_apart = 0
         nb_imported_items = 0
-        #Original location of self.list_products = []
+        
         for product in data['products']:
             brand = self.check_special_characters(product.get('brands'))
             name = self.check_special_characters(product.get('product_name'))
@@ -84,10 +59,10 @@ class ConnectToOFF:
             ingredients = self.check_special_characters(product.get('ingredients_text'))
             if brand != "NaN" and name != "NaN" and nutrition_grade in ["a","b","c","d","e"]:
                 nb_imported_items += 1
-                self.list_products.append((brand,name,category,code,nutrition_grade,stores,ingredients))
+                self.list_items.append((brand,name,category,code,nutrition_grade,stores,ingredients))
             else:
                 items_left_apart += 1
-        return (nb_imported_items, items_left_apart)
+        return (nb_imported_items, items_left_apart, self.list_items)
         
     def import_static_data(self):
         """
@@ -127,8 +102,3 @@ class ConnectToOFF:
 
 if __name__ == "__main__":
     connection = ConnectToOFF()
-    apostrophe = connection.check_special_characters("Aliments d'origine végétale")
-    #connection.import_static_data()
-    print(apostrophe)
-    #for item in connection.list_products:
-        #print(item)

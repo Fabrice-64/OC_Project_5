@@ -87,8 +87,8 @@ class UserDialog:
          self.interface.clear_window("right")
          self.interface.left_window_display_string(0,cfg.S_A_INFO_ADD_NEW_CATEGORY)
          # A short sample of OFF categories is imported and displayed in the right window
-         self.OFF.import_static_data()
-         for (key, value) in self.OFF.OFF_category_dict.items():
+         self.categories = self.queries.get_categories()
+         for (key, value) in self.categories.items():
             self.interface.right_window_display_result(y+1,"{}:  {}\n".format(key, value))
             y += 1
          self.interface.display_users_guide_textpad()
@@ -98,8 +98,8 @@ class UserDialog:
          
          running = True
          while running:
-            if answer_category.isdigit() and int(answer_category) in self.OFF.OFF_category_dict.keys():
-               selected_category = self.OFF.OFF_category_dict.get(int(answer_category))
+            if answer_category.isdigit() and int(answer_category) in self.categories.keys():
+               selected_category = self.categories.get(int(answer_category))
                display_chosen_category = "You will import : " + str(selected_category)
                self.interface.right_window_display_info(display_chosen_category)
                running = False 
@@ -110,19 +110,19 @@ class UserDialog:
                running = True
 
          # This methods fetches a range of data from Open Food Facts
-         (nb_imported_items, items_left_apart) = self.OFF.import_products_list(selected_category)
+         (nb_imported_items, items_left_apart, list_items) = self.OFF.import_products_list(selected_category)
          self.interface.right_window_display_info('{} food items have rejected because of bad data'.format(items_left_apart))
          self.interface.right_window_display_info('{} food items have been downloaded from Open Food Facts'.format(nb_imported_items))
         
         # This method implements the selected category into the local DB
-         test = "Now to be implemented:" + selected_category
+         test = "Now to be implemented : " + selected_category
          self.interface.right_window_display_info(test)
          # This is where the excerpt of OFF is uploaded in the local DB
-         self.queries.upload_product(cq.query_upload_new_category, selected_category)
+         self.queries.upload_dataset(cq.query_upload_new_category_products, list_items)
          nb_rows = self.queries.get_numbers_on_DB(cq.query_count_rows)
-         self.queries.upload_dataset(cq.query_upload_new_category_products, self.OFF.list_products)
          self.interface.right_window_display_info('Now your local database counts {} food items'.format(nb_rows))
          time.sleep(1)
+         
       elif answer == cfg.S_A_OPERATE_ON_DB[3]:
          self.interface.quit_display()
 
