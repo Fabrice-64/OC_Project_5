@@ -83,7 +83,14 @@ class Interface:
         self.inner_right_window = self.right_window.subwin(self.half_win_height -2, self.half_win_width -4,2,self.x_center +4)
         self.right_window.noutrefresh()
         self.screen.refresh()
-      
+    def get_cursor_position(self):
+        y, x = curses.getsyx()
+        return y,x
+    
+    def set_cursor_position(self,y,x):
+        self.inner_left_window.move(0,x)
+        self.inner_left_window.refresh()
+        
     def display_message(self, message):
         curses.curs_set(0)
         self.message = " ".join(message)
@@ -93,8 +100,8 @@ class Interface:
         curses.beep()
         self.screen.clear()
     
-    def left_window_display_string(self, string):
-        self.inner_left_window.addstr(string)
+    def left_window_display_string(self, y, string):
+        self.inner_left_window.addstr(y, 0, string)
         self.inner_left_window.refresh()
     
     def clear_window(self, window):
@@ -211,14 +218,13 @@ class Interface:
         self.inner_left_window.refresh()
 
     def display_textpad(self, upper_left_y, nblines, nbcols):
-        self.win = self.inner_left_window.derwin(nblines , nbcols, upper_left_y+1, 1)
+        self.win = self.inner_left_window.derwin(nblines , nbcols, upper_left_y, 1)
         self.win.clear()
-        self.win.keypad(False)
-        textpad.rectangle(self.inner_left_window, upper_left_y, 0, upper_left_y +1 + nblines, nbcols+1)
+        textpad.rectangle(self.inner_left_window, upper_left_y-1, 0, upper_left_y + nblines, nbcols+1)
         curses.curs_set(1)
         self.win.refresh()
-        self.inner_left_window.refresh()
         box = textpad.Textbox(self.win, insert_mode= True)
+        self.inner_left_window.refresh()
         content = box.edit()
         curses.curs_set(0)
         return content

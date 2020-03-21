@@ -19,17 +19,18 @@ class UserDialog:
       self.OFF = OFF.ConnectToOFF()
 
    def step_terms_and_conditions(self, file):
+      y = 0
       self.interface.title_bar(cfg.TITLE_1)
-      self.interface.left_window_display_string(cfg.T_C_LINE_1)
-      self.interface.left_window_display_string(cfg.T_C_LINE_2)
+      self.interface.left_window_display_string(y, cfg.T_C_LINE_1)
+      self.interface.left_window_display_string(y+1, cfg.T_C_LINE_2)
       self.interface.display_file_right_window(file)
       self.interface.clear_window("left")
-      self.interface.left_window_display_string(cfg.T_C_QUESTION_ACCEPT_T_C)
-      self.interface.left_window_display_string(cfg.T_C_IF_REFUSAL)
+      self.interface.left_window_display_string(y, cfg.T_C_QUESTION_ACCEPT_T_C)
+      self.interface.left_window_display_string(y+1, cfg.T_C_IF_REFUSAL)
       answer = self.interface.set_up_drop_down(cfg.REPLY_YES_NO, cfg.SELECT_ANSWER)
       if answer == "Yes":
          self.interface.clear_window('left')
-         self.interface.left_window_display_string("You have decided to go on with the program")
+         self.interface.left_window_display_string(y, "You have decided to go on with the program")
          time.sleep(1)
       elif answer == "No":
          self.interface.quit_display()
@@ -52,57 +53,69 @@ class UserDialog:
       while running_main:
          self.interface.clear_window('left')
          self.interface.clear_window('right')
-         self.interface.left_window_display_string(cfg.S_A_INFO_LINE_1)
+         self.interface.left_window_display_string(0, cfg.S_A_INFO_LINE_1)
          self.interface.right_window_display_result("The results will be displayed in this window\n")
          answer = self.interface.set_up_drop_down(cfg.S_A_OPERATE_ON_DB,cfg.SELECT_ANSWER)
+         time.sleep(1)
          
          if answer == cfg.S_A_OPERATE_ON_DB[0]:
             self.interface.title_bar(cfg.TITLE_3)
             self.interface.clear_window("right")
             self.interface.clear_window("left")
-            y = 0        
-            self.interface.left_window_display_string(cfg.KEYPAD_INSTRUCTION_1)
-            self.interface.left_window_display_string(cfg.S_A_SELECT_CATEGORY)
+            y = 0    
+            self.interface.left_window_display_string(y, cfg.KEYPAD_INSTRUCTION_1)
+            self.interface.left_window_display_string(y+1, cfg.S_A_SELECT_CATEGORY)
+            self.interface.display_users_guide_textpad()   
             categories = self.queries.get_categories(cq.query_retrieve_available_categories)
             for (key, category) in categories.items():
                self.interface.right_window_display_result("{}:  {}\n".format(key, category))
             
-            self.interface.display_users_guide_textpad()
+            
             # In interface.display_textpad(y, nblines, nbcols), the y is incremented by 1 for every new line
             # The y is where the texpad starts, the number of lines and cols to select the category
-            answer_category = self.interface.display_textpad(2,1,3)
+            
+            # Fill the required fields to characterize the food item the user is looking for
+            answer_category = self.interface.display_textpad(y+3,1,3)
             running = True
             while running:
                answer_category = self.ascii_to_string(answer_category)
-               if answer_category.isdigit() and int(answer_category) in categories.keys():
+               if answer_category.isdigit() and int(answer_category) in categories.keys() or answer_category == "":
+                  answer_category = int(answer_category)
+                  answer_category = categories.get(answer_category)
                   running = False
                else:
                   self.interface.right_window_display_warning()               
-                  answer_category = self.interface.display_textpad(2,1,3)
+                  answer_category = self.interface.display_textpad(y+3,1,3)
                   running = True
+      
+            self.interface.left_window_display_string(y+5, cfg.S_A_NAME_FOOD_ITEM)
+            answer_name = self.interface.display_textpad(y+7,1,25)
 
-            self.interface.left_window_display_string(cfg.S_A_NAME_FOOD_ITEM)
-            answer_name = self.interface.display_textpad(7,1,40)
-            
-            # Fill the required fields to characterize the food item the user is looking for
+            self.interface.left_window_display_string(y+9, cfg.S_A_NAME_ITEM_BRAND)
+            answer_brand = self.interface.display_textpad(y+11, 1, 25)
+
+            self.item_search = [answer_category, answer_name, answer_brand]
+            self.interface.right_window_display_info("Selection : {}, {}, {}".format(answer_category, answer_name, answer_brand))
+           
             # Query for a substitution food item
             # Propose to record the substitution food item
          elif answer == cfg.S_A_OPERATE_ON_DB[1]:
             # Query for getting a recorded food item
             pass
          elif answer == cfg.S_A_OPERATE_ON_DB[2]:
+            y = 0
             self.interface.clear_window("left")
             self.interface.clear_window("right")
-            self.interface.left_window_display_string(cfg.S_A_INFO_ADD_NEW_CATEGORY)
+            self.interface.left_window_display_string(y, cfg.S_A_INFO_ADD_NEW_CATEGORY)
             # A short sample of OFF categories is imported and displayed in the right window
             self.categories = self.queries.get_categories(cq.query_categories)
             y_categories = 0
             for (key, value) in self.categories.items():
                self.interface.right_window_display_result("{}:  {}\n".format(key, value))
-               y += 1
+
             self.interface.display_users_guide_textpad()
             # The user is requested to designate a category to be uploaded
-            answer_category = self.interface.display_textpad(2,1,3)
+            answer_category = self.interface.display_textpad(y+3,1,3)
             answer_category = self.ascii_to_string(answer_category)
          
             running = True
@@ -115,7 +128,7 @@ class UserDialog:
                else:
                   self.interface.right_window_display_warning()
                   answer_category = ""              
-                  answer_category = self.interface.display_textpad(2,1,3)
+                  answer_category = self.interface.display_textpad(y+3,1,3)
                   answer_category = self.ascii_to_string(answer_category)
                   running = True
 
