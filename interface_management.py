@@ -93,8 +93,8 @@ class Interface:
         curses.beep()
         self.screen.clear()
     
-    def left_window_display_string(self, y, string):
-        self.inner_left_window.addstr(y,0,string)
+    def left_window_display_string(self, string):
+        self.inner_left_window.addstr(string)
         self.inner_left_window.refresh()
     
     def clear_window(self, window):

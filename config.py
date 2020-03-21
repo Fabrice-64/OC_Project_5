@@ -13,9 +13,9 @@ TITLE_0 = "Initial Window"
 # The following lines deals with the successive comments, questions, window titles to be used at each step of the program
 # These are the dialog strings related to the step dealing with the Terms and Conditions
 TITLE_1 = "Open Food Facts Terms and Conditions"
-T_C_LINE_1 = "Please first scroll down the Terms and Conditions!"
-T_C_LINE_2 = "You can press any key..."
-T_C_QUESTION_ACCEPT_T_C = "Do you accept the Terms and Conditions?"
+T_C_LINE_1 = "Please first scroll down the Terms and Conditions!\n"
+T_C_LINE_2 = "You can press any key...\n"
+T_C_QUESTION_ACCEPT_T_C = "Do you accept the Terms and Conditions?\,"
 T_C_IF_REFUSAL = "If you do not accept the Terms and Conditions, you'll quit automatically\n"
 
 # These are the dialog strings related to the step dealing with the actions to be conducted
@@ -24,8 +24,11 @@ S_A_INFO_LINE_1 = "Please select in the list below the action you are interested
 S_A_OPERATE_ON_DB = ["Search for substitution food", "Find a previous search", "Upload a new category", "Quit"]
 
 # These are the dialog strings to select a substition food item
-S_A_SELECT_CATEGORY = "Please type the number of the selected category:"
-S_A_DESCRIBE_FOOD_ITEM = "Please describe the food item for which you are looking for a substitution:"
+TITLE_3 = "Looking for a substitution food item"
+S_A_SELECT_CATEGORY = "Please type the number of the selected category if you wish to:\n"
+S_A_NAME_FOOD_ITEM = "Please name the food item for which you are looking for a substitution:\n"
+S_A_NAME_ITEM_BRAND = "Please name the brand of this food item \n"
+
 
 # These are the dialog strings to download and upload an excerpt of Open Food Facts DB
 S_A_INFO_ADD_NEW_CATEGORY = "You ought to look into Open Food Facts which category you want to add to your local DB"
@@ -40,8 +43,8 @@ KEYBOARD_INFO_4 = "Press Ctrl+E to go to the end of line"
 KEYBOARD_INFO_5 = "Press Ctrl+G or ENTER to terminate the operation"
 
 #These are the instructions displayed when using the keypad
-KEYPAD_INSTRUCTION_1 = "Please input your selection in the box below"
+KEYPAD_INSTRUCTION_1 = "Please input your selection in the box below\n"
 
 
-SELECT_ANSWER = "Please select the appropriate answer and press ENTER"
+SELECT_ANSWER = "Please select the appropriate answer and press ENTER\n"
 REPLY_YES_NO = ["Yes","No"]

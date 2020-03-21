@@ -18,9 +18,8 @@ class MySQLQueries:
         self.test_outside = self.cnx.is_connected()
         print("externe :", self.test_outside)
 
-    def get_categories(self):
+    def get_categories(self, query):
     # Purpose of this function is to send a query to the DB and fetch the required data
-        query = cq.query_categories
         categories = {}
         self.cursor.execute(query)
         for (key, category) in self.cursor:
@@ -53,8 +52,4 @@ class MySQLQueries:
 
 if __name__ == "__main__":
     requete = MySQLQueries()
-    query = cq.query_upload_new_category
-    item = "Aliments d\'origine végétale"
-    query = query.format(item)
-    print(query)
-    requete.upload_product(query)
+    categories = requete.get_categories()
