@@ -15,7 +15,7 @@ TITLE_0 = "Initial Window"
 TITLE_1 = "Open Food Facts Terms and Conditions"
 T_C_LINE_1 = "Please first scroll down the Terms and Conditions!\n"
 T_C_LINE_2 = "You can press any key...\n"
-T_C_QUESTION_ACCEPT_T_C = "Do you accept the Terms and Conditions?\,"
+T_C_QUESTION_ACCEPT_T_C = "Do you accept the Terms and Conditions?\n"
 T_C_IF_REFUSAL = "If you do not accept the Terms and Conditions, you'll quit automatically\n"
 
 # These are the dialog strings related to the step dealing with the actions to be conducted
@@ -27,7 +27,8 @@ S_A_OPERATE_ON_DB = ["Search for substitution food", "Find a previous search", "
 TITLE_3 = "Looking for a substitution food item"
 S_A_SELECT_CATEGORY = "Please type the number of the selected category if you wish to:\n"
 S_A_NAME_FOOD_ITEM = "Please name the food item for which you are looking for a substitution:\n"
-S_A_NAME_ITEM_BRAND = "Please name the brand of this food item \n"
+S_A_NAME_ITEM_BRAND = "Please name the brand of this food item:\n"
+S_A_NAME_ITEM_CODE = "Please type the id code of the product:\n"
 
 
 # These are the dialog strings to download and upload an excerpt of Open Food Facts DB

@@ -79,9 +79,12 @@ class UserDialog:
             running = True
             while running:
                answer_category = self.ascii_to_string(answer_category)
-               if answer_category.isdigit() and int(answer_category) in categories.keys() or answer_category == "":
-                  answer_category = int(answer_category)
-                  answer_category = categories.get(answer_category)
+               if answer_category.isdigit() and int(answer_category) in categories.keys():
+                     answer_category = int(answer_category)
+                     answer_category = categories.get(answer_category)
+                     running = False
+               elif answer_category == "" or " ":
+                  answer_category = sql.query_settings(answer_category)
                   running = False
                else:
                   self.interface.right_window_display_warning()               
@@ -90,12 +93,18 @@ class UserDialog:
       
             self.interface.left_window_display_string(y+5, cfg.S_A_NAME_FOOD_ITEM)
             answer_name = self.interface.display_textpad(y+7,1,25)
+            answer_name = sql.query_settings(answer_name)
 
             self.interface.left_window_display_string(y+9, cfg.S_A_NAME_ITEM_BRAND)
             answer_brand = self.interface.display_textpad(y+11, 1, 25)
+            answer_brand = sql.query_settings(answer_brand)
 
-            self.item_search = [answer_category, answer_name, answer_brand]
-            self.interface.right_window_display_info("Selection : {}, {}, {}".format(answer_category, answer_name, answer_brand))
+            self.interface.left_window_display_string(y+13, cfg.S_A_NAME_ITEM_CODE)
+            answer_code = self.interface.display_textpad(y+15, 1, 14)
+            answer_code = sql.query_settings(answer_code)
+
+            self.item_search = [answer_category, answer_name, answer_brand, answer_code]
+            self.interface.right_window_display_info("Selection : {}, {}, {}, {}".format(answer_category, answer_name, answer_brand, answer_code))
            
             # Query for a substitution food item
             # Propose to record the substitution food item

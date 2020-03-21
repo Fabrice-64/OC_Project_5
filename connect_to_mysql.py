@@ -48,6 +48,11 @@ class MySQLQueries:
 #query.upload_products()
 #query.get_categories()
 
+def query_settings(answer):
+    if answer == "" or answer == " ":
+        return "*"
+    else:
+        return answer
 
 
 if __name__ == "__main__":
