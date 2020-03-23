@@ -20,4 +20,11 @@ ALTER TABLE best_product DROP foreign key FK_product_id;
 TRUNCATE TABLE product;
 TRUNCATE TABLE category;
 
-SELECT DISTINCT category.idcategory, category.name FROM category RIGHT JOIN product ON category.idcategory = product.category_id ;
+SELECT DISTINCT
+    category.idcategory, category.name
+FROM
+    category
+        RIGHT JOIN
+    product ON category.idcategory = product.category_id;
+
+SELECT LEFT(product.name,45), product.nutrition_grade, product.brand FROM product WHERE category.name = "Aliments et boissons à base de végétaux" AND product.name LIKE "%%" and product.nutrition_grade LIKE "%%" AND product.brand LIKE "%%" ORDER BY product.nutrition_grade ASC, product.name DESC LIMIT 5;

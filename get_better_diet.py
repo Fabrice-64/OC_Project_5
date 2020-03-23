@@ -46,6 +46,24 @@ class UserDialog:
       converted_string = "".join(conversion_list).strip()
       return converted_string
 
+   def check_category_selection(self, y, categories):
+      running = True
+      while running:
+         answer_category = self.interface.display_textpad(y+3,1,3)
+         answer_category = self.ascii_to_string(answer_category)
+         if answer_category.isdigit() == False or int(answer_category)  not in categories.keys():
+            self.interface.right_window_display_warning()               
+            running = True
+         elif answer_category == "" or " ":
+            answer_category = sql.query_settings(answer_category)
+            running = False
+         else:
+            answer_category = int(answer_category)
+            answer_category = categories.get(answer_category)
+            running = False
+         answer_category = categories.get(answer_category)
+      return answer_category
+
    def step_select_action(self):
       y = 0
       self.interface.title_bar(cfg.TITLE_2)
@@ -70,7 +88,6 @@ class UserDialog:
             for (key, category) in categories.items():
                self.interface.right_window_display_result("{}:  {}\n".format(key, category))
             
-            
             # In interface.display_textpad(y, nblines, nbcols), the y is incremented by 1 for every new line
             # The y is where the texpad starts, the number of lines and cols to select the category
             
@@ -79,18 +96,16 @@ class UserDialog:
             running = True
             while running:
                answer_category = self.ascii_to_string(answer_category)
-               if answer_category.isdigit() and int(answer_category) in categories.keys():
-                     answer_category = int(answer_category)
-                     answer_category = categories.get(answer_category)
-                     running = False
-               elif answer_category == "" or " ":
-                  answer_category = sql.query_settings(answer_category)
-                  running = False
-               else:
-                  self.interface.right_window_display_warning()               
-                  answer_category = self.interface.display_textpad(y+3,1,3)
+               if answer_category.isdigit() == False or int(answer_category) not in categories.keys():
+                  self.interface.right_window_display_warning()
+                  answer_category = self.interface.display_textpad(y+3,1,3)              
                   running = True
-      
+               else:
+                  running = False
+
+            answer_category = int(answer_category)
+            answer_category = categories.get(answer_category)
+                        
             self.interface.left_window_display_string(y+5, cfg.S_A_NAME_FOOD_ITEM)
             answer_name = self.interface.display_textpad(y+7,1,25)
             answer_name = sql.query_settings(answer_name)
@@ -103,10 +118,12 @@ class UserDialog:
             answer_code = self.interface.display_textpad(y+15, 1, 14)
             answer_code = sql.query_settings(answer_code)
 
-            self.item_search = [answer_category, answer_name, answer_brand, answer_code]
-            self.interface.right_window_display_info("Selection : {}, {}, {}, {}".format(answer_category, answer_name, answer_brand, answer_code))
-           
-            # Query for a substitution food item
+            item_search = [answer_category, answer_name, answer_brand, answer_code]
+            
+            product_details = self.queries.get_product(cq.query_searched_item, item_search)
+            
+            # Displays the answers fetched from the local DB
+
             # Propose to record the substitution food item
          elif answer == cfg.S_A_OPERATE_ON_DB[1]:
             # Query for getting a recorded food item
@@ -169,3 +186,4 @@ def main(user):
 if __name__ == "__main__":
    user = UserDialog()
    main(user)
+   

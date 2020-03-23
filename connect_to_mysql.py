@@ -26,9 +26,22 @@ class MySQLQueries:
             categories.update({int(key) : category})
         return categories
     
+    def get_product(self, query, searched_item):
+        products = []
+        query = query.format(searched_item[0], searched_item[1], searched_item[2], searched_item[3])
+        self.cursor.execute(query)
+        results = self.cursor.fetchmany(size = 20)
+        counter  = 1
+        for result in results:
+            result = {int(counter) : result}
+            products.append(result)
+            counter += 1
+        return products
+    
     def get_numbers_on_DB(self,query):
         self.cursor.execute(query)
         result = self.cursor.fetchmany()
+        print(result[0][0])
         return result[0][0]
 
     # Method used to upload only ONE item in the local DB.
@@ -45,16 +58,20 @@ class MySQLQueries:
     def close_connection(self):
         self.cursor.close()
 
-#query.upload_products()
-#query.get_categories()
-
 def query_settings(answer):
-    if answer == "" or answer == " ":
-        return "*"
-    else:
-        return answer
+    temporary_list = []
+    item_features = []
+    temporary_list = answer.strip().split(" ")
+    temporary_list = ["%"+word+"%" for word in temporary_list]
+    item_features = " ".join(temporary_list)
+    return item_features
+
+def query_research_set_up():
+    pass
 
 
 if __name__ == "__main__":
     requete = MySQLQueries()
-    categories = requete.get_categories()
+    #searched_item = ("Snacks", "%", "Carrefour", "%")
+    #products = requete.get_product(cq.query_searched_item, searched_item)
+    #print(products)

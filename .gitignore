@@ -2,3 +2,7 @@ venv
 .vscode
 venv/lib
 __pycache__
+__pycache__/config_queries.cpython-38.pyc
+__pycache__/config.cpython-38.pyc
+__pycache__/connect_to_mysql.cpython-38.pyc
+__pycache__/interface_management.cpython-38.pyc
