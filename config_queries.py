@@ -7,6 +7,6 @@ query_upload_new_category = """INSERT INTO category (name) VALUES ("{}")"""
 query_upload_new_category_products = """REPLACE INTO product (brand, name, category_id, code, nutrition_grade, stores, ingredients) \
         VALUES (%s, %s, (SELECT idcategory FROM category WHERE name = %s), %s, %s, %s, %s)"""
 
-query_searched_item = """SELECT LEFT(product.name,40), product.brand, product.nutrition_grade, product.code FROM category, product WHERE category.name = \"{}\" AND product.name LIKE \"{}\" AND product.brand LIKE \"{}\" AND product.code LIKE \"{}\" ORDER BY product.name ASC, product.nutrition_grade ASC LIMIT 20"""
+query_searched_item = """SELECT LEFT(product.name,40), product.brand, product.nutrition_grade, product.code FROM category, product WHERE category.name = \"{}\" AND product.name LIKE \"{}\" AND product.brand LIKE \"{}\" AND product.code LIKE \"{}\" ORDER BY product.name ASC, product.nutrition_grade ASC LIMIT 10"""
 
 query_retrieve_available_categories = """SELECT DISTINCT category.idcategory, category.name FROM category RIGHT JOIN product ON category.idcategory = product.category_id"""

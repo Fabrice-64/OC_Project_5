@@ -30,7 +30,7 @@ class MySQLQueries:
         products = []
         query = query.format(searched_item[0], searched_item[1], searched_item[2], searched_item[3])
         self.cursor.execute(query)
-        results = self.cursor.fetchmany(size = 20)
+        results = self.cursor.fetchmany(size = 10)
         counter  = 1
         for result in results:
             result = {int(counter) : result}

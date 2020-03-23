@@ -120,10 +120,22 @@ class UserDialog:
 
             item_search = [answer_category, answer_name, answer_brand, answer_code]
             
-            product_details = self.queries.get_product(cq.query_searched_item, item_search)
+            detailed_products = self.queries.get_product(cq.query_searched_item, item_search)
             
             # Displays the answers fetched from the local DB
+            self.interface.clear_window("right")
+            self.interface.right_window_display_result("Here is a selection of food items we have found:\n")
+            for item in detailed_products:
+               for (key, values) in item.items():
+                  self.interface.right_window_display_result("{}:  {}\n".format(key, values[0]))
+                  self.interface.right_window_display_result("Brand: {}, Nutrition grade: {}\n".format(values[1], values[2]))
+                  self.interface.right_window_display_result("\n")
+                  time.sleep(1)
 
+            self.interface.left_window_display_string(y+17, "Please Enter the Food Item you wish to compare with:\n")
+            answer_code = self.interface.display_textpad(y+19, 1, 3)
+
+            time.sleep(3)
             # Propose to record the substitution food item
          elif answer == cfg.S_A_OPERATE_ON_DB[1]:
             # Query for getting a recorded food item
