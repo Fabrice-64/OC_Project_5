@@ -118,11 +118,14 @@ class UserDialog:
             answer_code = self.interface.display_textpad(y+15, 1, 14)
             answer_code = sql.query_settings(answer_code)
 
+            answer_nutrition_grade = ""
+
             item_search = [answer_category, answer_name, answer_brand, answer_code]
-            
             detailed_products = self.queries.get_product(cq.query_searched_item, item_search)
-            
+
             # Displays the answers fetched from the local DB
+            list_selection = []
+            list_item = []
             self.interface.clear_window("right")
             self.interface.right_window_display_result("Here is a selection of food items we have found:\n")
             for item in detailed_products:
@@ -130,12 +133,30 @@ class UserDialog:
                   self.interface.right_window_display_result("{}:  {}\n".format(key, values[0]))
                   self.interface.right_window_display_result("Brand: {}, Nutrition grade: {}\n".format(values[1], values[2]))
                   self.interface.right_window_display_result("\n")
-                  time.sleep(1)
+                  list_item = [key, values]
+               list_selection.append(list_item)
+               time.sleep(1)
 
             self.interface.left_window_display_string(y+17, "Please Enter the Food Item you wish to compare with:\n")
-            answer_code = self.interface.display_textpad(y+19, 1, 3)
+            answer_compared_item = self.interface.display_textpad(y+19, 1, 3)
 
+            item_key_list = [key for item in detailed_products for key in item]
+            running = True
+            while running:
+               answer_compared_item = self.ascii_to_string(answer_compared_item)
+               if answer_compared_item.isdigit() == False or int(answer_compared_item) not in item_key_list:
+                  self.interface.right_window_display_warning()
+                  answer_compared_item = self.interface.display_textpad(y+19,1,3)              
+                  running = True
+               else:
+                  running = False
+               answer_compared_item = int(answer_compared_item)
+               answer_name, answer_brand, answer_nutrition_grade, answer_code = list_selection[answer_compared_item-1][1]
+
+            result = f" cat: {answer_category}, name: {answer_name}, nutriscore: {answer_nutrition_grade}"
+            self.interface.right_window_display_info(result)
             time.sleep(3)
+
             # Propose to record the substitution food item
          elif answer == cfg.S_A_OPERATE_ON_DB[1]:
             # Query for getting a recorded food item

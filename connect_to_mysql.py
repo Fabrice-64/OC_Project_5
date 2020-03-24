@@ -37,7 +37,12 @@ class MySQLQueries:
             products.append(result)
             counter += 1
         return products
-    
+
+    def get_best_product(self, query, best_product):
+
+        pass
+
+
     def get_numbers_on_DB(self,query):
         self.cursor.execute(query)
         result = self.cursor.fetchmany()
@@ -72,6 +77,6 @@ def query_research_set_up():
 
 if __name__ == "__main__":
     requete = MySQLQueries()
-    #searched_item = ("Snacks", "%", "Carrefour", "%")
-    #products = requete.get_product(cq.query_searched_item, searched_item)
-    #print(products)
+    searched_item = ("Snacks", "%", "Carrefour", "%")
+    products = requete.get_product(cq.query_searched_item, searched_item)
+    print(products)

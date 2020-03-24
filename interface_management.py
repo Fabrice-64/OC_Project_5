@@ -83,6 +83,7 @@ class Interface:
         self.inner_right_window = self.right_window.subwin(self.half_win_height -2, self.half_win_width -4,2,self.x_center +4)
         self.right_window.noutrefresh()
         self.screen.refresh()
+        
     def get_cursor_position(self):
         y, x = curses.getsyx()
         return y,x
