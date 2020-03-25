@@ -251,7 +251,4 @@ class Interface:
         curses.endwin()
         exit()
     
-def display_terms_conditions(self):
-    cwd = os.getcwd()
-    file_location = str('file:'+ cwd + '/terms_conditions_users.pdf')
-    webbrowser.open(file_location,new=1)
+

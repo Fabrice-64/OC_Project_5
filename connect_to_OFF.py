@@ -23,6 +23,7 @@ Then the url for this product is rebuilt and recorded in the exchange file.
 import requests
 import json
 import config_open_food_facts as coff
+import webbrowser
 
 class ConnectToOFF:
     def __init__(self):
@@ -99,6 +100,14 @@ class ConnectToOFF:
                     self.OFF_category_list.append(name)
                     counter += 1     
         return self.OFF_category_list
+    
+    def open_product_file_OFF (self, code_product):
+        product_location = str(coff.OFF_PRODUCT_ADDRESS + code_product)
+        webbrowser.open(product_location,new=1)
 
 if __name__ == "__main__":
     connection = ConnectToOFF()
+
+    code_product = '3760151013287'
+
+    connection.open_product_file_OFF(code_product)

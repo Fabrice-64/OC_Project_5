@@ -22,3 +22,5 @@ URL_STATIC = 'https://fr.openfoodfacts.org/categories.json'
 STATIC_TAG = 'tags'
 STATIC_FIELD_0 = 'name'
 STATIC_VOLUME = 15
+
+OFF_PRODUCT_ADDRESS = "https://world.openfoodfacts.org/product/"

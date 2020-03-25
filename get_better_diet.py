@@ -164,14 +164,53 @@ class UserDialog:
             self.interface.clear_window("left")
             self.interface.clear_window("right")
             self.interface.display_users_guide_textpad()
-
+            index_list_best_products = []
             for item in list_best_products:
                self.interface.right_window_display_result("{}:  {}\n".format(item[0], item[1][0]))
                self.interface.right_window_display_result("Brand: {}, Nutrition grade: {}\n".format(item[1][1], item[1][2]))
                self.interface.right_window_display_result("Stores: {}\n".format(item[1][4]))
                self.interface.right_window_display_result("\n")
+               index_list_best_products.append(str(item[0]))
+            self.interface.right_window_display_info(str(index_list_best_products))
 
-            self.interface.left_window_display_string(0,"Do you want to record a result for further use?")
+            y = 0
+            self.interface.left_window_display_string(0,"Do you want to process the results ?\n")
+            self.interface.left_window_display_string(1, "Press Y to continue, N for the main menu.\n")
+            process_result = self.interface.display_textpad(y + 4, 1, 2)
+            running = True
+            while running:
+               process_result = self.ascii_to_string(process_result)
+               if process_result not in ["Y","y", "N","n"]:
+                  self.interface.right_window_display_warning()
+                  process_result = self.interface.display_textpad(y+3,1,3)              
+                  running = True
+               else:
+                  if process_result in ["N", "n"]:
+                     self.interface.right_window_display_info("You are going back to the main menu.\n")
+                     running = False
+                     user.step_select_action()
+                  else:
+                     running = False
+            y = 0
+            self.interface.clear_window("left")
+            self.interface.left_window_display_string(y, "Please select the item you want check on the official website:\n")
+            check_item = self.interface.display_textpad(y+3, 1, 2)
+            running = True
+            while running:
+               check_item = self.ascii_to_string(check_item)
+               if check_item not in index_list_best_products:
+                  self.interface.right_window_display_warning()
+                  check_item = self.interface.display_textpad(y+3,1,2)              
+                  running = True
+               else: 
+                  # Call the hyperlink to open the product file in the browser
+                  check_item = int(check_item)
+                  code_product = list_best_products[check_item-1][1][3]
+                  self.OFF.open_product_file_OFF(code_product)
+                  running = False
+
+            self.interface.left_window_display_string(y+5, "Do you want to record this item for further use?")
+
 
             #result = f" cat: {answer_category}, name: {answer_name}, nutriscore: {answer_nutrition_grade}"
             #self.interface.right_window_display_info(str(sql_result))
