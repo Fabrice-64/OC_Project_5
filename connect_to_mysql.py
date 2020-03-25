@@ -39,8 +39,10 @@ class MySQLQueries:
         return products
 
     def get_best_product(self, query, best_product):
-
-        pass
+        query = query.format(best_product[0], best_product[1], best_product[2])
+        self.cursor.execute(query)
+        result = self.cursor.fetchmany(size = 10)
+        return result
 
 
     def get_numbers_on_DB(self,query):

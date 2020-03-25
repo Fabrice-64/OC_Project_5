@@ -150,11 +150,19 @@ class UserDialog:
                   running = True
                else:
                   running = False
-               answer_compared_item = int(answer_compared_item)
-               answer_name, answer_brand, answer_nutrition_grade, answer_code = list_selection[answer_compared_item-1][1]
 
-            result = f" cat: {answer_category}, name: {answer_name}, nutriscore: {answer_nutrition_grade}"
-            self.interface.right_window_display_info(result)
+            answer_compared_item = int(answer_compared_item)
+            sql_result = []
+            sql_result.append(answer_category)
+            for item in list_selection[answer_compared_item-1][1]:
+              item = sql.query_settings(item)
+              sql_result.append(item)
+            sql_result = tuple(sql_result)
+
+            
+
+            #result = f" cat: {answer_category}, name: {answer_name}, nutriscore: {answer_nutrition_grade}"
+            self.interface.right_window_display_info(str(sql_result))
             time.sleep(3)
 
             # Propose to record the substitution food item
