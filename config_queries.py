@@ -9,6 +9,6 @@ query_upload_new_category_products = """REPLACE INTO product (brand, name, categ
 
 query_searched_item = """SELECT LEFT(product.name,40), product.brand, product.nutrition_grade, product.code FROM category, product WHERE category.name = \"{}\" AND product.name LIKE \"{}\" AND product.brand LIKE \"{}\" AND product.code LIKE \"{}\" ORDER BY product.nutrition_grade ASC LIMIT 10"""
 
-query_best_item = """SELECT LEFT(product.name,40), product.brand, product.nutrition_grade, product.code, product.stores FROM category, product WHERE category.name = \"{}\" AND product.name LIKE \"{}\" AND product.brand LIKE \"{}\" AND product.code LIKE \"{}\" AND product.nutrition_grade <= \"{}\" ORDER BY product.nutrition_grade ASC LIMIT 10"""
+query_best_product = """SELECT LEFT(product.name,40), product.brand, product.nutrition_grade, product.code, product.stores FROM category, product WHERE category.name = \"{}\" AND product.name LIKE \"{}\" AND product.nutrition_grade <= \"{}\" ORDER BY product.nutrition_grade ASC LIMIT 5"""
 
 query_retrieve_available_categories = """SELECT DISTINCT category.idcategory, category.name FROM category RIGHT JOIN product ON category.idcategory = product.category_id"""

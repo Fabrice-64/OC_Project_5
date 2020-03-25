@@ -154,15 +154,27 @@ class UserDialog:
             answer_compared_item = int(answer_compared_item)
             sql_result = []
             sql_result.append(answer_category)
-            for item in list_selection[answer_compared_item-1][1]:
-              item = sql.query_settings(item)
-              sql_result.append(item)
+            sql_result.append(sql.query_settings(list_selection[answer_compared_item-1][1][0]))
+            sql_result.append(list_selection[answer_compared_item-1][1][2])
             sql_result = tuple(sql_result)
-
+            #self.interface.right_window_display_info(str(sql_result))
+            list_best_products = self.queries.get_best_product(cq.query_best_product, sql_result)
+            #self.interface.right_window_display_info(str(list_best_products))
             
+            self.interface.clear_window("left")
+            self.interface.clear_window("right")
+            self.interface.display_users_guide_textpad()
+
+            for item in list_best_products:
+               self.interface.right_window_display_result("{}:  {}\n".format(item[0], item[1][0]))
+               self.interface.right_window_display_result("Brand: {}, Nutrition grade: {}\n".format(item[1][1], item[1][2]))
+               self.interface.right_window_display_result("Stores: {}\n".format(item[1][4]))
+               self.interface.right_window_display_result("\n")
+
+            self.interface.left_window_display_string(0,"Do you want to record a result for further use?")
 
             #result = f" cat: {answer_category}, name: {answer_name}, nutriscore: {answer_nutrition_grade}"
-            self.interface.right_window_display_info(str(sql_result))
+            #self.interface.right_window_display_info(str(sql_result))
             time.sleep(3)
 
             # Propose to record the substitution food item
