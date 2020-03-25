@@ -80,48 +80,57 @@ class UserDialog:
             self.interface.title_bar(cfg.TITLE_3)
             self.interface.clear_window("right")
             self.interface.clear_window("left")
-            y = 0    
-            self.interface.left_window_display_string(y, cfg.KEYPAD_INSTRUCTION_1)
-            self.interface.left_window_display_string(y+1, cfg.S_A_SELECT_CATEGORY)
-            self.interface.display_users_guide_textpad()   
+
             categories = self.queries.get_categories(cq.query_retrieve_available_categories)
             for (key, category) in categories.items():
                self.interface.right_window_display_result("{}:  {}\n".format(key, category))
             
-            # In interface.display_textpad(y, nblines, nbcols), the y is incremented by 1 for every new line
-            # The y is where the texpad starts, the number of lines and cols to select the category
-            
-            # Fill the required fields to characterize the food item the user is looking for
-            answer_category = self.interface.display_textpad(y+3,1,3)
-            running = True
-            while running:
-               answer_category = self.ascii_to_string(answer_category)
-               if answer_category.isdigit() == False or int(answer_category) not in categories.keys():
-                  self.interface.right_window_display_warning()
-                  answer_category = self.interface.display_textpad(y+3,1,3)              
-                  running = True
+            running_data_not_null = True
+            while running_data_not_null:
+               y = 0    
+               self.interface.left_window_display_string(y, cfg.KEYPAD_INSTRUCTION_1)
+               self.interface.left_window_display_string(y+1, cfg.S_A_SELECT_CATEGORY)
+               self.interface.display_users_guide_textpad()   
+                              
+               # In interface.display_textpad(y, nblines, nbcols), the y is incremented by 1 for every new line
+               # The y is where the texpad starts, the number of lines and cols to select the category
+               
+               # Fill the required fields to characterize the food item the user is looking for
+               answer_category = self.interface.display_textpad(y+3,1,3)
+               running = True
+               while running:
+                  answer_category = self.ascii_to_string(answer_category)
+                  if answer_category.isdigit() == False or int(answer_category) not in categories.keys():
+                     self.interface.right_window_display_warning()
+                     answer_category = self.interface.display_textpad(y+3,1,3)              
+                     running = True
+                  else:
+                     running = False
+
+               answer_category = int(answer_category)
+               answer_category = categories.get(answer_category)
+                           
+               self.interface.left_window_display_string(y+5, cfg.S_A_NAME_FOOD_ITEM)
+               answer_name = self.interface.display_textpad(y+7,1,25)
+               answer_name = sql.query_settings(answer_name)
+
+               self.interface.left_window_display_string(y+9, cfg.S_A_NAME_ITEM_BRAND)
+               answer_brand = self.interface.display_textpad(y+11, 1, 25)
+               answer_brand = sql.query_settings(answer_brand)
+
+               self.interface.left_window_display_string(y+13, cfg.S_A_NAME_ITEM_CODE)
+               answer_code = self.interface.display_textpad(y+15, 1, 14)
+               answer_code = sql.query_settings(answer_code)
+
+               answer_nutrition_grade = ""
+
+               item_search = [answer_category, answer_name, answer_brand, answer_code]
+               detailed_products = self.queries.get_product(cq.query_searched_item, item_search)
+
+               if len(detailed_products) > 0:
+                  running_data_not_null = False
                else:
-                  running = False
-
-            answer_category = int(answer_category)
-            answer_category = categories.get(answer_category)
-                        
-            self.interface.left_window_display_string(y+5, cfg.S_A_NAME_FOOD_ITEM)
-            answer_name = self.interface.display_textpad(y+7,1,25)
-            answer_name = sql.query_settings(answer_name)
-
-            self.interface.left_window_display_string(y+9, cfg.S_A_NAME_ITEM_BRAND)
-            answer_brand = self.interface.display_textpad(y+11, 1, 25)
-            answer_brand = sql.query_settings(answer_brand)
-
-            self.interface.left_window_display_string(y+13, cfg.S_A_NAME_ITEM_CODE)
-            answer_code = self.interface.display_textpad(y+15, 1, 14)
-            answer_code = sql.query_settings(answer_code)
-
-            answer_nutrition_grade = ""
-
-            item_search = [answer_category, answer_name, answer_brand, answer_code]
-            detailed_products = self.queries.get_product(cq.query_searched_item, item_search)
+                  self.interface.right_window_display_warning()
 
             # Displays the answers fetched from the local DB
             list_selection = []
@@ -135,7 +144,7 @@ class UserDialog:
                   self.interface.right_window_display_result("\n")
                   list_item = [key, values]
                list_selection.append(list_item)
-               time.sleep(1)
+               time.sleep(1)               
 
             self.interface.left_window_display_string(y+17, "Please Enter the Food Item you wish to compare with:\n")
             answer_compared_item = self.interface.display_textpad(y+19, 1, 3)
@@ -171,7 +180,7 @@ class UserDialog:
                self.interface.right_window_display_result("Stores: {}\n".format(item[1][4]))
                self.interface.right_window_display_result("\n")
                index_list_best_products.append(str(item[0]))
-            self.interface.right_window_display_info(str(index_list_best_products))
+           
 
             y = 0
             self.interface.left_window_display_string(0,"Do you want to process the results ?\n")
@@ -188,9 +197,10 @@ class UserDialog:
                   if process_result in ["N", "n"]:
                      self.interface.right_window_display_info("You are going back to the main menu.\n")
                      running = False
+                     time.sleep(2)
                      user.step_select_action()
                   else:
-                     running = False
+                     running = True
             y = 0
             self.interface.clear_window("left")
             self.interface.left_window_display_string(y, "Please select the item you want check on the official website:\n")
@@ -209,7 +219,24 @@ class UserDialog:
                   self.OFF.open_product_file_OFF(code_product)
                   running = False
 
+            # Process for recording an item in the local DB
             self.interface.left_window_display_string(y+5, "Do you want to record this item for further use?")
+            decide_record_item = self.interface.display_textpad(y+7, 1, 2)
+            running = True
+            while running:
+               decide_record_item = self.ascii_to_string(decide_record_item)
+               if decide_record_item not in ["Y","y", "N","n"]:
+                  self.interface.right_window_display_warning()
+                  decide_record_item = self.interface.display_textpad(y+3,1,3)              
+                  running = True
+               else:
+                  if decide_record_item in ["N", "n"]:
+                     self.interface.right_window_display_info("You are going back to the main menu.\n")
+                     time.sleep(2)
+                     user.step_select_action()
+                  else:
+                     
+                     running = True
 
 
             #result = f" cat: {answer_category}, name: {answer_name}, nutriscore: {answer_nutrition_grade}"
