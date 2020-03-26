@@ -11,6 +11,7 @@ import config_open_food_facts as coff
 import config_queries as cq
 import config as cfg
 import time
+from datetime import datetime
 
 class UserDialog:
    def __init__(self):
@@ -200,10 +201,11 @@ class UserDialog:
                      time.sleep(2)
                      user.step_select_action()
                   else:
-                     running = True
+                     running = False
+
             y = 0
             self.interface.clear_window("left")
-            self.interface.left_window_display_string(y, "Please select the item you want check on the official website:\n")
+            self.interface.left_window_display_string(y, "Please select the item you want to check on the official website:\n")
             check_item = self.interface.display_textpad(y+3, 1, 2)
             running = True
             while running:
@@ -227,26 +229,75 @@ class UserDialog:
                decide_record_item = self.ascii_to_string(decide_record_item)
                if decide_record_item not in ["Y","y", "N","n"]:
                   self.interface.right_window_display_warning()
-                  decide_record_item = self.interface.display_textpad(y+3,1,3)              
+                  decide_record_item = self.interface.display_textpad(y+7,1,2)              
                   running = True
                else:
                   if decide_record_item in ["N", "n"]:
                      self.interface.right_window_display_info("You are going back to the main menu.\n")
                      time.sleep(2)
                      user.step_select_action()
-                  else:
-                     
-                     running = True
+                  elif decide_record_item in ["y", "Y"]:
+                     record_date_time = datetime.now()
+                     record_date_time = record_date_time.strftime('%Y-%m-%d %H:%M:%S')
+                     running = False
 
-
-            #result = f" cat: {answer_category}, name: {answer_name}, nutriscore: {answer_nutrition_grade}"
-            #self.interface.right_window_display_info(str(sql_result))
-            time.sleep(3)
+            best_product_record  = code_product, record_date_time
+            self.queries.upload_product(cq.query_record_best_product, best_product_record)
+            self.interface.right_window_display_info("Your selection is about to be recorded")
+            time.sleep(2)
+            user.step_select_action()
 
             # Propose to record the substitution food item
          elif answer == cfg.S_A_OPERATE_ON_DB[1]:
-            # Query for getting a recorded food item
-            pass
+            self.interface.clear_window("left")
+            self.interface.clear_window("right")
+            last_recorded_products = self.queries.retrieve_recorded_products(cq.query_retrieve_recorded_product)
+            index_list_products = []
+            for item in last_recorded_products:
+               self.interface.right_window_display_result("{}:  {}\n".format(item[0], item[1][0]))
+               self.interface.right_window_display_result("Brand: {}, Nutrition grade: {}\n".format(item[1][1], item[1][2]))
+               self.interface.right_window_display_result("Stores: {}\n".format(item[1][4]))
+               self.interface.right_window_display_result("\n")
+               index_list_products.append(str(item[0]))
+
+            running_recorded_products = True
+            while running_recorded_products:
+               y = 0
+               self.interface.left_window_display_string(y,"Here are your last records\n")
+               self.interface.left_window_display_string(y+1, "Please select the item you want to check on the official website:\n")
+               
+               check_item = self.interface.display_textpad(y+3, 1, 2)
+               running = True
+               while running:
+                  check_item = self.ascii_to_string(check_item)
+                  if check_item not in index_list_products:
+                     self.interface.right_window_display_warning()
+                     check_item = self.interface.display_textpad(y+3,1,2)              
+                     running = True
+                  else: 
+                     # Calls the hyperlink to open the product file in the browser
+                     check_item = int(check_item)
+                     code_product = last_recorded_products[check_item-1][1][3]
+                     self.OFF.open_product_file_OFF(code_product)
+
+                  self.interface.clear_window("left")
+                  self.interface.left_window_display_string(y, "Do you want to select another food item?\n")
+                  process_result = self.interface.display_textpad(y + 2, 1, 2)
+                  running = True
+                  while running:
+                     process_result = self.ascii_to_string(process_result)
+                     if process_result not in ["Y","y", "N","n"]:
+                        self.interface.right_window_display_warning()
+                        process_result = self.interface.display_textpad(y+2,1,2)              
+                        running = True
+                     else:
+                        if process_result in ["N", "n"]:
+                           self.interface.right_window_display_info("You are going back to the main menu.\n")
+                           time.sleep(1)
+                           user.step_select_action()
+                        else:
+                           running = False
+
          elif answer == cfg.S_A_OPERATE_ON_DB[2]:
             y = 0
             self.interface.clear_window("left")

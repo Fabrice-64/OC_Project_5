@@ -50,6 +50,18 @@ class MySQLQueries:
             best_products.append(result_list)
             counter += 1
         return best_products
+    
+    def retrieve_recorded_products(self, query):
+        recorded_products = []
+        result = []
+        self.cursor.execute(query)
+        results = self.cursor.fetchmany(size = 5)
+        counter = 1
+        for result in results:
+            result_list = [int(counter), result]
+            recorded_products.append(result_list)
+            counter += 1
+        return recorded_products
 
 
     def get_numbers_on_DB(self,query):
@@ -60,7 +72,7 @@ class MySQLQueries:
 
     # Method used to upload only ONE item in the local DB.
     def upload_product(self, query, item):
-        query = query.format(item)
+        query = query.format(item[0], item[1])
         self.cursor.execute(query)
         self.cnx.commit()
 
@@ -86,6 +98,7 @@ def query_research_set_up():
 
 if __name__ == "__main__":
     requete = MySQLQueries()
-    searched_item = ("Snacks", "%", "Carrefour", "%")
-    products = requete.get_product(cq.query_searched_item, searched_item)
-    print(products)
+    query = cq.query_record_best_product
+    item = ('3596710308996', '2020-03-26 21:34:34')
+    best_product = requete.upload_product(cq.query_record_best_product, item)
+    print(best_product)
