@@ -105,11 +105,16 @@ class Interface:
         self.inner_left_window.addstr(y, 0, string)
         self.inner_left_window.refresh()
     
-    def clear_window(self, window):
+    def clear_window(self, window = "both"):
         if window == "left":
             self.inner_left_window.clear()
             self.inner_left_window.refresh()
         elif window == "right":
+            self.inner_right_window.clear()
+            self.inner_right_window.refresh()
+        elif window == "both":
+            self.inner_left_window.clear()
+            self.inner_left_window.refresh()
             self.inner_right_window.clear()
             self.inner_right_window.refresh()
 

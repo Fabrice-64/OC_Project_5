@@ -70,8 +70,7 @@ class UserDialog:
       self.interface.title_bar(cfg.TITLE_2)
       running_main = True
       while running_main:
-         self.interface.clear_window('left')
-         self.interface.clear_window('right')
+         self.interface.clear_window()
          self.interface.left_window_display_string(0, cfg.S_A_INFO_LINE_1)
          self.interface.right_window_display_result("The results will be displayed in this window\n")
          answer = self.interface.set_up_drop_down(cfg.S_A_OPERATE_ON_DB,cfg.SELECT_ANSWER)
@@ -79,9 +78,8 @@ class UserDialog:
          
          if answer == cfg.S_A_OPERATE_ON_DB[0]:
             self.interface.title_bar(cfg.TITLE_3)
-            self.interface.clear_window("right")
-            self.interface.clear_window("left")
-
+            self.interface.clear_window()
+           
             categories = self.queries.get_categories(cq.query_retrieve_available_categories)
             for (key, category) in categories.items():
                self.interface.right_window_display_result("{}:  {}\n".format(key, category))
@@ -171,8 +169,7 @@ class UserDialog:
             list_best_products = self.queries.get_best_product(cq.query_best_product, sql_result)
             #self.interface.right_window_display_info(str(list_best_products))
             
-            self.interface.clear_window("left")
-            self.interface.clear_window("right")
+            self.interface.clear_window()
             self.interface.display_users_guide_textpad()
             index_list_best_products = []
             for item in list_best_products:
@@ -249,8 +246,7 @@ class UserDialog:
 
             # Propose to record the substitution food item
          elif answer == cfg.S_A_OPERATE_ON_DB[1]:
-            self.interface.clear_window("left")
-            self.interface.clear_window("right")
+            self.interface.clear_window()
             last_recorded_products = self.queries.retrieve_recorded_products(cq.query_retrieve_recorded_product)
             index_list_products = []
             for item in last_recorded_products:
@@ -300,8 +296,7 @@ class UserDialog:
 
          elif answer == cfg.S_A_OPERATE_ON_DB[2]:
             y = 0
-            self.interface.clear_window("left")
-            self.interface.clear_window("right")
+            self.interface.clear_window()
             self.interface.left_window_display_string(y, cfg.S_A_INFO_ADD_NEW_CATEGORY)
             # A short sample of OFF categories is imported and displayed in the right window
             self.categories = self.queries.get_categories(cq.query_categories)
