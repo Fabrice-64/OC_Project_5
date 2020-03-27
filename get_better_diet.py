@@ -53,7 +53,7 @@ class UserDialog:
          answer_category = self.interface.display_textpad(y+3,1,3)
          answer_category = self.ascii_to_string(answer_category)
          if answer_category.isdigit() == False or int(answer_category)  not in categories.keys():
-            self.interface.right_window_display_info("warning", cfg.WARNING_MESSAGE_0)             
+            self.interface.right_window_display_info(cfg.WARNING_MESSAGE_0, "warning")             
             running = True
          elif answer_category == "" or " ":
             answer_category = sql.query_settings(answer_category)
@@ -100,7 +100,7 @@ class UserDialog:
                while running:
                   answer_category = self.ascii_to_string(answer_category)
                   if answer_category.isdigit() == False or int(answer_category) not in categories.keys():
-                     self.interface.right_window_display_info("warning", cfg.WARNING_MESSAGE_0)
+                     self.interface.right_window_display_info(cfg.WARNING_MESSAGE_0, "warning")
                      answer_category = self.interface.display_textpad(y+3,1,3)              
                      running = True
                   else:
@@ -129,7 +129,7 @@ class UserDialog:
                if len(detailed_products) > 0:
                   running_data_not_null = False
                else:
-                  self.interface.right_window_display_info("warning", cfg.WARNING_MESSAGE_0)
+                  self.interface.right_window_display_info(cfg.WARNING_MESSAGE_0,"warning")
 
             # Displays the answers fetched from the local DB
             list_selection = []
@@ -153,7 +153,7 @@ class UserDialog:
             while running:
                answer_compared_item = self.ascii_to_string(answer_compared_item)
                if answer_compared_item.isdigit() == False or int(answer_compared_item) not in item_key_list:
-                  self.interface.right_window_display_info("warning", cfg.WARNING_MESSAGE_0)
+                  self.interface.right_window_display_info(cfg.WARNING_MESSAGE_0, "warning")
                   answer_compared_item = self.interface.display_textpad(y+19,1,3)              
                   running = True
                else:
@@ -179,8 +179,8 @@ class UserDialog:
            
 
             y = 0
-            self.interface.left_window_display_string(0,"Do you want to process the results ?\n")
-            self.interface.left_window_display_string(1, "Press Y to continue, N for the main menu.\n")
+            self.interface.left_window_display_string(y,"Do you want to process the results ?\n")
+            self.interface.left_window_display_string(y+1, "Press Y to continue, N for the main menu.\n")
             process_result = self.interface.display_textpad(y + 4, 1, 2)
             running = True
             while running:
@@ -206,7 +206,7 @@ class UserDialog:
             while running:
                check_item = self.ascii_to_string(check_item)
                if check_item not in index_list_best_products:
-                  self.interface.right_window_display_info("warning", cfg.WARNING_MESSAGE_0)
+                  self.interface.right_window_display_info(cfg.WARNING_MESSAGE_0,"warning")
                   check_item = self.interface.display_textpad(y+3,1,2)              
                   running = True
                else: 
@@ -223,7 +223,7 @@ class UserDialog:
             while running:
                decide_record_item = self.ascii_to_string(decide_record_item)
                if decide_record_item not in ["Y","y", "N","n"]:
-                  self.interface.right_window_display_info("warning", cfg.WARNING_MESSAGE_0)
+                  self.interface.right_window_display_info(cfg.WARNING_MESSAGE_0,"warning")
                   decide_record_item = self.interface.display_textpad(y+7,1,2)              
                   running = True
                else:
@@ -234,12 +234,12 @@ class UserDialog:
                   elif decide_record_item in ["y", "Y"]:
                      record_date_time = datetime.now()
                      record_date_time = record_date_time.strftime('%Y-%m-%d %H:%M:%S')
-                     running = False
-
-            best_product_record  = code_product, record_date_time
-            self.queries.upload_product(cq.query_record_best_product, best_product_record)
-            self.interface.right_window_display_info(cfg.S_A_PROCESSING_RECORD)
-            time.sleep(2)
+                     best_product_record  = code_product, record_date_time
+                     self.queries.upload_product(cq.query_record_best_product, best_product_record)
+                     
+                     
+               self.interface.right_window_display_info(cfg.S_A_PROCESSING_RECORD)
+               running = False
             user.step_select_action()
 
             # Propose to record the substitution food item
@@ -264,7 +264,7 @@ class UserDialog:
                while running:
                   check_item = self.ascii_to_string(check_item)
                   if check_item not in index_list_products:
-                     self.interface.right_window_display_info("warning", cfg.WARNING_MESSAGE_0)
+                     self.interface.right_window_display_info(cfg.WARNING_MESSAGE_0,"warning")
                      check_item = self.interface.display_textpad(y+3,1,2)              
                      running = True
                   else: 
@@ -281,7 +281,7 @@ class UserDialog:
                      while running_approval:
                         process_result = self.ascii_to_string(process_result)
                         if process_result not in ["Y","y", "N","n"]:
-                           self.interface.right_window_display_info("warning", cfg.WARNING_MESSAGE_0)
+                           self.interface.right_window_display_info(cfg.WARNING_MESSAGE_0,"warning")
                            process_result = self.interface.display_textpad(y+2,1,2)              
                            running_approval = True
                         else:

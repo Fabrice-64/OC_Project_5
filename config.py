@@ -25,7 +25,7 @@ S_A_OPERATE_ON_DB = ["Search for substitution food", "Find a previous search", "
 
 S_A_NUMBER_DOWNLOADED_ITEMS = '{} food items have been downloaded from Open Food Facts'
 
-S_A_PROCESSING_RECORD = "Your selection is about to be recorded\n"
+S_A_PROCESSING_RECORD = "Your selection is about to be recorded"
 
 # These are the dialog strings to select a substition food item
 TITLE_3 = "Looking for a substitution food item"

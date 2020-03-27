@@ -134,14 +134,17 @@ class Interface:
         self.inner_right_window.addstr(string)
         self.inner_right_window.refresh()
 
-    def right_window_display_info(self, type = "info", message = ""):
+    def right_window_display_info(self, message, type = "info"):
         y, x = self.inner_right_window.getmaxyx()
+        #self.inner_right_window.scrollok(0)
         if type == "warning":
-            self.inner_right_window.attron(curses.color_pair(3))
-            self.inner_right_window.addstr(y-1, 0, message)
-            self.inner_right_window.attroff(curses.color_pair(3))
+            color_pair = curses.color_pair(3)
         elif type == "info":
-            self.inner_right_window.addstr(y-1, 0, message)
+            color_pair = curses.color_pair(2)
+            
+        self.inner_right_window.attron(color_pair)
+        self.inner_right_window.addstr(y-1, 0, message)
+        self.inner_right_window.attroff(color_pair)
         self.inner_right_window.refresh()
         self.inner_right_window.getch()
         self.inner_right_window.move(y-1,0)
