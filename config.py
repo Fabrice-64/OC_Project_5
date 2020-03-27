@@ -21,7 +21,7 @@ T_C_IF_REFUSAL = "If you do not accept the Terms and Conditions, you'll quit aut
 # These are the dialog strings related to the step dealing with the actions to be conducted
 TITLE_2 = "Working with the Databases"
 S_A_INFO_LINE_1 = "Please select in the list below the action you are interested in\n"
-S_A_OPERATE_ON_DB = ["Search for substitution food", "Find a previous search", "Upload a new category", "Quit"]
+S_A_OPERATE_ON_DB = ["Look for a substitution food item", "Get to the previous searches", "Upload a new category", "Quit"]
 
 S_A_NUMBER_DOWNLOADED_ITEMS = '{} food items have been downloaded from Open Food Facts'
 

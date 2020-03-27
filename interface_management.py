@@ -83,15 +83,7 @@ class Interface:
         self.inner_right_window = self.right_window.subwin(self.half_win_height -2, self.half_win_width -4,2,self.x_center +4)
         self.right_window.noutrefresh()
         self.screen.refresh()
-        
-    def get_cursor_position(self):
-        y, x = curses.getsyx()
-        return y,x
-    
-    def set_cursor_position(self,y,x):
-        self.inner_left_window.move(0,x)
-        self.inner_left_window.refresh()
-        
+             
     def display_message(self, message):
         curses.curs_set(0)
         self.message = " ".join(message)
@@ -136,12 +128,10 @@ class Interface:
 
     def right_window_display_info(self, message, type = "info"):
         y, x = self.inner_right_window.getmaxyx()
-        #self.inner_right_window.scrollok(0)
         if type == "warning":
             color_pair = curses.color_pair(3)
         elif type == "info":
             color_pair = curses.color_pair(2)
-            
         self.inner_right_window.attron(color_pair)
         self.inner_right_window.addstr(y-1, 0, message)
         self.inner_right_window.attroff(color_pair)
