@@ -107,7 +107,6 @@ class ConnectToOFF:
 
 if __name__ == "__main__":
     connection = ConnectToOFF()
+    
 
-    code_product = '3760151013287'
-
-    connection.open_product_file_OFF(code_product)
+    

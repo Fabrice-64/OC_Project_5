@@ -67,7 +67,6 @@ class MySQLQueries:
     def get_numbers_on_DB(self,query):
         self.cursor.execute(query)
         result = self.cursor.fetchmany()
-        print(result[0][0])
         return result[0][0]
 
     # Method used to upload only ONE item in the local DB.

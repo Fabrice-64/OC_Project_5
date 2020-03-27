@@ -31,7 +31,7 @@ class UserDialog:
       answer = self.interface.set_up_drop_down(cfg.REPLY_YES_NO, cfg.SELECT_ANSWER)
       if answer == "Yes":
          self.interface.clear_window('left')
-         self.interface.left_window_display_string(y, "You have decided to go on with the program")
+         self.interface.left_window_display_string(y, "You have decided to go on with the program\n")
          time.sleep(1)
       elif answer == "No":
          self.interface.quit_display()
@@ -331,7 +331,7 @@ class UserDialog:
             # This is where the excerpt of OFF is uploaded in the local DB
             self.queries.upload_dataset(cq.query_upload_new_category_products, list_items)
             nb_rows = self.queries.get_numbers_on_DB(cq.query_count_rows)
-            self.interface.right_window_display_info(cfg.S_A_NUMBER_DOWNLOADED_ITEMS.format(nb_rows))
+            self.interface.right_window_display_info(cfg.S_A_SIZE_LOCAL_DB.format(nb_rows))
             time.sleep(1)
             running = False
 

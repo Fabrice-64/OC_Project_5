@@ -23,7 +23,7 @@ TITLE_2 = "Working with the Databases"
 S_A_INFO_LINE_1 = "Please select in the list below the action you are interested in\n"
 S_A_OPERATE_ON_DB = ["Look for a substitution food item", "Get to the previous searches", "Upload a new category", "Quit"]
 
-S_A_NUMBER_DOWNLOADED_ITEMS = '{} food items have been downloaded from Open Food Facts'
+S_A_SIZE_LOCAL_DB = 'Your loca database currently counts : {} food items'
 
 S_A_PROCESSING_RECORD = "Your selection is about to be recorded"
 
