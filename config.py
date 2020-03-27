@@ -23,6 +23,10 @@ TITLE_2 = "Working with the Databases"
 S_A_INFO_LINE_1 = "Please select in the list below the action you are interested in\n"
 S_A_OPERATE_ON_DB = ["Search for substitution food", "Find a previous search", "Upload a new category", "Quit"]
 
+S_A_NUMBER_DOWNLOADED_ITEMS = '{} food items have been downloaded from Open Food Facts'
+
+S_A_PROCESSING_RECORD = "Your selection is about to be recorded\n"
+
 # These are the dialog strings to select a substition food item
 TITLE_3 = "Looking for a substitution food item"
 S_A_SELECT_CATEGORY = "Please type the number of the selected category if you wish to:\n"
@@ -49,3 +53,8 @@ KEYPAD_INSTRUCTION_1 = "Please input your selection in the box below\n"
 
 SELECT_ANSWER = "Please select the appropriate answer and press ENTER\n"
 REPLY_YES_NO = ["Yes","No"]
+
+WARNING_MESSAGE_0 = """PLEASE ENTER A CORRECT VALUE"""
+
+# Miscellaneous messages.
+BACK_MAIN_MENU = "You are going back to the main menu.\n"

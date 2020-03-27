@@ -134,20 +134,14 @@ class Interface:
         self.inner_right_window.addstr(string)
         self.inner_right_window.refresh()
 
-    def right_window_display_warning(self):
+    def right_window_display_info(self, type = "info", message = ""):
         y, x = self.inner_right_window.getmaxyx()
-        self.inner_right_window.attron(curses.color_pair(3))
-        self.inner_right_window.addstr(y-1, 0, "PLEASE ENTER A CORRECT VALUE")
-        self.inner_right_window.attroff(curses.color_pair(3))
-        self.inner_right_window.refresh()
-        self.inner_right_window.getch()
-        self.inner_right_window.move(y-1,0)
-        self.inner_right_window.clrtoeol()
-        self.inner_right_window.refresh()
-    
-    def right_window_display_info(self, info_string):
-        y, x = self.inner_right_window.getmaxyx()
-        self.inner_right_window.addstr(y-1, 0, info_string)
+        if type == "warning":
+            self.inner_right_window.attron(curses.color_pair(3))
+            self.inner_right_window.addstr(y-1, 0, message)
+            self.inner_right_window.attroff(curses.color_pair(3))
+        elif type == "info":
+            self.inner_right_window.addstr(y-1, 0, message)
         self.inner_right_window.refresh()
         self.inner_right_window.getch()
         self.inner_right_window.move(y-1,0)

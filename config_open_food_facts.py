@@ -3,6 +3,8 @@ This module encompasses all the parameters needed for Open Food Facts API
 """
 
 # Updload data from Open Food Facts
+NUMBER_REJECTED_ITEMS = '{} food items have rejected because of bad data'
+NUMBER_DOWNLOADED_ITEMS = '{} food items have been downloaded from Open Food Facts'
 
 # This is to limit the import of data to 1 page & avoid to overload the local DB.
 OFF_PAGE = 1

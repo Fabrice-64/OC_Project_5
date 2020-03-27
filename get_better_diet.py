@@ -53,7 +53,7 @@ class UserDialog:
          answer_category = self.interface.display_textpad(y+3,1,3)
          answer_category = self.ascii_to_string(answer_category)
          if answer_category.isdigit() == False or int(answer_category)  not in categories.keys():
-            self.interface.right_window_display_warning()               
+            self.interface.right_window_display_info("warning", cfg.WARNING_MESSAGE_0)             
             running = True
          elif answer_category == "" or " ":
             answer_category = sql.query_settings(answer_category)
@@ -100,7 +100,7 @@ class UserDialog:
                while running:
                   answer_category = self.ascii_to_string(answer_category)
                   if answer_category.isdigit() == False or int(answer_category) not in categories.keys():
-                     self.interface.right_window_display_warning()
+                     self.interface.right_window_display_info("warning", cfg.WARNING_MESSAGE_0)
                      answer_category = self.interface.display_textpad(y+3,1,3)              
                      running = True
                   else:
@@ -129,7 +129,7 @@ class UserDialog:
                if len(detailed_products) > 0:
                   running_data_not_null = False
                else:
-                  self.interface.right_window_display_warning()
+                  self.interface.right_window_display_info("warning", cfg.WARNING_MESSAGE_0)
 
             # Displays the answers fetched from the local DB
             list_selection = []
@@ -153,7 +153,7 @@ class UserDialog:
             while running:
                answer_compared_item = self.ascii_to_string(answer_compared_item)
                if answer_compared_item.isdigit() == False or int(answer_compared_item) not in item_key_list:
-                  self.interface.right_window_display_warning()
+                  self.interface.right_window_display_info("warning", cfg.WARNING_MESSAGE_0)
                   answer_compared_item = self.interface.display_textpad(y+19,1,3)              
                   running = True
                else:
@@ -165,10 +165,8 @@ class UserDialog:
             sql_result.append(sql.query_settings(list_selection[answer_compared_item-1][1][0]))
             sql_result.append(list_selection[answer_compared_item-1][1][2])
             sql_result = tuple(sql_result)
-            #self.interface.right_window_display_info(str(sql_result))
             list_best_products = self.queries.get_best_product(cq.query_best_product, sql_result)
-            #self.interface.right_window_display_info(str(list_best_products))
-            
+                        
             self.interface.clear_window()
             self.interface.display_users_guide_textpad()
             index_list_best_products = []
@@ -188,12 +186,12 @@ class UserDialog:
             while running:
                process_result = self.ascii_to_string(process_result)
                if process_result not in ["Y","y", "N","n"]:
-                  self.interface.right_window_display_warning()
+                  self.interface.right_window_display_info("warning", cfg.WARNING_MESSAGE_0)
                   process_result = self.interface.display_textpad(y+3,1,3)              
                   running = True
                else:
                   if process_result in ["N", "n"]:
-                     self.interface.right_window_display_info("You are going back to the main menu.\n")
+                     self.interface.right_window_display_info( cfg.BACK_MAIN_MENU)
                      running = False
                      time.sleep(2)
                      user.step_select_action()
@@ -208,7 +206,7 @@ class UserDialog:
             while running:
                check_item = self.ascii_to_string(check_item)
                if check_item not in index_list_best_products:
-                  self.interface.right_window_display_warning()
+                  self.interface.right_window_display_info("warning", cfg.WARNING_MESSAGE_0)
                   check_item = self.interface.display_textpad(y+3,1,2)              
                   running = True
                else: 
@@ -225,12 +223,12 @@ class UserDialog:
             while running:
                decide_record_item = self.ascii_to_string(decide_record_item)
                if decide_record_item not in ["Y","y", "N","n"]:
-                  self.interface.right_window_display_warning()
+                  self.interface.right_window_display_info("warning", cfg.WARNING_MESSAGE_0)
                   decide_record_item = self.interface.display_textpad(y+7,1,2)              
                   running = True
                else:
                   if decide_record_item in ["N", "n"]:
-                     self.interface.right_window_display_info("You are going back to the main menu.\n")
+                     self.interface.right_window_display_info(cfg.BACK_MAIN_MENU)
                      time.sleep(2)
                      user.step_select_action()
                   elif decide_record_item in ["y", "Y"]:
@@ -240,7 +238,7 @@ class UserDialog:
 
             best_product_record  = code_product, record_date_time
             self.queries.upload_product(cq.query_record_best_product, best_product_record)
-            self.interface.right_window_display_info("Your selection is about to be recorded")
+            self.interface.right_window_display_info(cfg.S_A_PROCESSING_RECORD)
             time.sleep(2)
             user.step_select_action()
 
@@ -261,13 +259,12 @@ class UserDialog:
                y = 0
                self.interface.left_window_display_string(y,"Here are your last records\n")
                self.interface.left_window_display_string(y+1, "Please select the item you want to check on the official website:\n")
-               
                check_item = self.interface.display_textpad(y+3, 1, 2)
                running = True
                while running:
                   check_item = self.ascii_to_string(check_item)
                   if check_item not in index_list_products:
-                     self.interface.right_window_display_warning()
+                     self.interface.right_window_display_info("warning", cfg.WARNING_MESSAGE_0)
                      check_item = self.interface.display_textpad(y+3,1,2)              
                      running = True
                   else: 
@@ -276,24 +273,27 @@ class UserDialog:
                      code_product = last_recorded_products[check_item-1][1][3]
                      self.OFF.open_product_file_OFF(code_product)
 
-                  self.interface.clear_window("left")
-                  self.interface.left_window_display_string(y, "Do you want to select another food item?\n")
-                  process_result = self.interface.display_textpad(y + 2, 1, 2)
-                  running = True
-                  while running:
-                     process_result = self.ascii_to_string(process_result)
-                     if process_result not in ["Y","y", "N","n"]:
-                        self.interface.right_window_display_warning()
-                        process_result = self.interface.display_textpad(y+2,1,2)              
-                        running = True
-                     else:
-                        if process_result in ["N", "n"]:
-                           self.interface.right_window_display_info("You are going back to the main menu.\n")
-                           time.sleep(1)
-                           user.step_select_action()
-                        else:
-                           running = False
+                     self.interface.clear_window("left")
+                     self.interface.left_window_display_string(y, "Do you want to select another food item?\n")
+                     process_result = self.interface.display_textpad(y + 2, 1, 2)
 
+                     running_approval = True
+                     while running_approval:
+                        process_result = self.ascii_to_string(process_result)
+                        if process_result not in ["Y","y", "N","n"]:
+                           self.interface.right_window_display_info("warning", cfg.WARNING_MESSAGE_0)
+                           process_result = self.interface.display_textpad(y+2,1,2)              
+                           running_approval = True
+                        else:
+                           if process_result in ["N", "n"]:
+                              self.interface.right_window_display_info(cfg.BACK_MAIN_MENU)
+                              time.sleep(1)
+                              user.step_select_action()
+                           else:
+                              running_approval = False
+                        running = False
+                     running_recorded_products = True
+                        
          elif answer == cfg.S_A_OPERATE_ON_DB[2]:
             y = 0
             self.interface.clear_window()
@@ -317,7 +317,7 @@ class UserDialog:
                   self.interface.right_window_display_info(display_chosen_category)
                   running = False 
                else:
-                  self.interface.right_window_display_warning()
+                  self.interface.right_window_display_info("warning", cfg.WARNING_MESSAGE_0)
                   answer_category = ""              
                   answer_category = self.interface.display_textpad(y+3,1,3)
                   answer_category = self.ascii_to_string(answer_category)
@@ -325,13 +325,13 @@ class UserDialog:
 
             # This methods fetches a range of data from Open Food Facts
             (nb_imported_items, items_left_apart, list_items) = self.OFF.import_products_list(selected_category)
-            self.interface.right_window_display_info('{} food items have rejected because of bad data'.format(items_left_apart))
-            self.interface.right_window_display_info('{} food items have been downloaded from Open Food Facts'.format(nb_imported_items))
+            self.interface.right_window_display_info(coff.NUMBER_REJECTED_ITEMS.format(items_left_apart))
+            self.interface.right_window_display_info(coff.NUMBER_DOWNLOADED_ITEMS.format(nb_imported_items))
             
             # This is where the excerpt of OFF is uploaded in the local DB
             self.queries.upload_dataset(cq.query_upload_new_category_products, list_items)
             nb_rows = self.queries.get_numbers_on_DB(cq.query_count_rows)
-            self.interface.right_window_display_info('Now your local database counts {} food items'.format(nb_rows))
+            self.interface.right_window_display_info(cfg.S_A_NUMBER_DOWNLOADED_ITEMS.format(nb_rows))
             time.sleep(1)
             running = False
 
