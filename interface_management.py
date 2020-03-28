@@ -232,8 +232,7 @@ class Interface:
             Returns:
             It doesn't return anything
         """
-        self.clear_window('left')
-        self.clear_window('right')
+        self.clear_window()
         self.left_window_display_string(0, "The program will quit in a few seconds")
         time.sleep(1)
         self.screen.clear()

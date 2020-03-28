@@ -31,7 +31,7 @@ class UserDialog:
       answer = self.interface.set_up_drop_down(cfg.REPLY_YES_NO, cfg.SELECT_ANSWER)
       if answer == "Yes":
          self.interface.clear_window('left')
-         self.interface.left_window_display_string(y, "You have decided to go on with the program\n")
+         self.interface.left_window_display_string(y, cfg.T_C_APPROVAL)
          time.sleep(1)
       elif answer == "No":
          self.interface.quit_display()
@@ -72,7 +72,7 @@ class UserDialog:
       while running_main:
          self.interface.clear_window()
          self.interface.left_window_display_string(0, cfg.S_A_INFO_LINE_1)
-         self.interface.right_window_display_result("The results will be displayed in this window\n")
+         self.interface.right_window_display_result(cfg.S_A_INFO_LOC_DISPLAY_RESULTS)
          answer = self.interface.set_up_drop_down(cfg.S_A_OPERATE_ON_DB,cfg.SELECT_ANSWER)
          time.sleep(1)
          
@@ -82,7 +82,7 @@ class UserDialog:
            
             categories = self.queries.get_categories(cq.query_retrieve_available_categories)
             for (key, category) in categories.items():
-               self.interface.right_window_display_result("{}:  {}\n".format(key, category))
+               self.interface.right_window_display_result(cfg.S_A_INDEX_NAME.format(key, category))
             
             running_data_not_null = True
             while running_data_not_null:
@@ -135,17 +135,16 @@ class UserDialog:
             list_selection = []
             list_item = []
             self.interface.clear_window("right")
-            self.interface.right_window_display_result("Here is a selection of food items we have found:\n")
+            self.interface.right_window_display_result(cfg.S_A_INFO_ITEM_SEARCH_OUTCOME)
             for item in detailed_products:
                for (key, values) in item.items():
-                  self.interface.right_window_display_result("{}:  {}\n".format(key, values[0]))
-                  self.interface.right_window_display_result("Brand: {}, Nutrition grade: {}\n".format(values[1], values[2]))
+                  self.interface.right_window_display_result(cfg.S_A_INDEX_NAME .format(key, values[0]))
+                  self.interface.right_window_display_result(cfg.S_A_DISPLAY_BRAND_NUTRISCORE.format(values[1], values[2]))
                   self.interface.right_window_display_result("\n")
                   list_item = [key, values]
-               list_selection.append(list_item)
-               time.sleep(1)               
+               list_selection.append(list_item)            
 
-            self.interface.left_window_display_string(y+17, "Please Enter the Food Item you wish to compare with:\n")
+            self.interface.left_window_display_string(y+17, cfg.S_A_COMPARE_FOOD_ITEMS)
             answer_compared_item = self.interface.display_textpad(y+19, 1, 3)
 
             item_key_list = [key for item in detailed_products for key in item]
@@ -171,22 +170,22 @@ class UserDialog:
             self.interface.display_users_guide_textpad()
             index_list_best_products = []
             for item in list_best_products:
-               self.interface.right_window_display_result("{}:  {}\n".format(item[0], item[1][0]))
-               self.interface.right_window_display_result("Brand: {}, Nutrition grade: {}\n".format(item[1][1], item[1][2]))
-               self.interface.right_window_display_result("Stores: {}\n".format(item[1][4]))
-               self.interface.right_window_display_result("\n")
+               self.interface.right_window_display_result(cfg.S_A_INDEX_NAME .format(item[0], item[1][0]))
+               self.interface.right_window_display_result(cfg.S_A_DISPLAY_BRAND_NUTRISCORE.format(item[1][1], item[1][2]))
+               self.interface.right_window_display_result(cfg.S_A_DISPLAY_STORES.format(item[1][4]))
+               self.interface.right_window_display_result(cfg.S_A_SINGLE_RETURN)
                index_list_best_products.append(str(item[0]))
            
 
             y = 0
-            self.interface.left_window_display_string(y,"Do you want to process the results ?\n")
-            self.interface.left_window_display_string(y+1, "Press Y to continue, N for the main menu.\n")
+            self.interface.left_window_display_string(y,cfg.S_A_ASK_CHECK_DETAILED_RESULTS)
+            self.interface.left_window_display_string(y+1, cfg.SELECT_Y_N)
             process_result = self.interface.display_textpad(y + 4, 1, 2)
             running = True
             while running:
                process_result = self.ascii_to_string(process_result)
                if process_result not in ["Y","y", "N","n"]:
-                  self.interface.right_window_display_info("warning", cfg.WARNING_MESSAGE_0)
+                  self.interface.right_window_display_info(cfg.WARNING_MESSAGE_0, "warning")
                   process_result = self.interface.display_textpad(y+3,1,3)              
                   running = True
                else:
@@ -200,7 +199,7 @@ class UserDialog:
 
             y = 0
             self.interface.clear_window("left")
-            self.interface.left_window_display_string(y, "Please select the item you want to check on the official website:\n")
+            self.interface.left_window_display_string(y, cfg.S_A_USE_BROWSER)
             check_item = self.interface.display_textpad(y+3, 1, 2)
             running = True
             while running:
@@ -217,7 +216,7 @@ class UserDialog:
                   running = False
 
             # Process for recording an item in the local DB
-            self.interface.left_window_display_string(y+5, "Do you want to record this item for further use?")
+            self.interface.left_window_display_string(y+5, cfg.S_A_ASK_RECORD_SELECTED_ITEM)
             decide_record_item = self.interface.display_textpad(y+7, 1, 2)
             running = True
             while running:
@@ -248,17 +247,17 @@ class UserDialog:
             last_recorded_products = self.queries.retrieve_recorded_products(cq.query_retrieve_recorded_product)
             index_list_products = []
             for item in last_recorded_products:
-               self.interface.right_window_display_result("{}:  {}\n".format(item[0], item[1][0]))
-               self.interface.right_window_display_result("Brand: {}, Nutrition grade: {}\n".format(item[1][1], item[1][2]))
-               self.interface.right_window_display_result("Stores: {}\n".format(item[1][4]))
-               self.interface.right_window_display_result("\n")
+               self.interface.right_window_display_result(cfg.S_A_INDEX_NAME .format(item[0], item[1][0]))
+               self.interface.right_window_display_result(cfg.S_A_DISPLAY_BRAND_NUTRISCORE.format(item[1][1], item[1][2]))
+               self.interface.right_window_display_result(cfg.S_A_DISPLAY_STORES.format(item[1][4]))
+               self.interface.right_window_display_result(cfg.S_A_SINGLE_RETURN)
                index_list_products.append(str(item[0]))
 
             running_recorded_products = True
             while running_recorded_products:
                y = 0
-               self.interface.left_window_display_string(y,"Here are your last records\n")
-               self.interface.left_window_display_string(y+1, "Please select the item you want to check on the official website:\n")
+               self.interface.left_window_display_string(y,cfg.S_A_INFO_LAST_RECORDS )
+               self.interface.left_window_display_string(y+1, cfg.S_A_USE_BROWSER)
                check_item = self.interface.display_textpad(y+3, 1, 2)
                running = True
                while running:
@@ -274,7 +273,7 @@ class UserDialog:
                      self.OFF.open_product_file_OFF(code_product)
 
                      self.interface.clear_window("left")
-                     self.interface.left_window_display_string(y, "Do you want to select another food item?\n")
+                     self.interface.left_window_display_string(y, cfg.S_A_GO_ON_CHECK_FOOD_ITEMS_Y_N)
                      process_result = self.interface.display_textpad(y + 2, 1, 2)
 
                      running_approval = True
@@ -302,7 +301,7 @@ class UserDialog:
             self.categories = self.queries.get_categories(cq.query_categories)
             y_categories = 0
             for (key, value) in self.categories.items():
-               self.interface.right_window_display_result("{}:  {}\n".format(key, value))
+               self.interface.right_window_display_result(cfg.S_A_INDEX_NAME .format(key, value))
 
             self.interface.display_users_guide_textpad()
             # The user is requested to designate a category to be uploaded
@@ -317,7 +316,7 @@ class UserDialog:
                   self.interface.right_window_display_info(display_chosen_category)
                   running = False 
                else:
-                  self.interface.right_window_display_info("warning", cfg.WARNING_MESSAGE_0)
+                  self.interface.right_window_display_info(cfg.WARNING_MESSAGE_0,"warning")
                   answer_category = ""              
                   answer_category = self.interface.display_textpad(y+3,1,3)
                   answer_category = self.ascii_to_string(answer_category)
@@ -345,7 +344,7 @@ def main(user):
    user.interface.display_message(cfg.WELCOME_MESSAGE)
    time.sleep(1)
    user.interface.split_screen(cfg.TITLE_0)
-   user.step_terms_and_conditions("Documentation/texte_T&C.txt")
+   user.step_terms_and_conditions(cfg.T_C_FILE)
    user.step_select_action()
    
 if __name__ == "__main__":
