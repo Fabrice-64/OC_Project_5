@@ -28,7 +28,7 @@ S_A_OPERATE_ON_DB = ["Look for a substitution food item", "Get to the previous s
 
 S_A_SIZE_LOCAL_DB = 'Your loca database currently counts : {} food items'
 
-S_A_PROCESSING_RECORD = "Your selection is about to be recorded"
+S_A_PROCESSING_RECORD = "Your selection is about to be recorded."
 
 # These are the dialog strings to select a substition food item
 TITLE_3 = "Looking for a substitution food item"
@@ -46,7 +46,7 @@ S_A_SINGLE_RETURN = "\n"
 
 # These are the dialog strings dealing with the DB consultation.
 S_A_ASK_CHECK_DETAILED_RESULTS = "Do you want to check the result on the Web and record it (Y/N)?\n"
-S_A_ASK_RECORD_SELECTED_ITEM = "Do you want to record this research for further use (Y/N)?"
+S_A_ASK_RECORD_SELECTED_ITEM = "Do you want to record this research for further use (Y/N)\n?"
 
 # These are the dialog strings to download and upload an excerpt of Open Food Facts DB
 S_A_INFO_ADD_NEW_CATEGORY = "You ought to look into Open Food Facts which category you want to add to your local DB."
@@ -77,4 +77,4 @@ REPLY_YES_NO = ["Yes","No"]
 WARNING_MESSAGE_0 = "PLEASE ENTER A CORRECT VALUE"
 
 # Miscellaneous messages.
-BACK_MAIN_MENU = "You are going back to the main menu.\n"
+BACK_MAIN_MENU = "You are going back to the main menu."

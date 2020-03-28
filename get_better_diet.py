@@ -145,24 +145,24 @@ class UserDialog:
                list_selection.append(list_item)            
 
             self.interface.left_window_display_string(y+17, cfg.S_A_COMPARE_FOOD_ITEMS)
-            answer_compared_item = self.interface.display_textpad(y+19, 1, 3)
+            index_reference_item = self.interface.display_textpad(y+19, 1, 3)
 
             item_key_list = [key for item in detailed_products for key in item]
             running = True
             while running:
-               answer_compared_item = self.ascii_to_string(answer_compared_item)
-               if answer_compared_item.isdigit() == False or int(answer_compared_item) not in item_key_list:
+               index_reference_item = self.ascii_to_string(index_reference_item)
+               if index_reference_item.isdigit() == False or int(index_reference_item) not in item_key_list:
                   self.interface.right_window_display_info(cfg.WARNING_MESSAGE_0, "warning")
-                  answer_compared_item = self.interface.display_textpad(y+19,1,3)              
+                  index_reference_item = self.interface.display_textpad(y+19,1,3)              
                   running = True
                else:
                   running = False
 
-            answer_compared_item = int(answer_compared_item)
+            index_reference_item = int(index_reference_item)
             sql_result = []
             sql_result.append(answer_category)
-            sql_result.append(sql.query_settings(list_selection[answer_compared_item-1][1][0]))
-            sql_result.append(list_selection[answer_compared_item-1][1][2])
+            sql_result.append(sql.query_settings(list_selection[index_reference_item-1][1][0]))
+            sql_result.append(list_selection[index_reference_item-1][1][2])
             sql_result = tuple(sql_result)
             list_best_products = self.queries.get_best_product(cq.query_best_product, sql_result)
                         
@@ -233,7 +233,7 @@ class UserDialog:
                   elif decide_record_item in ["y", "Y"]:
                      record_date_time = datetime.now()
                      record_date_time = record_date_time.strftime('%Y-%m-%d %H:%M:%S')
-                     best_product_record  = code_product, record_date_time
+                     best_product_record  = code_product, record_date_time, list_selection[index_reference_item -1][1][3]
                      self.queries.upload_product(cq.query_record_best_product, best_product_record)
                      
                      

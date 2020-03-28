@@ -71,7 +71,7 @@ class MySQLQueries:
 
     # Method used to upload only ONE item in the local DB.
     def upload_product(self, query, item):
-        query = query.format(item[0], item[1])
+        query = query.format(item[0], item[1], item[2])
         self.cursor.execute(query)
         self.cnx.commit()
 

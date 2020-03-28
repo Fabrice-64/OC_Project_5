@@ -14,6 +14,6 @@ query_best_product = """SELECT LEFT(product.name,40), product.brand, product.nut
 
 query_retrieve_available_categories = """SELECT DISTINCT category.idcategory, category.name FROM category RIGHT JOIN product ON category.idcategory = product.category_id"""
 
-query_record_best_product = """REPLACE INTO best_product VALUES (NULL, {}, '{}')"""
+query_record_best_product = """REPLACE INTO best_product VALUES (NULL, {}, '{}',{})"""
 
 query_retrieve_recorded_product = """SELECT LEFT(product.name,40), product.brand, product.nutrition_grade, product.code, product.stores FROM product JOIN best_product ON best_product.product_id = product.code ORDER BY best_product.query_created ASC LIMIT 5"""
