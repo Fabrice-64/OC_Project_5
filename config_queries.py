@@ -16,4 +16,6 @@ query_retrieve_available_categories = """SELECT DISTINCT category.idcategory, ca
 
 query_record_best_product = """REPLACE INTO best_product VALUES (NULL, {}, '{}',{})"""
 
-query_retrieve_recorded_product = """SELECT LEFT(product.name,40), product.brand, product.nutrition_grade, product.code, product.stores FROM product JOIN best_product ON best_product.product_id = product.code ORDER BY best_product.query_created ASC LIMIT 5"""
+query_retrieve_reference_product = """SELECT LEFT(product.name, 40), product.brand, product.code, best_product.query_created, best_product.reference_product FROM product JOIN best_product ON best_product.product_id =product.code WHERE product.code = {} ORDER BY best_product.query_created ASC"""
+
+query_retrieve_recorded_product = """SELECT LEFT(product.name,40), product.brand, product.nutrition_grade, product.code, product.stores, best_product.query_created FROM product JOIN best_product ON best_product.product_id = product.code ORDER BY best_product.query_created ASC LIMIT 5"""

@@ -142,10 +142,10 @@ class UserDialog:
                   self.interface.right_window_display_result(cfg.S_A_DISPLAY_BRAND_NUTRISCORE.format(values[1], values[2]))
                   self.interface.right_window_display_result("\n")
                   list_item = [key, values]
-               list_selection.append(list_item)            
+               list_selection.append(list_item)  
 
             self.interface.left_window_display_string(y+17, cfg.S_A_COMPARE_FOOD_ITEMS)
-            index_reference_item = self.interface.display_textpad(y+19, 1, 3)
+            index_reference_item = self.interface.display_textpad(y+19, 1, 3)          
 
             item_key_list = [key for item in detailed_products for key in item]
             running = True
@@ -157,11 +157,14 @@ class UserDialog:
                   running = True
                else:
                   running = False
+            
+            self.interface.left_window_display_string(y+21, "Please enter one or two keywords in order to have a larger choice:\n")
+            keywords_item = self.interface.display_textpad(y+23, 1, 25)
 
             index_reference_item = int(index_reference_item)
             sql_result = []
             sql_result.append(answer_category)
-            sql_result.append(sql.query_settings(list_selection[index_reference_item-1][1][0]))
+            sql_result.append(sql.query_settings(keywords_item))
             sql_result.append(list_selection[index_reference_item-1][1][2])
             sql_result = tuple(sql_result)
             list_best_products = self.queries.get_best_product(cq.query_best_product, sql_result)
