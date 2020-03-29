@@ -101,9 +101,9 @@ class UserDialog:
                self.interface.left_window_display_string(y, cfg.KEYPAD_INSTRUCTION_1)
                self.interface.left_window_display_string(y+1, cfg.S_A_SELECT_CATEGORY)
                self.interface.display_users_guide_textpad()   
-                                            
+               y = y+3                            
                # These fields help to characterize the food item the user is looking for
-               answer_category = self.interface.display_textpad(y+3,1,3)
+               answer_category = self.interface.display_textpad(y,1,3)
                
                running = True
                while running:
@@ -111,7 +111,7 @@ class UserDialog:
                   answer_category = self.ascii_to_string(answer_category)
                   if answer_category.isdigit() == False or int(answer_category) not in categories.keys():
                      self.interface.right_window_display_info(cfg.WARNING_MESSAGE_0, "warning")
-                     answer_category = self.interface.display_textpad(y+3,1,3)              
+                     answer_category = self.interface.display_textpad(y,1,3)              
                      running = True
                   else:
                      running = False
@@ -119,17 +119,14 @@ class UserDialog:
                answer_category = int(answer_category)
                answer_category = categories.get(answer_category)
                            
-               self.interface.left_window_display_string(y+5, cfg.S_A_NAME_FOOD_ITEM)
-               answer_name = self.interface.display_textpad(y+7,1,25)
+               answer_name, y = self.interface.left_window_display_string_textpad(5,1,25, cfg.S_A_ITEM_NAME)
                answer_name = sql.query_settings(answer_name)
 
-               self.interface.left_window_display_string(y+9, cfg.S_A_NAME_ITEM_BRAND)
-               answer_brand = self.interface.display_textpad(y+11, 1, 25)
+               answer_brand, y = self.interface.left_window_display_string_textpad(y,1,25, cfg.S_A_ITEM_BRAND)
                answer_brand = sql.query_settings(answer_brand)
 
-               self.interface.left_window_display_string(y+13, cfg.S_A_NAME_ITEM_CODE)
-               answer_code = self.interface.display_textpad(y+15, 1, 14)
-               answer_code = sql.query_settings(answer_code)
+               answer_code, y = self.interface.left_window_display_string_textpad(y,1,13, cfg.S_A_ITEM_CODE)
+               answer_code = sql.query_settings(answer_brand)
 
                answer_nutrition_grade = ""
 
@@ -156,8 +153,7 @@ class UserDialog:
                list_selection.append(list_item)  
 
             # Requests the user to select a food item with which a comparrison is to be made.
-            self.interface.left_window_display_string(y+17, cfg.S_A_COMPARE_FOOD_ITEMS)
-            index_reference_item = self.interface.display_textpad(y+19, 1, 3)          
+            index_reference_item, y = self.interface.left_window_display_string_textpad(y,1,3, cfg.S_A_COMPARE_FOOD_ITEMS)          
 
             item_key_list = [key for item in detailed_products for key in item]
             running = True
@@ -165,16 +161,14 @@ class UserDialog:
                index_reference_item = self.ascii_to_string(index_reference_item)
                if index_reference_item.isdigit() == False or int(index_reference_item) not in item_key_list:
                   self.interface.right_window_display_info(cfg.WARNING_MESSAGE_0, "warning")
-                  index_reference_item = self.interface.display_textpad(y+19,1,3)              
+                  index_reference_item = self.interface.display_textpad(y-2,1,3)              
                   running = True
                else:
                   running = False
             # The user is requested to enter keywords iot broaden the search.
             index_reference_item = int(index_reference_item)
-            #sql_result = []
-            self.interface.left_window_display_string(y+21, cfg.S_A_ADD_KEYWORDS)
-            keywords_item = self.interface.display_textpad(y+23, 1, 25)
-
+            keywords_item, y = self.interface.left_window_display_string_textpad(y, 1, 25, cfg.S_A_ADD_KEYWORDS)
+            
             running= True
             while running:
                # This part prepares the data for looking for the best food items.
@@ -187,7 +181,7 @@ class UserDialog:
                   break
                else:
                   self.interface.right_window_display_info(cfg.WARNING_MESSAGE_1, "warning")
-                  keywords_item = self.interface.display_textpad(y+23, 1, 25)
+                  keywords_item = self.interface.display_textpad(y-2, 1, 25)
                         
             self.interface.clear_window()
             self.interface.display_users_guide_textpad()
@@ -203,14 +197,13 @@ class UserDialog:
             # Here is an interaction with the user, so that he can select the food item he would like to see in detail.
             y = 0
             self.interface.left_window_display_string(y,cfg.S_A_ASK_CHECK_DETAILED_RESULTS)
-            self.interface.left_window_display_string(y+1, cfg.SELECT_Y_N)
-            process_result = self.interface.display_textpad(y + 4, 1, 2)
+            process_result, y = self.interface.left_window_display_string_textpad(y+1,1,2,cfg.SELECT_Y_N)
             running = True
             while running:
                process_result = self.ascii_to_string(process_result)
                if process_result not in ["Y","y", "N","n"]:
                   self.interface.right_window_display_info(cfg.WARNING_MESSAGE_0, "warning")
-                  process_result = self.interface.display_textpad(y+3,1,3)              
+                  process_result = self.interface.display_textpad(y-2,1,3)              
                   running = True
                else:
                   if process_result in ["N", "n"]:

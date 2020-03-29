@@ -96,6 +96,12 @@ class Interface:
     def left_window_display_string(self, y, string):
         self.inner_left_window.addstr(y, 0, string)
         self.inner_left_window.refresh()
+
+    def left_window_display_string_textpad(self, y, nb_lines, length_field, message):
+        self.left_window_display_string(y, message)
+        answer = self.display_textpad(y+2, nb_lines, length_field)
+        y = y + 2 + nb_lines +1
+        return answer, y
     
     def clear_window(self, window = "both"):
         if window == "left":
