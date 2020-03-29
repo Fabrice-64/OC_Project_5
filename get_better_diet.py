@@ -216,7 +216,7 @@ class UserDialog:
                   if process_result in ["N", "n"]:
                      self.interface.right_window_display_info( cfg.BACK_MAIN_MENU)
                      running = False
-                     time.sleep(2)
+                     time.sleep(1)
                      user.step_select_action()
                   else:
                      running = False
@@ -273,8 +273,10 @@ class UserDialog:
             # The number of food items displayed is limited in the query an can be changed.
             for item in last_recorded_products:
                self.interface.right_window_display_result(cfg.S_A_INDEX_NAME .format(item[0], item[1][0]))
-               self.interface.right_window_display_result(cfg.S_A_DISPLAY_BRAND_NUTRISCORE.format(item[1][1], item[1][2]))
+               self.interface.right_window_display_result(cfg.S_A_DISPLAY_BRAND_NUTRISCORE.format(item[1][1], item[1][3]))
                self.interface.right_window_display_result(cfg.S_A_DISPLAY_STORES.format(item[1][4]))
+               self.interface.right_window_display_result("Initial product was: {}\n".format(item[1][6]))
+               self.interface.right_window_display_result("Comparrison was on: {: %d %B %y %H:%M}.\n".format(item[1][5]))
                self.interface.right_window_display_result(cfg.S_A_SINGLE_RETURN)
                index_list_products.append(str(item[0]))
 
@@ -294,7 +296,7 @@ class UserDialog:
                   else: 
                      # Calls the hyperlink to open the product file in the browser.
                      check_item = int(check_item)
-                     code_product = last_recorded_products[check_item-1][1][3]
+                     code_product = last_recorded_products[check_item-1][1][2]
                      self.OFF.open_product_file_OFF(code_product)
 
                      self.interface.clear_window("left")

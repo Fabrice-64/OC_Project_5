@@ -10,11 +10,12 @@ Administrator role:
 import mysql.connector
 import config 
 import config_queries as cq
+import datetime
 
 class MySQLQueries:
     def __init__(self):
         self.cnx = mysql.connector.connect(**config.db_connection_parameters)
-        self.cursor = self.cnx.cursor()
+        self.cursor = self.cnx.cursor(buffered= True)
         self.test_outside = self.cnx.is_connected()
         print("externe :", self.test_outside)
 
@@ -91,13 +92,8 @@ def query_settings(answer):
     item_features = " ".join(temporary_list)
     return item_features
 
-def query_research_set_up():
-    pass
-
-
 if __name__ == "__main__":
     requete = MySQLQueries()
-    query = cq.query_record_best_product
-    item = ('3596710308996', '2020-03-26 21:34:34')
-    best_product = requete.upload_product(cq.query_record_best_product, item)
-    print(best_product)
+    query = cq.query_retrieve_recorded_product
+    result = requete.retrieve_recorded_products(cq.query_retrieve_recorded_product)
+    print(result)
