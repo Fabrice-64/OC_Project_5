@@ -20,6 +20,11 @@ class UserDialog:
       self.OFF = OFF.ConnectToOFF()
 
    def step_terms_and_conditions(self, file):
+      """
+      Accepting the terms and conditions allows to go on, if not: quit.
+
+      """
+
       y = 0
       self.interface.title_bar(cfg.TITLE_1)
       self.interface.left_window_display_string(y, cfg.T_C_LINE_1)
@@ -66,6 +71,9 @@ class UserDialog:
       return answer_category
 
    def step_select_action(self):
+      """
+      This method deals with what is a sort of main menu. It proposses different options to navigate into the app.
+      """
       y = 0
       self.interface.title_bar(cfg.TITLE_2)
       running_main = True
@@ -76,28 +84,29 @@ class UserDialog:
          answer = self.interface.set_up_drop_down(cfg.S_A_OPERATE_ON_DB,cfg.SELECT_ANSWER)
          time.sleep(1)
          
+         #This part deals with the use of the local DB to search and find food items.
          if answer == cfg.S_A_OPERATE_ON_DB[0]:
             self.interface.title_bar(cfg.TITLE_3)
             self.interface.clear_window()
-           
+            # A list of categories previously recorded is displayed on the right window
             categories = self.queries.get_categories(cq.query_retrieve_available_categories)
             for (key, category) in categories.items():
                self.interface.right_window_display_result(cfg.S_A_INDEX_NAME.format(key, category))
             
             running_data_not_null = True
+            # This loop is intended to avoid that a too precise request leads to an empty selection
             while running_data_not_null:
+               # y is the reference coordinate for all the following dialog boxes in this loop.
                y = 0    
                self.interface.left_window_display_string(y, cfg.KEYPAD_INSTRUCTION_1)
                self.interface.left_window_display_string(y+1, cfg.S_A_SELECT_CATEGORY)
                self.interface.display_users_guide_textpad()   
-                              
-               # In interface.display_textpad(y, nblines, nbcols), the y is incremented by 1 for every new line
-               # The y is where the texpad starts, the number of lines and cols to select the category
-               
-               # Fill the required fields to characterize the food item the user is looking for
+                                            
+               # These fields help to characterize the food item the user is looking for
                answer_category = self.interface.display_textpad(y+3,1,3)
                running = True
                while running:
+                  # The category is the only field which is compulsary
                   answer_category = self.ascii_to_string(answer_category)
                   if answer_category.isdigit() == False or int(answer_category) not in categories.keys():
                      self.interface.right_window_display_info(cfg.WARNING_MESSAGE_0, "warning")
@@ -126,6 +135,7 @@ class UserDialog:
                item_search = [answer_category, answer_name, answer_brand, answer_code]
                detailed_products = self.queries.get_product(cq.query_searched_item, item_search)
 
+               # This refers to the top of the loop, so one avoids getting 0 choice
                if len(detailed_products) > 0:
                   running_data_not_null = False
                else:
@@ -140,10 +150,11 @@ class UserDialog:
                for (key, values) in item.items():
                   self.interface.right_window_display_result(cfg.S_A_INDEX_NAME .format(key, values[0]))
                   self.interface.right_window_display_result(cfg.S_A_DISPLAY_BRAND_NUTRISCORE.format(values[1], values[2]))
-                  self.interface.right_window_display_result("\n")
+                  self.interface.right_window_display_result(cfg.S_A_SINGLE_RETURN)
                   list_item = [key, values]
                list_selection.append(list_item)  
 
+            # Requests the user to select a food item with which a comparrison is to be made.
             self.interface.left_window_display_string(y+17, cfg.S_A_COMPARE_FOOD_ITEMS)
             index_reference_item = self.interface.display_textpad(y+19, 1, 3)          
 
@@ -157,10 +168,11 @@ class UserDialog:
                   running = True
                else:
                   running = False
-            
-            self.interface.left_window_display_string(y+21, "Please enter one or two keywords in order to have a larger choice:\n")
+            # The user is requested to enter keywords iot broaden the search.
+            self.interface.left_window_display_string(y+21, cfg.S_A_ADD_KEYWORDS)
             keywords_item = self.interface.display_textpad(y+23, 1, 25)
 
+            # This part prepares the data for looking for the best food items.
             index_reference_item = int(index_reference_item)
             sql_result = []
             sql_result.append(answer_category)
@@ -171,6 +183,7 @@ class UserDialog:
                         
             self.interface.clear_window()
             self.interface.display_users_guide_textpad()
+            # This is where all the features of each and every food item are displayed.
             index_list_best_products = []
             for item in list_best_products:
                self.interface.right_window_display_result(cfg.S_A_INDEX_NAME .format(item[0], item[1][0]))
@@ -179,7 +192,7 @@ class UserDialog:
                self.interface.right_window_display_result(cfg.S_A_SINGLE_RETURN)
                index_list_best_products.append(str(item[0]))
            
-
+            # Here is an interaction with the user, so that he can select the food item he would like to see in detail.
             y = 0
             self.interface.left_window_display_string(y,cfg.S_A_ASK_CHECK_DETAILED_RESULTS)
             self.interface.left_window_display_string(y+1, cfg.SELECT_Y_N)
@@ -244,11 +257,12 @@ class UserDialog:
                running = False
             user.step_select_action()
 
-            # Propose to record the substitution food item
+            # This step is where the user gets back to recorded food items
          elif answer == cfg.S_A_OPERATE_ON_DB[1]:
             self.interface.clear_window()
             last_recorded_products = self.queries.retrieve_recorded_products(cq.query_retrieve_recorded_product)
             index_list_products = []
+            # The number of food items displayed is limited in the query an can be changed.
             for item in last_recorded_products:
                self.interface.right_window_display_result(cfg.S_A_INDEX_NAME .format(item[0], item[1][0]))
                self.interface.right_window_display_result(cfg.S_A_DISPLAY_BRAND_NUTRISCORE.format(item[1][1], item[1][2]))
@@ -270,12 +284,13 @@ class UserDialog:
                      check_item = self.interface.display_textpad(y+3,1,2)              
                      running = True
                   else: 
-                     # Calls the hyperlink to open the product file in the browser
+                     # Calls the hyperlink to open the product file in the browser.
                      check_item = int(check_item)
                      code_product = last_recorded_products[check_item-1][1][3]
                      self.OFF.open_product_file_OFF(code_product)
 
                      self.interface.clear_window("left")
+                     # The user is asked whether he wants to check another item.
                      self.interface.left_window_display_string(y, cfg.S_A_GO_ON_CHECK_FOOD_ITEMS_Y_N)
                      process_result = self.interface.display_textpad(y + 2, 1, 2)
 
@@ -295,19 +310,20 @@ class UserDialog:
                               running_approval = False
                         running = False
                      running_recorded_products = True
-                        
+
+         # This part of the program is for adding a new category   
          elif answer == cfg.S_A_OPERATE_ON_DB[2]:
             y = 0
             self.interface.clear_window()
             self.interface.left_window_display_string(y, cfg.S_A_INFO_ADD_NEW_CATEGORY)
-            # A short sample of OFF categories is imported and displayed in the right window
+            # A short sample of OFF categories is imported and displayed in the right window.
             self.categories = self.queries.get_categories(cq.query_categories)
             y_categories = 0
             for (key, value) in self.categories.items():
                self.interface.right_window_display_result(cfg.S_A_INDEX_NAME .format(key, value))
 
             self.interface.display_users_guide_textpad()
-            # The user is requested to designate a category to be uploaded
+            # The user is requested to designate a category to be uploaded.
             answer_category = self.interface.display_textpad(y+3,1,3)
             answer_category = self.ascii_to_string(answer_category)
          
@@ -325,18 +341,20 @@ class UserDialog:
                   answer_category = self.ascii_to_string(answer_category)
                   running = True
 
-            # This methods fetches a range of data from Open Food Facts
+            # This methods fetches a range of data from Open Food Facts.
             (nb_imported_items, items_left_apart, list_items) = self.OFF.import_products_list(selected_category)
+            # Here some pieces of info related to the downloaded data are given for info.
             self.interface.right_window_display_info(coff.NUMBER_REJECTED_ITEMS.format(items_left_apart))
             self.interface.right_window_display_info(coff.NUMBER_DOWNLOADED_ITEMS.format(nb_imported_items))
             
-            # This is where the excerpt of OFF is uploaded in the local DB
+            # This is where the excerpt of OFF is uploaded in the local DB.
             self.queries.upload_dataset(cq.query_upload_new_category_products, list_items)
             nb_rows = self.queries.get_numbers_on_DB(cq.query_count_rows)
             self.interface.right_window_display_info(cfg.S_A_SIZE_LOCAL_DB.format(nb_rows))
             time.sleep(1)
             running = False
 
+         # This last option is to close properly the program and reinitialize the shell.
          elif answer == cfg.S_A_OPERATE_ON_DB[3]:
             self.queries.close_connection()
             self.interface.quit_display()
@@ -344,6 +362,7 @@ class UserDialog:
       time.sleep(1)
 
 def main(user):
+   # The graphic interface is initialized right there.
    user.interface.display_message(cfg.WELCOME_MESSAGE)
    time.sleep(1)
    user.interface.split_screen(cfg.TITLE_0)

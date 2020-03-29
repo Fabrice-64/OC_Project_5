@@ -28,7 +28,7 @@ S_A_OPERATE_ON_DB = ["Look for a substitution food item", "Get to the previous s
 
 S_A_SIZE_LOCAL_DB = 'Your loca database currently counts : {} food items'
 
-S_A_PROCESSING_RECORD = "Your selection is about to be recorded."
+S_A_PROCESSING_RECORD = "Your selection is being recorded."
 
 # These are the dialog strings to select a substition food item
 TITLE_3 = "Looking for a substitution food item"
@@ -38,6 +38,7 @@ S_A_NAME_ITEM_BRAND = "Please name the brand of this food item:\n"
 S_A_NAME_ITEM_CODE = "Please type the id code of the product:\n"
 S_A_INFO_ITEM_SEARCH_OUTCOME = "Here is a selection of food items we have found:\n"
 S_A_COMPARE_FOOD_ITEMS = "Please Enter the Food Item you wish to compare with:\n"
+S_A_ADD_KEYWORDS = "Please enter one or two keywords in order to have a larger choice:\n"
 
 S_A_INDEX_NAME = "{}:  {}\n"
 S_A_DISPLAY_BRAND_NUTRISCORE = "Brand: {}, Nutrition grade: {}\n"
