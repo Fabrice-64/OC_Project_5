@@ -76,6 +76,7 @@ SELECT_Y_N = "Press Y to continue, N to interrupt.\n"
 REPLY_YES_NO = ["Yes","No"]
 
 WARNING_MESSAGE_0 = "PLEASE ENTER A CORRECT VALUE"
+WARNING_MESSAGE_1 = "YOUR SEARCH IS TO RESTRICTIVE, BE LESS SPECIFIC"
 
 # Miscellaneous messages.
 BACK_MAIN_MENU = "You are going back to the main menu."

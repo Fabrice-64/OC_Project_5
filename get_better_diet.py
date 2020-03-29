@@ -104,6 +104,7 @@ class UserDialog:
                                             
                # These fields help to characterize the food item the user is looking for
                answer_category = self.interface.display_textpad(y+3,1,3)
+               
                running = True
                while running:
                   # The category is the only field which is compulsary
@@ -169,17 +170,24 @@ class UserDialog:
                else:
                   running = False
             # The user is requested to enter keywords iot broaden the search.
+            index_reference_item = int(index_reference_item)
+            #sql_result = []
             self.interface.left_window_display_string(y+21, cfg.S_A_ADD_KEYWORDS)
             keywords_item = self.interface.display_textpad(y+23, 1, 25)
 
-            # This part prepares the data for looking for the best food items.
-            index_reference_item = int(index_reference_item)
-            sql_result = []
-            sql_result.append(answer_category)
-            sql_result.append(sql.query_settings(keywords_item))
-            sql_result.append(list_selection[index_reference_item-1][1][2])
-            sql_result = tuple(sql_result)
-            list_best_products = self.queries.get_best_product(cq.query_best_product, sql_result)
+            running= True
+            while running:
+               # This part prepares the data for looking for the best food items.
+               keywords_item = sql.query_settings(keywords_item)
+               sql_result = answer_category, keywords_item, list_selection[index_reference_item-1][1][2]
+               sql_result = tuple(sql_result)
+               list_best_products = self.queries.get_best_product(cq.query_best_product, sql_result)
+               self.interface.right_window_display_info(str(len(list_best_products)))
+               if len(list_best_products) > 0 :
+                  break
+               else:
+                  self.interface.right_window_display_info(cfg.WARNING_MESSAGE_1, "warning")
+                  keywords_item = self.interface.display_textpad(y+23, 1, 25)
                         
             self.interface.clear_window()
             self.interface.display_users_guide_textpad()
