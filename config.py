@@ -26,7 +26,7 @@ S_A_INFO_LINE_1 = "Please select in the list below the action you are interested
 S_A_INFO_LOC_DISPLAY_RESULTS = "The results will be displayed in this window\n"
 S_A_OPERATE_ON_DB = ["Look for a substitution food item", "Get to the previous searches", "Upload a new category", "Quit"]
 
-S_A_SIZE_LOCAL_DB = 'Your loca database currently counts : {} food items'
+S_A_SIZE_LOCAL_DB = 'Your local database currently counts : {} food items'
 
 S_A_PROCESSING_RECORD = "Your selection is being recorded."
 

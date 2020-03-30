@@ -216,14 +216,13 @@ class UserDialog:
 
             y = 0
             self.interface.clear_window("left")
-            self.interface.left_window_display_string(y, cfg.S_A_USE_BROWSER)
-            check_item = self.interface.display_textpad(y+3, 1, 2)
+            check_item, y = self.interface.left_window_display_string_textpad(y,1,2, cfg.S_A_USE_BROWSER)
             running = True
             while running:
                check_item = self.ascii_to_string(check_item)
                if check_item not in index_list_best_products:
                   self.interface.right_window_display_info(cfg.WARNING_MESSAGE_0,"warning")
-                  check_item = self.interface.display_textpad(y+3,1,2)              
+                  check_item = self.interface.display_textpad(y-2,1,2)              
                   running = True
                else: 
                   # Call the hyperlink to open the product file in the browser
@@ -233,14 +232,13 @@ class UserDialog:
                   running = False
 
             # Process for recording an item in the local DB
-            self.interface.left_window_display_string(y+5, cfg.S_A_ASK_RECORD_SELECTED_ITEM)
-            decide_record_item = self.interface.display_textpad(y+7, 1, 2)
+            decide_record_item, y = self.interface.left_window_display_string_textpad(y, 1, 2, cfg.S_A_ASK_RECORD_SELECTED_ITEM)
             running = True
             while running:
                decide_record_item = self.ascii_to_string(decide_record_item)
                if decide_record_item not in ["Y","y", "N","n"]:
                   self.interface.right_window_display_info(cfg.WARNING_MESSAGE_0,"warning")
-                  decide_record_item = self.interface.display_textpad(y+7,1,2)              
+                  decide_record_item = self.interface.display_textpad(y-2,1,2)              
                   running = True
                else:
                   if decide_record_item in ["N", "n"]:
@@ -276,15 +274,14 @@ class UserDialog:
             running_recorded_products = True
             while running_recorded_products:
                y = 0
-               self.interface.left_window_display_string(y,cfg.S_A_INFO_LAST_RECORDS )
-               self.interface.left_window_display_string(y+1, cfg.S_A_USE_BROWSER)
-               check_item = self.interface.display_textpad(y+3, 1, 2)
+               self.interface.left_window_display_string(y, cfg.S_A_INFO_LAST_RECORDS)
+               check_item, y = self.interface.left_window_display_string_textpad(y+1, 1, 2, cfg.S_A_USE_BROWSER)
                running = True
                while running:
                   check_item = self.ascii_to_string(check_item)
                   if check_item not in index_list_products:
                      self.interface.right_window_display_info(cfg.WARNING_MESSAGE_0,"warning")
-                     check_item = self.interface.display_textpad(y+3,1,2)              
+                     check_item = self.interface.display_textpad(y-2, 1, 2)              
                      running = True
                   else: 
                      # Calls the hyperlink to open the product file in the browser.
@@ -292,17 +289,15 @@ class UserDialog:
                      code_product = last_recorded_products[check_item-1][1][2]
                      self.OFF.open_product_file_OFF(code_product)
 
-                     self.interface.clear_window("left")
                      # The user is asked whether he wants to check another item.
-                     self.interface.left_window_display_string(y, cfg.S_A_GO_ON_CHECK_FOOD_ITEMS_Y_N)
-                     process_result = self.interface.display_textpad(y + 2, 1, 2)
-
+                     process_result, y = self.interface.left_window_display_string_textpad(y,1, 2, cfg.S_A_GO_ON_CHECK_FOOD_ITEMS_Y_N)
+                     
                      running_approval = True
                      while running_approval:
                         process_result = self.ascii_to_string(process_result)
                         if process_result not in ["Y","y", "N","n"]:
                            self.interface.right_window_display_info(cfg.WARNING_MESSAGE_0,"warning")
-                           process_result = self.interface.display_textpad(y+2,1,2)              
+                           process_result = self.interface.display_textpad(y-2, 1, 2)              
                            running_approval = True
                         else:
                            if process_result in ["N", "n"]:
@@ -318,7 +313,7 @@ class UserDialog:
          elif answer == cfg.S_A_OPERATE_ON_DB[2]:
             y = 0
             self.interface.clear_window()
-            self.interface.left_window_display_string(y, cfg.S_A_INFO_ADD_NEW_CATEGORY)
+            
             # A short sample of OFF categories is imported and displayed in the right window.
             self.categories = self.queries.get_categories(cq.query_categories)
             y_categories = 0
@@ -327,7 +322,7 @@ class UserDialog:
 
             self.interface.display_users_guide_textpad()
             # The user is requested to designate a category to be uploaded.
-            answer_category = self.interface.display_textpad(y+3,1,3)
+            answer_category, y = self.interface.left_window_display_string_textpad(y,1,3, cfg.S_A_INFO_ADD_NEW_CATEGORY)
             answer_category = self.ascii_to_string(answer_category)
          
             running = True
