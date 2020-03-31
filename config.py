@@ -59,13 +59,13 @@ S_A_GO_ON_CHECK_FOOD_ITEMS_Y_N = "Do you want to select another food item (Y/N?\
 
 
 # These are the keyboard information lines to deal with the textpad
-KEYBOARD_INFO_00 = "User's Guide:"
-KEYBOARD_INFO_0 = "THE NUMERIC KEYPAD IS NOT ACTIVATED" 
-KEYBOARD_INFO_1 = "Press Ctrl+B to have the cursor go left."
-KEYBOARD_INFO_2 = "Press Ctrl+D to delete the character under the cursor."
-KEYBOARD_INFO_3 = "Press Ctrl+H to delete a character backwards."
-KEYBOARD_INFO_4 = "Press Ctrl+E to go to the end of line."
-KEYBOARD_INFO_5 = "Press Ctrl+G or ENTER to terminate the operation."
+USER_GUIDE = [ "User's Guide:",
+    "THE NUMERIC KEYPAD IS NOT ACTIVATED",
+    "Press Ctrl+B to have the cursor go left.",
+    "Press Ctrl+D to delete the character under the cursor.",
+    "Press Ctrl+H to delete a character backwards.",
+    "Press Ctrl+E to go to the end of line.",
+    "Press Ctrl+G or ENTER to terminate the operation."]
 
 #These are the instructions displayed when using the keypad
 KEYPAD_INSTRUCTION_1 = "Please input your selection in the box below.\n"

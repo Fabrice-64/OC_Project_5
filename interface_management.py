@@ -207,13 +207,13 @@ class Interface:
             It doesn't return anything
         """
         y,x = self.inner_left_window.getmaxyx()
-        self.inner_left_window.addstr(y-1, 0, config.KEYBOARD_INFO_1)
-        self.inner_left_window.addstr(y-2, 0, config.KEYBOARD_INFO_2)
-        self.inner_left_window.addstr(y-3, 0, config.KEYBOARD_INFO_3)
-        self.inner_left_window.addstr(y-4, 0, config.KEYBOARD_INFO_4)
-        self.inner_left_window.addstr(y-5,0 , config.KEYBOARD_INFO_5)
-        self.inner_left_window.addstr(y-6, 0, config.KEYBOARD_INFO_0)
-        self.inner_left_window.addstr(y-7, 0, config.KEYBOARD_INFO_00)
+        y = y-1
+        index = -1
+        for line in config.USER_GUIDE:
+            line = config.USER_GUIDE[index]
+            self.inner_left_window.addstr(y, 0, line)
+            y -= 1
+            index -= 1
         self.inner_left_window.refresh()
 
     def display_textpad(self, upper_left_y, nblines, nbcols):
