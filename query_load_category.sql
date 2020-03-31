@@ -1,3 +1,0 @@
-SELECT product.name, product.nutrition_grade, product.stores, product.brand, product.code FROM category, product WHERE category.name = "Aliments d'origine végétale" AND product.name LIKE "%COnfiture%" AND product.nutrition_grade <= "d" ORDER BY product.nutrition_grade ASC LIMIT 50;
-
-SELECT * FROM category;SELECT DISTINCT category.idcategory, category.name FROM category RIGHT JOIN product ON category.idcategory = product.category_id;
