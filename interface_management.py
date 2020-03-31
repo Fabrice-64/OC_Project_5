@@ -1,33 +1,18 @@
 """
-    This module intends to play the role of an interface with the user when navigating in the program.
+    
+    This module manages the graphical interface for the application.
 
-    This module is fed with orders coming form get_better_diet.py module.
-    It encompasses only one class, named Interface.
-Methods:
-    title_bar():    displays a title in the bar at the top of the main window. This title is updated in accordance with the step of the program.
-    split_screen():     splits the screen in two separate windows. In fact each window includes a sub-window in which the text is displayed. 
-    This is demanded when using curses in order to avoid having the text stepping over the borders of the window.
-    display_message():      this method displays a message on the main window, at the center of the screen. Is used for welcome message and for goodbye.
-    left_window_display_string():   this method is set to display an instruction on the left screen.
-    clear_window():     is needed to reinitialize the sub-window and remove the useless text.
-    display_file_right_window():    the right window is used for displaying larger files for which this method allows to scroll them down.
-    right_window_display_result():  the results of the queries sent to the DB are displayed on this window. The outcome is formatted by this method
-    highlight_selection():  when using a drop-down list, this methods highlights the selected item
-    set_up_drop_down():     this method is used in connexion with the method highlight_selection, as it provides the latter with the relevant index. 
-    It activates the key UP and DOWN iot iterate in the menu displayed.
-    quit_display():     as the module Curses activate many features of the shell, this method intends to desactivate all the features activated by the script.
+    As the application is built in a View-Model-Controller logic, this module hosts all the necessary items to manage the View functionalities.
+    This module is fed with orders coming the module named: get_better_diet.py.
 
-Attributes:
-    Most attributes are used to set coordinates useful for displaying the content.
+    Class:
+    Interface : based on curses library it provides a rough but functional graphic interface
 
-    title:  used to display a title in the bar set at the top of the main window
-    half_win_height & half_win_width:   when the main window is split in 2, it sets the size of each half window
-    left_window & right_window:     cover half of the main window
-    inner_left_window and inner_right_window:   are inside the half windows and are uses to better manage the displayed text.
-    message: used to display a message at the center of the screen at welcome and in a future version by exiting the program
-    y_center & x_center:    set the center of the main screen
-    screen_x_center: used to get the x of the center of the main window, whatever the length of the string to be displayed is
-    x_center_half_l_window & y_center_half_l_window:    y & x of the center of the left half window
+    Exceptions:
+    No exception is dealt with in this class.
+
+    Functions:
+    No function has been implemented. All methods belong to the Interface class.
 
 """
 import time
@@ -38,6 +23,70 @@ import config
 from curses import textpad
 
 class Interface:
+    """ 
+
+    The class Interface is used to manage the graphical interface of this application.
+    
+    The integrated library curses is used throughout the class.
+    The main screen is split intoo two halves: 
+    -The left one (from the User perspective) is used for the interaction with him, 
+    -The right one displays the results of the queries or even a warning in some cases.
+    
+    Methods:
+
+        __init__(): initialize the graphic interface to make it usable by the subsequent methods.
+
+        title_bar(): displays a title in the bar at the top of the main window. This title is updated in accordance with the step of the program.
+        
+        split_screen(): splits the screen in two separate windows. 
+        In fact each window includes a sub-window in which the text is displayed. 
+        
+        display_message(): displays a message on the main window, at the center of the screen. Is used for welcome message and for goodbye.
+        
+        left_window_display_string(): this method is set to display an instruction on the left screen.
+
+        left_window_display_string_textpad(): displays an invitation to use the keypad and just below the keypad itself. 
+        It is composed of two other methods:  left_window_display_string() and display_textpad.
+
+        clear_window(): reinitializes the sub-windows.
+
+        display_file_right_window(): the right window is used for displaying larger files for which this method allows to scroll them down.
+        
+        right_window_display_result():  the results of the queries sent to the DB are displayed on this window. The outcome is formatted by this method
+        
+        right_window_display_info(): displays one line long pieces of info at the bottom of the right window.
+
+        highlight_selection():  when using a drop-down list, highlights the selected item.
+
+        set_up_drop_down(): operates the key UP and DOWN iot iterate in the menu displayed.
+
+        display_users_guide_textpad(): displays a short users guide at the bottom of left page
+
+        display_textpad(): displays a textpad used to capture the user's various inputs.
+
+        quit_display(): desactivates in a clean way all the features activated by the use of curses.
+
+    Attributes:
+
+        Most attributes are used to set coordinates useful for displaying the content.
+
+        title: used to display a title in the bar set at the top of the main window
+
+        half_win_height & half_win_width: when the main window is split in 2, it sets the size of each half window
+
+        left_window & right_window: cover half of the main window
+
+        inner_left_window and inner_right_window: are inside the half windows and are uses to better manage the displayed text.
+
+        message: used to display a message at the center of the screen at welcome and in a future version by exiting the program
+
+        y_center & x_center:    set the center of the main screen
+
+        screen_x_center: used to get the x of the center of the main window, whatever the length of the string to be displayed is
+        x_center_half_l_window & y_center_half_l_window:    y & x of the center of the left half window
+
+    """
+
     def __init__(self):
         self.screen = curses.initscr()
         # Setting up the Curses parameters to use the screen
@@ -218,6 +267,10 @@ class Interface:
         self.inner_left_window.refresh()
 
     def display_textpad(self, upper_left_y, nblines, nbcols):
+        """
+
+
+        """
         self.win = self.inner_left_window.derwin(nblines , nbcols, upper_left_y, 1)
         self.win.clear()
         textpad.rectangle(self.inner_left_window, upper_left_y-1, 0, upper_left_y + nblines, nbcols+1)
@@ -231,6 +284,7 @@ class Interface:
 
     def quit_display(self):
         """
+
             This method is used to properly quit the Curses module and reinitialize the shell.
 
             Args:
@@ -238,6 +292,7 @@ class Interface:
 
             Returns:
             It doesn't return anything
+
         """
         self.clear_window()
         self.left_window_display_string(0, "The program will quit in a few seconds")
