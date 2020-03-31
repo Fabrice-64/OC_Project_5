@@ -1,14 +1,16 @@
 """
-    This module encompasses all the parameters needed for Open Food Facts API.
 
-    Class:
-        NIL
+This module encompasses all the parameters needed for Open Food Facts API.
+
+Class:
+ NIL
     
-    Exceptions: 
-        NIL
+Exceptions: 
+NIL
     
-    Functions:
-        NIL
+Functions:
+NIL
+
 """
 
 # Updload data from Open Food Facts

@@ -1,15 +1,15 @@
 """
 
-    This module interacts with the local DB, which is a mySQL DB.
+This module interacts with the local DB, which is a mySQL DB.
 
-    Classes:
-        MySQLQueries: manage the querying methods under a same umbrella
+Classes:
+MySQLQueries: manage the querying methods under a same umbrella
     
-    Exceptions:
-        NIL.
+Exceptions:
+NIL.
     
-    Functions:
-        query_settings(answer): insert a % before and after each word of selected fields in order to broaden the search.
+Functions:
+query_settings(answer): insert a % before and after each word of selected fields in order to broaden the search.
 
 """
 import mysql.connector
@@ -20,45 +20,45 @@ import datetime
 class MySQLQueries:
     """
         
-        Organized around an initialization of the connection to the DB at the instanciation, followed by different queries to be used as the program unfolds.
+    Organized around an initialization of the connection to the DB at the instanciation, followed by different queries to be used as the program unfolds.
 
-        Methods:
-            get_categories(): get the names of the categories from which the user can afterwards load the data from OFF.
+    Methods:
+    get_categories(): get the names of the categories from which the user can afterwards load the data from OFF.
 
-            get_product(): get a selection of product from the local DB, iaw the criterion filled by the user.
+    get_product(): get a selection of product from the local DB, iaw the criterion filled by the user.
 
-            get_best_product(): get a filtered list of products as close as possible to a selected product.
+    get_best_product(): get a filtered list of products as close as possible to a selected product.
+    
+    retrieve_recorded_products(): get the list of best products recorded in the local DB.
 
-            retrieve_recorded_products(): get the list of best products recorded in the local DB.
+    get_numbers_on_DB(): fetch some figures related to the local DB, like the number of rows, etc.
 
-            get_numbers_on_DB(): fetch some figures related to the local DB, like the number of rows, etc.
+    upload_product(): upload a single product into the local DB, e.g. a selected best product.
 
-            upload_product(): upload a single product into the local DB, e.g. a selected best product.
+    upload_dataset(): upload to the local DB a bunch of rows downloaded from OFF.
 
-            upload_dataset(): upload to the local DB a bunch of rows downloaded from OFF.
+    close_connection(): closes the connection to mySQL iot to avoid free access.
 
-            close_connection(): closes the connection to mySQL iot to avoid free access.
+    Instance variables:
+    self.cnx: establish the connection to the local mySQL DB.
 
-        Instance variables:
-            self.cnx: establish the connection to the local mySQL DB.
+    self.cursor (tuple): contain the data gathered in the local DB.
 
-            self.cursor (tuple): contain the data gathered in the local DB.
-
-        Comment:
-            self.test_outside = self.cnx.is_connected()
-            can be included in the __init__ to check the connection.
+    Comment:
+    self.test_outside = self.cnx.is_connected()
+    can be included in the __init__ to check the connection.
 
     """
     def __init__(self):
         """
            
-            Initialize the connexion with the local DB with parameters stored in config.
+        Initialize the connexion with the local DB with parameters stored in config.
 
-            Arguments:
-                NIL.
+        Arguments:
+        NIL.
             
-            Returns:
-                NIL.
+        Returns:
+        NIL.
 
         """
         self.cnx = mysql.connector.connect(**config.DB_CONNECTION_PARAMETERS)
@@ -67,13 +67,13 @@ class MySQLQueries:
     def get_categories(self, query):
         """
 
-            Get the name of categories already recorded in the local DB.
+        Get the name of categories already recorded in the local DB.
 
-            Arguments:
-                query: query designed to fetch the categories, including their id number.
+        Arguments:
+        query: query designed to fetch the categories, including their id number.
 
-            Returns:
-                categories with their id number.
+        Returns:
+        categories with their id number.
 
         """
         categories = {}
@@ -85,14 +85,14 @@ class MySQLQueries:
     def get_product(self, query, searched_item):
         """
            
-            Get a list of 10 products as close as possible to the criterion filled by the user
+        Get a list of 10 products as close as possible to the criterion filled by the user
 
-            Arguments:
-                query: self explanatory
-                searched_item (list): criterion to apply for the query.
+        Arguments:
+        query: self explanatory
+        searched_item (list): criterion to apply for the query.
 
-            Returns:
-                products: list of food items, augmented with an index starting at 1.
+        Returns:
+        products: list of food items, augmented with an index starting at 1.
 
         """
         products = []
@@ -109,15 +109,15 @@ class MySQLQueries:
     def get_best_product(self, query, best_product):
         """
            
-            Get a list of products with a better nutrition grade that the initially selected.
+        Get a list of products with a better nutrition grade that the initially selected.
 
-            Arguments: 
-                query: self explanatory.
+        Arguments: 
+        query: self explanatory.
 
-                best-product (tuple): contain the criterion to sort out the matching products.
+        best-product (tuple): contain the criterion to sort out the matching products.
             
-            Returns:
-                best_products (list): list of selected products, with an index number.
+        Returns:
+        best_products (list): list of selected products, with an index number.
         
         """
         best_products = []
@@ -135,13 +135,13 @@ class MySQLQueries:
     def retrieve_recorded_products(self, query):
         """
 
-            Fetch the last recorded best products and the products used for the comparrison. 
+        Fetch the last recorded best products and the products used for the comparrison. 
 
-            Arguments:
-                query : self explanatory
+        Arguments:
+        query : self explanatory
 
-            Returns:
-                recorded_products (list): list of both best and reference products, with a index.
+        Returns:
+        recorded_products (list): list of both best and reference products, with a index.
 
         """
         recorded_products = []
@@ -159,13 +159,13 @@ class MySQLQueries:
     def get_numbers_on_DB(self,query):
         """
 
-            Gets simple figures from the local DB.
+        Gets simple figures from the local DB.
         
-            Arguments:
-                query: self explanatory
+        Arguments:
+        query: self explanatory
             
-            Returns:
-                result[0][0]: currently the number of rows in the table product.
+        Returns:
+        result[0][0]: currently the number of rows in the table product.
         
         """
         self.cursor.execute(query)
@@ -175,14 +175,14 @@ class MySQLQueries:
     def upload_product(self, query, item):
         """
 
-            Uploads only one item in the local DB. Currently formatted to record a best product.
+        Uploads only one item in the local DB. Currently formatted to record a best product.
 
-            Arguments:
-                query: self explanatory
-                item: the food item to be recorded in the table best_product.
+        Arguments:
+        query: self explanatory
+        item: the food item to be recorded in the table best_product.
             
-            Returns:
-                NIL
+        Returns:
+        NIL
         
         """
         query = query.format(item[0], item[1], item[2])
@@ -192,14 +192,15 @@ class MySQLQueries:
     def upload_dataset(self, query,item_list):
         """
             
-            After the selection of a new category, comes it upload in the local DB.
+        After the selection of a new category, comes it upload in the local DB.
 
-            Arguments:
-                query: self explanatory
-                item_list: list of items downloaded from OFF. They have been largely cleaned beforehand.
+        Arguments:
+        query: self explanatory
 
-            Returns;
-                NIL
+        item_list: list of items downloaded from OFF. They have been largely cleaned beforehand.
+
+        Returns;
+        NIL
 
         """
         self.cursor.executemany(query, item_list)
@@ -208,13 +209,13 @@ class MySQLQueries:
     def close_connection(self):
         """
             
-            Close the connection with the local DB.
+        Close the connection with the local DB.
 
-            Arguments:
-                NIL
+        Arguments:
+        NIL
             
-            Returns:
-                NIL
+        Returns:
+        NIL
 
         """
         self.cursor.close()
@@ -222,13 +223,13 @@ class MySQLQueries:
 def query_settings(answer):
     """
 
-        Prepare the search criterion before looking into the local DB.
+    Prepare the search criterion before looking into the local DB.
 
-        Arguments:
-            answer: keyword, search criterion to be prepared for the search.
+    Arguments:
+    answer: keyword, search criterion to be prepared for the search.
 
-        Return:
-            item_features: keyword made ready to be appended to the query.
+    Returns:
+    item_features: keyword made ready to be appended to the query.
 
     """
     temporary_list = []

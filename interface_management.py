@@ -1,18 +1,18 @@
 """
     
-    This module manages the graphical interface for the application.
+This module manages the graphical interface for the application.
 
-    As the application is built in a View-Model-Controller logic, this module hosts all the necessary items to manage the View functionalities.
-    This module is fed with orders coming the module named: get_better_diet.py.
+As the application is built in a View-Model-Controller logic, this module hosts all the necessary items to manage the View functionalities.
+This module is fed with orders coming the module named: get_better_diet.py.
 
-    Class:
-    Interface : based on curses library it provides a rough but functional graphic interface
+Class:
+Interface : based on curses library it provides a rough but functional graphic interface
 
-    Exceptions:
-    No exception is dealt with in this class.
+Exceptions:
+No exception is dealt with in this class.
 
-    Functions:
-    No function has been implemented. All methods belong to the Interface class.
+Functions:
+No function has been implemented. All methods belong to the Interface class.
 
 """
 import time
@@ -25,79 +25,79 @@ from curses import textpad
 class Interface:
     """ 
 
-        Manages the graphical interface of this application.
+    Manages the graphical interface of this application.
     
-        The integrated library curses is used throughout the class.
-        The main screen is split into two halves: 
-        -The left one (from the User perspective) is used for the interaction with him, 
-        -The right one displays the results of the queries or even a warning in some cases.
+    The integrated library curses is used throughout the class.
+    The main screen is split into two halves: 
+    -The left one (from the User perspective) is used for the interaction with him, 
+    -The right one displays the results of the queries or even a warning in some cases.
     
-        Methods:
+    Methods:
 
-            __init__(): initialize the graphic interface to make it usable by the subsequent methods.
+    __init__(): initialize the graphic interface to make it usable by the subsequent methods.
 
-            title_bar(): display a title in the bar at the top of the main window. This title is updated in accordance with the step of the program.
+    title_bar(): display a title in the bar at the top of the main window. This title is updated in accordance with the step of the program.
             
-            split_screen(): split the screen in two separate windows. 
-            In fact each window include a sub-window in which the text is displayed. 
+    split_screen(): split the screen in two separate windows. 
+    In fact each window include a sub-window in which the text is displayed. 
             
-            display_message(): display a message on the main window, at the center of the screen. Is used for welcome message and for goodbye.
+    display_message(): display a message on the main window, at the center of the screen. Is used for welcome message and for goodbye.
             
-            left_window_display_string(): display an instruction on the left screen.
+    left_window_display_string(): display an instruction on the left screen.
 
-            left_window_display_string_textpad(): display an invitation to use the keypad and just below the keypad itself. 
-            It is composed of two other methods:  left_window_display_string() and display_textpad.
+    left_window_display_string_textpad(): display an invitation to use the keypad and just below the keypad itself. 
+    It is composed of two other methods:  left_window_display_string() and display_textpad.
 
-            clear_window(): reinitialize the sub-windows.
+    clear_window(): reinitialize the sub-windows.
 
-            display_file_right_window(): display larger files for which this method allows to scroll them down.
+    display_file_right_window(): display larger files for which this method allows to scroll them down.
             
-            right_window_display_result():  display the results of the queries sent to the DB.
+    right_window_display_result():  display the results of the queries sent to the DB.
             
-            right_window_display_info(): display one line long pieces of info at the bottom of the right window.
+    right_window_display_info(): display one line long pieces of info at the bottom of the right window.
 
-            highlight_selection():  highlight the selected itemwhen using a drop-down list.
+    highlight_selection():  highlight the selected itemwhen using a drop-down list.
 
-            set_up_drop_down(): operate the key UP and DOWN iot iterate in the menu displayed.
+    set_up_drop_down(): operate the key UP and DOWN iot iterate in the menu displayed.
 
-            display_users_guide_textpad(): display a short users guide at the bottom of left page
+    display_users_guide_textpad(): display a short users guide at the bottom of left page
 
-            display_textpad(): display a textpad used to capture the user's various inputs.
+    display_textpad(): display a textpad used to capture the user's various inputs.
 
-            quit_display(): desactivate in a clean way all the features activated by the use of curses.
+    quit_display(): desactivate in a clean way all the features activated by the use of curses.
 
-        Attributes:
+    Attributes:
 
-            Most attributes are used to set coordinates useful for displaying the content.
+    Most attributes are used to set coordinates useful for displaying the content.
 
-            title: display a title in the bar set at the top of the main window
+    title: display a title in the bar set at the top of the main window
             
-            y_center and x_center: represent the centre of the main screen. Used later on to display text, ect.
+    y_center and x_center: represent the centre of the main screen. Used later on to display text, ect.
 
-            half_win_height & half_win_width: set the size of each half window as the main window is split in 2.
+    half_win_height & half_win_width: set the size of each half window as the main window is split in 2.
 
-            left_window & inner_left_window: cover, from a user's perspective, the left half of the main window
+    left_window & inner_left_window: cover, from a user's perspective, the left half of the main window
 
-            right_window and inner_right_window: cover, from a user's perspective, the right half of the main window
+    right_window and inner_right_window: cover, from a user's perspective, the right half of the main window
 
-            message: display a message on the screen centre at the beginning of the execution
+    message: display a message on the screen centre at the beginning of the execution
 
-            screen_x_center: calculate the center of the main screen for a well centered intro message.
+    screen_x_center: calculate the center of the main screen for a well centered intro message.
 
-            x_center_half_l_window & y_center_half_l_window: represent y & x of the center of the left half window
+    x_center_half_l_window & y_center_half_l_window: represent y & x of the center of the left half window
 
     """
 
     def __init__(self):
         """
 
-            The graphic screen is initialized from the very first step of the application.
+        The graphic screen is initialized from the very first step of the application.
 
-            Arguments:
-               NIL.
+        Arguments:
+        NIL.
 
-            Returns:
-                NIL.
+        Returns:
+        NIL.
 
         """
         self.screen = curses.initscr()
@@ -118,13 +118,13 @@ class Interface:
     def title_bar(self, title):
         """ 
             
-            A new title bar is displayed for each and every step of the program. This method is called through the module get_better_diet.py
+        A new title bar is displayed for each and every step of the program. This method is called through the module get_better_diet.py
 
-            Argument : 
-                title :  adapt the window title to the step of the program.
+        Argument : 
+        title :  adapt the window title to the step of the program.
             
-            Return:
-                NIL.
+        Return:
+        NIL.
 
         """
         self.screen.clear()
@@ -137,13 +137,13 @@ class Interface:
     def split_screen(self):
         """
 
-            Split the screen in 2 halves to share between queries or requests and their outcome.
+        Split the screen in 2 halves to share between queries or requests and their outcome.
 
-            Argument:
-                NIL.
+        Argument:
+        NIL.
             
-            Return:
-                NIL.
+        Return:
+        NIL.
 
         """
         # Setting up the parameters to get 2 split sub-windows
@@ -162,13 +162,13 @@ class Interface:
     def display_message(self, message):
         """
 
-            Display a message centered on the main screen
+        Display a message centered on the main screen
 
-            Arguments:
-                message: string defined in the module config.py.
+        Arguments:
+        message: string defined in the module config.py.
 
-            Return:
-                NIL.
+        Return:
+        NIL.
         
         """
         curses.curs_set(0)
@@ -182,15 +182,15 @@ class Interface:
     def left_window_display_string(self, y, string):
         """
 
-            Display a string from module config.py. By default, x = 0.
-            Vertical coordinate is used as an argument, x = 0 by default.
+        Display a string from module config.py. By default, x = 0.
+        Vertical coordinate is used as an argument, x = 0 by default.
 
-            Arguments:
-                y: vertical coordinate, which 0 is the upper left corner of the inner left window.
-                string: set in config.py. By default includes \n.
+        Arguments:
+        y: vertical coordinate, which 0 is the upper left corner of the inner left window.
+        string: set in config.py. By default includes \n.
 
-            Returns:
-                NIL.
+        Returns:
+        NIL.
         
         """
         self.inner_left_window.addstr(y, 0, string)
@@ -199,17 +199,21 @@ class Interface:
     def left_window_display_string_textpad(self, y, nb_lines, length_field, message):
         """
 
-            Display a string followed, at the line below by a textpad aimed at catching a user's input.
+        Display a string followed, at the line below by a textpad aimed at catching a user's input.
 
-            Arguments:
-                y: vertical coordinate, which 0 is the upper left corner of the inner left window.
-                nb_lines : number of lines of the keypad
-                length_field: maximum number of characters allowed +1, due to curses specifications
-                message: string from config.py explaining what is expected from the user.
+        Arguments:
+        y: vertical coordinate, which 0 is the upper left corner of the inner left window.
 
-            Returns:
-                answer: under ASCII format, the string typed in the textpad by the user.
-                y: incremented vertical coordinate.
+        nb_lines : number of lines of the keypad
+
+        length_field: maximum number of characters allowed +1, due to curses specifications
+
+        message: string from config.py explaining what is expected from the user.
+
+        Returns:
+        answer: under ASCII format, the string typed in the textpad by the user.
+
+        y: incremented vertical coordinate.
 
         """
         self.left_window_display_string(y, message)
@@ -220,13 +224,13 @@ class Interface:
     def clear_window(self, window = "both"):
         """
 
-            Clear the window from all its content.
+        Clear the window from all its content.
 
-            Arguments:
-                window: by default, both half screens are cleared, if required, only the left or the right can be affected.
+        Arguments:
+        window: by default, both half screens are cleared, if required, only the left or the right can be affected.
 
-            Returns:
-                NIL
+        Returns:
+        NIL
 
         """
         if window == "left" or window == "both":
@@ -239,14 +243,14 @@ class Interface:
     def display_file_right_window(self, file):
         """
 
-            Display a file line by line. The user is expected to click at every new line, which appears in fact as a paragraph.
-            Currently can only scroll down, not up. To be fixed in a future version.
+        Display a file line by line. The user is expected to click at every new line, which appears in fact as a paragraph.
+        Currently can only scroll down, not up. To be fixed in a future version.
 
-            Arguments:
-                file: any file in txt format.
+        Arguments:
+        file: any file in txt format.
             
-            Returns:
-                NIL
+        Returns:
+        NIL
 
         """
         with open(file, "rb") as file:
@@ -263,13 +267,13 @@ class Interface:
     def right_window_display_result(self,string):
         """
 
-            Display the result of a query, line by line, on the right window.
+        Display the result of a query, line by line, on the right window.
 
-            Arguments:
-                string: a string, usually out of a dictionary or a list, both being the result of a query.
+        Arguments:
+        string: a string, usually out of a dictionary or a list, both being the result of a query.
 
-            Returns: 
-                NIL
+        Returns: 
+        NIL
 
         """
         self.inner_right_window.addstr(string)
@@ -278,15 +282,15 @@ class Interface:
     def right_window_display_info(self, message, type = "info"):
         """
 
-            Display a information message at the bottom line of the right window.
-            The line is cleared after the user has pressed any key.
+        Display a information message at the bottom line of the right window.
+        The line is cleared after the user has pressed any key.
 
-            Arguments:
-                message: the string to be displayed.
-                type: depending on the type, the background color will change.
+        Arguments:
+        message: the string to be displayed.
+        type: depending on the type, the background color will change.
 
-            Returns:
-                NIL.
+        Returns:
+        NIL.
 
         """
         y, x = self.inner_right_window.getmaxyx()
@@ -306,14 +310,15 @@ class Interface:
     def highlight_selection(self, active_row_idx, drop_down_list):
         """
             
-            Highlight the selected row in a drop-down list.
+        Highlight the selected row in a drop-down list.
 
-            Args:
-                active_row_idx (int): index of the row to be highlighted.
-                drop_down_list (list); list to be displayed for the user to chose an item.
+        Argumentss:
+        active_row_idx (int): index of the row to be highlighted.
+        drop_down_list (list); list to be displayed for the user to chose an item.
 
-            Returns:
-                NIL
+        Returns:
+        NIL
+
         """
         height, width = self.inner_left_window.getmaxyx()
         for idx, row in enumerate(drop_down_list):
@@ -332,15 +337,15 @@ class Interface:
     def set_up_drop_down(self, drop_down_list, question):
         """
            
-           Manage the cursor movements within a drop-down list.
-           It interacts closely with the method highlight_selection() of the same class.
+        Manage the cursor movements within a drop-down list.
+        It interacts closely with the method highlight_selection() of the same class.
 
-            Arguments:
-                drop_down_list (list): set in the config.py module
-                question: set in the config.py module.
+        Arguments:
+        drop_down_list (list): set in the config.py module
+        question: set in the config.py module.
 
-            Returns:
-                answer : the choice made by the user after having higlighted it + pressed retun.
+        Returns:
+        answer : the choice made by the user after having higlighted it + pressed retun.
 
         """
         curses.curs_set(0)
@@ -367,14 +372,14 @@ class Interface:
     def display_users_guide_textpad(self, user_guide):
         """
 
-            This method displays the list of keyboard shortcuts to be used with the keypad.
-            It doesn't return anything
+        This method displays the list of keyboard shortcuts to be used with the keypad.
+        It doesn't return anything
 
-            Arguments:
-                user_guide (list): is available in config.py
+        Arguments:
+        user_guide (list): is available in config.py
             
-            Returns:
-                NIL
+        Returns:
+        NIL
 
         """
         y,x = self.inner_left_window.getmaxyx()
@@ -391,15 +396,15 @@ class Interface:
     def display_textpad(self, upper_left_y, nblines, nbcols):
         """
             
-            Display a textpad enclosed in a rectangle, so it is visible.
+        Display a textpad enclosed in a rectangle, so it is visible.
 
-            Arguments:
-                upper_left_y: vertical coordinate of the upper left corner of the keypad.
-                nb_lines: number of lines of the keypad
-                nb_cols: number of max of authorized characters + 1 because of curses.
+        Arguments:
+        upper_left_y: vertical coordinate of the upper left corner of the keypad.
+        nb_lines: number of lines of the keypad
+        nb_cols: number of max of authorized characters + 1 because of curses.
             
-            Returns:
-                content: values on ASCII format typed by the user.
+        Returns:
+        content: values on ASCII format typed by the user.
 
         """
         self.win = self.inner_left_window.derwin(nblines , nbcols, upper_left_y, 1)
@@ -416,13 +421,13 @@ class Interface:
     def quit_display(self):
         """
 
-            This method is used to properly quit the Curses module and reinitialize the shell.
+        This method is used to properly quit the Curses module and reinitialize the shell.
 
-            Arguments:
-                NIL.
+        Arguments:
+        NIL.
 
-            Returns:
-                NIL.
+        Returns:
+        NIL.
 
         """
         self.clear_window()

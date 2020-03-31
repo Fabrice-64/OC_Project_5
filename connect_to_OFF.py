@@ -1,17 +1,17 @@
 """
 
-    Downloads the requested data from Open Food Facts DB using an API.
+Downloads the requested data from Open Food Facts DB using an API.
 
-    To be noticed: dowloaded data are filtered by downloading. If some fields deemed as absolutely necessary are not field, the row is discarded.
+To be noticed: dowloaded data are filtered by downloading. If some fields deemed as absolutely necessary are not field, the row is discarded.
 
-    Classes:
-        ConnectToOFF: manage the connection settings through the API an the data download.
+Classes:
+ConnectToOFF: manage the connection settings through the API an the data download.
 
-    Exceptions:
-        NIL.
+Exceptions:
+NIL.
     
-    Functions:
-        NIL.
+Functions:
+NIL.
 
 
 """
@@ -23,21 +23,21 @@ import webbrowser
 class ConnectToOFF:
     """
 
-        Manage the relations with the Open Food Facts Database through an API.
+    Manage the relations with the Open Food Facts Database through an API.
 
-        Methods:
-            check_special_characters(): remove the quotation marks of any type to prepare the data for the upload to mysql DB.
+    Methods:
+    check_special_characters(): remove the quotation marks of any type to prepare the data for the upload to mysql DB.
 
-            import_products_list():  downloads a list of items from OFF.
+    import_products_list():  downloads a list of items from OFF.
 
-            import_static_data():   import data which are not subject to change, like categories, etc.
+    import_static_data():   import data which are not subject to change, like categories, etc.
 
-            open_product_file_OFF(): opens from OFF, in a web browser the file of a specific product.
+    open_product_file_OFF(): opens from OFF, in a web browser the file of a specific product.
         
-        Instance variables:
-            self.list_items (list): encompasses all the items downloaded from OFF.
+    Instance variables:
+    self.list_items (list): encompasses all the items downloaded from OFF.
 
-            self.OFF_category_list (list): contains the names of the categories imported as static data.
+    self.OFF_category_list (list): contains the names of the categories imported as static data.
 
     """
 
@@ -82,15 +82,15 @@ class ConnectToOFF:
     def import_products_list(self, category):
         """
 
-            Imports a large list of food items, based on a selected category.
+        Imports a large list of food items, based on a selected category.
 
-            Arguments:
-                category: selected from a predefined list of possible categories.
+        Arguments:
+        category: selected from a predefined list of possible categories.
 
-            Returns:
-                nb_imported_items: out of a selected range, number of food items considered as valid for import.
+        Returns:
+        nb_imported_items: out of a selected range, number of food items considered as valid for import.
 
-                items_left_apart: out of the initial range, number of food items discarded because of poor quality of the data.
+        items_left_apart: out of the initial range, number of food items discarded because of poor quality of the data.
 
         """            
         desired_category = {'tag_0': category}
@@ -117,14 +117,14 @@ class ConnectToOFF:
     def import_static_data(self):
         """
 
-            This method import categories, which are static data and therefore doesn't include the parameters needed in an API.
-            On Open Food Facts DB, the categories are sorted out by number of entries. Therefore, this method picks some of the most popular categories in OFF DB.
+        This method import categories, which are static data and therefore doesn't include the parameters needed in an API.
+        On Open Food Facts DB, the categories are sorted out by number of entries. Therefore, this method picks some of the most popular categories in OFF DB.
             
-            Args:
-                NIL.
+        Arguments:
+        NIL.
 
-            Returns:
-                self.OFF_category_list : list of categories selected for later download. 
+        Returns:
+        self.OFF_category_list : list of categories selected for later download. 
 
         """
         self.OFF_category_list = []
@@ -144,13 +144,13 @@ class ConnectToOFF:
     def open_product_file_OFF (self, code_product):
         """
             
-            Opens the page of a selected product in the default browser.
+        Opens the page of a selected product in the default browser.
 
-            Arguments:
-                code_product: completes the address where to find this very food item.
+        Arguments:
+        code_product: completes the address where to find this very food item.
 
-            Returns:
-                NIL.
+        Returns:
+        NIL.
 
         """
         product_location = str(coff.OFF_PRODUCT_ADDRESS + code_product)
