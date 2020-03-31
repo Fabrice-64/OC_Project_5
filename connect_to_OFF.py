@@ -1,24 +1,19 @@
 """
-The module API_OpenFoodFacts aims at downloading products from Open Food Facts database.
 
-In order to download a list of products large enough to provide the consumer with a large enough dataset, several parameters are set by default. A list of preselected categories has been made available in the module named config.py
-This module follows the following steps:
-1. the category to be downloaded has been previously selected
-2. the API is initiated and gets the data from OFF website. By default, they are downloaded in JSON format
-3. the downloaded data are converted in JSON readable by Python
-4. the data are converted into a CSV format, ready to be exported to the database.
+    Downloads the requested data from Open Food Facts DB using an API.
 
-The fields selected from the products database are the following ones:
-brands,
-product_name,
-code,
-stores,
-nutrition_score_fr,
-ingredients_txt,
+    To be noticed: dowloaded data are filtered by downloading. If some fields deemed as absolutely necessary are not field, the row is discarded.
 
-The category is selected out of the config.py module and the url is built based on the url of the website.
+    Classes:
+        ConnectToOFF: manage the connection settings through the API an the data download.
 
-Then the url for this product is rebuilt and recorded in the exchange file.
+    Exceptions:
+        NIL.
+    
+    Functions:
+        NIL.
+
+
 """
 import requests
 import json
@@ -26,10 +21,52 @@ import config_open_food_facts as coff
 import webbrowser
 
 class ConnectToOFF:
+    """
+
+        Manage the relations with the Open Food Facts Database through an API.
+
+        Methods:
+            check_special_characters(): remove the quotation marks of any type to prepare the data for the upload to mysql DB.
+
+            import_products_list():  downloads a list of items from OFF.
+
+            import_static_data():   import data which are not subject to change, like categories, etc.
+
+            open_product_file_OFF(): opens from OFF, in a web browser the file of a specific product.
+        
+        Instance variables:
+            self.list_items (list): encompasses all the items downloaded from OFF.
+
+            self.OFF_category_list (list): contains the names of the categories imported as static data.
+
+    """
+
     def __init__(self):
+        """
+
+            Initialize the class
+
+            Arguments:
+                NIL.
+
+            Returns:
+                NIL.
+        
+        """
         self.list_items = []
 
     def check_special_characters(self, value):
+        """
+            
+            Cleans the fields of the downloaded rows in order to avoid conflicts with mySQL syntax.
+
+            Arguments:
+                value: is a string to be checked.
+
+            Returns:
+                result: value cleaned from the various quotation marks or identified as empty.
+
+        """
         if value is None:
             result = "NaN"
         elif '"' in value:
@@ -43,13 +80,25 @@ class ConnectToOFF:
         return result
    
     def import_products_list(self, category):
+        """
+
+            Imports a large list of food items, based on a selected category.
+
+            Arguments:
+                category: selected from a predefined list of possible categories.
+
+            Returns:
+                nb_imported_items: out of a selected range, number of food items considered as valid for import.
+
+                items_left_apart: out of the initial range, number of food items discarded because of poor quality of the data.
+
+        """            
         desired_category = {'tag_0': category}
         coff.PAYLOAD.update(desired_category)
         r = requests.get(coff.URL, headers = coff.HEADERS, params = coff.PAYLOAD)
         data = r.json()
         items_left_apart = 0
         nb_imported_items = 0
-        
         for product in data['products']:
             brand = self.check_special_characters(product.get('brands'))
             name = self.check_special_characters(product.get('product_name'))
@@ -67,23 +116,16 @@ class ConnectToOFF:
         
     def import_static_data(self):
         """
-            This method import static data and therefore doesn't include the parameters needed in an API.
-            In the current application, it imports an excerpt of the Open Food Facts DB categories.
-            Parameters are set as constants in the module "config_open_food_facts" module.
 
-            Constants:
-            URL_STATIC :  url of the target website and data to be downloaded.
-
-            Attributes:
-            self.OFF_category_dict : this is a dictionary containing the downloaded categories from OFF.
-            the key is an index ranging from 1 to n, the value is the French name of the category.
-            This dictionary is subsequently used in the Controller, get_better_diet, to be displayed and help select new category to be downloaded.
-
+            This method import categories, which are static data and therefore doesn't include the parameters needed in an API.
+            On Open Food Facts DB, the categories are sorted out by number of entries. Therefore, this method picks some of the most popular categories in OFF DB.
+            
             Args:
-            It takes no argument
+                NIL.
 
             Returns:
-            It doesn't return anything
+                self.OFF_category_list : list of categories selected for later download. 
+
         """
         self.OFF_category_list = []
         r = requests.get(coff.URL_STATIC)
@@ -91,9 +133,7 @@ class ConnectToOFF:
         counter = 1
         for tag in data[coff.STATIC_TAG]:
             name = tag.get(coff.STATIC_FIELD_0)
-            # OFF categories contain mistakes, as a language code,\
-            # followed by ':' & then the category. Therefore this rough filter.
-            # choice has been made to limit the display of categories
+            # Some inconsistant fields have been remarked. This is an ad hoc way to remove those rows.
             if ":" not in name and counter <= coff.STATIC_VOLUME:
                 if name not in self.OFF_category_list:
                     name = str(name)
@@ -102,6 +142,17 @@ class ConnectToOFF:
         return self.OFF_category_list
     
     def open_product_file_OFF (self, code_product):
+        """
+            
+            Opens the page of a selected product in the default browser.
+
+            Arguments:
+                code_product: completes the address where to find this very food item.
+
+            Returns:
+                NIL.
+
+        """
         product_location = str(coff.OFF_PRODUCT_ADDRESS + code_product)
         webbrowser.open(product_location,new=1)
 
