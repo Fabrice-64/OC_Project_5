@@ -43,6 +43,8 @@ S_A_ADD_KEYWORDS = "Please enter one or two keywords in order to have a larger c
 S_A_INDEX_NAME = "{}:  {}\n"
 S_A_DISPLAY_BRAND_NUTRISCORE = "Brand: {}, Nutrition grade: {}\n"
 S_A_DISPLAY_STORES = "Stores: {}\n"
+S_A_DISPLAY_INITIAL_PRODUCT = "Initial product was: {}\n"
+S_A_COMPARRISON_DATE = "Comparrison was on: {: %d %B %y %H:%M}.\n"
 S_A_SINGLE_RETURN = "\n"
 
 # These are the dialog strings dealing with the DB consultation.
@@ -51,10 +53,11 @@ S_A_ASK_RECORD_SELECTED_ITEM = "Do you want to record this research for further 
 
 # These are the dialog strings to download and upload an excerpt of Open Food Facts DB
 S_A_INFO_ADD_NEW_CATEGORY = "You ought to look into Open Food Facts which category you want to add to your local DB."
-S_A_USE_BROWSER = "Please select the item you want to check on the official website:\n"
+S_A_INFO_NAME_IMPORTED_CATEGORY = "You will import : "
 
 # These are the dialog strings displayed when retrieving recorded previous searches
 S_A_INFO_LAST_RECORDS = "Here are your last records\n"
+S_A_USE_BROWSER = "Please select the item you want to check on the official website:\n"
 S_A_GO_ON_CHECK_FOOD_ITEMS_Y_N = "Do you want to select another food item (Y/N?\n"
 
 

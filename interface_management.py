@@ -4,27 +4,28 @@
     This module is fed with orders coming form get_better_diet.py module.
     It encompasses only one class, named Interface.
 Methods:
-    title_bar(): displays a title in the bar at the top of the main window. This title is updated in accordance with the step of the program.
-    split_screen(): splits the screen in two separate windows. In fact each window includes a sub-window in which the text is displayed. 
+    title_bar():    displays a title in the bar at the top of the main window. This title is updated in accordance with the step of the program.
+    split_screen():     splits the screen in two separate windows. In fact each window includes a sub-window in which the text is displayed. 
     This is demanded when using curses in order to avoid having the text stepping over the borders of the window.
-    display_message():  this method displays a message on the main window, at the center of the screen. Is used for welcome message and for goodbye.
-    left_window_display_string() : this method is set to display an instruction on the left screen.
-    clear_window():  is needed to reinitialize the sub-window and remove the useless text.
-    display_file_right_window(): the right window is used for displaying larger files for which this method allows to scroll them down.
-    right_window_display_result(): the results of the queries sent to the DB are displayed on this window. The outcome is formatted by this method
-    highlight_selection(): when using a drop-down list, this methods highlights the selected item
-    set_up_drop_down(): this method is used in connexion with the method highlight_selection, as it provides the latter with the relevant index. 
+    display_message():      this method displays a message on the main window, at the center of the screen. Is used for welcome message and for goodbye.
+    left_window_display_string():   this method is set to display an instruction on the left screen.
+    clear_window():     is needed to reinitialize the sub-window and remove the useless text.
+    display_file_right_window():    the right window is used for displaying larger files for which this method allows to scroll them down.
+    right_window_display_result():  the results of the queries sent to the DB are displayed on this window. The outcome is formatted by this method
+    highlight_selection():  when using a drop-down list, this methods highlights the selected item
+    set_up_drop_down():     this method is used in connexion with the method highlight_selection, as it provides the latter with the relevant index. 
     It activates the key UP and DOWN iot iterate in the menu displayed.
-    quit_display(): as the module Curses activate many features of the shell, this method intends to desactivate all the features activated by the script.
+    quit_display():     as the module Curses activate many features of the shell, this method intends to desactivate all the features activated by the script.
 
 Attributes:
     Most attributes are used to set coordinates useful for displaying the content.
+
     title:  used to display a title in the bar set at the top of the main window
     half_win_height & half_win_width:   when the main window is split in 2, it sets the size of each half window
-    left_window & right_window: cover half of the main window
-    inner_left_window and inner_right_window: are inside the half windows and are uses to better manage the displayed text.
+    left_window & right_window:     cover half of the main window
+    inner_left_window and inner_right_window:   are inside the half windows and are uses to better manage the displayed text.
     message: used to display a message at the center of the screen at welcome and in a future version by exiting the program
-    y_center & x_center: set the center of the main screen
+    y_center & x_center:    set the center of the main screen
     screen_x_center: used to get the x of the center of the main window, whatever the length of the string to be displayed is
     x_center_half_l_window & y_center_half_l_window:    y & x of the center of the left half window
 

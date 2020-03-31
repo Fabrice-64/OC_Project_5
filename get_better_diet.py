@@ -169,9 +169,9 @@ class UserDialog:
             index_reference_item = int(index_reference_item)
             keywords_item, y = self.interface.left_window_display_string_textpad(y, 1, 25, cfg.S_A_ADD_KEYWORDS)
             
+            # This part prepares the data for looking for the best food items.
             running= True
             while running:
-               # This part prepares the data for looking for the best food items.
                keywords_item = sql.query_settings(keywords_item)
                sql_result = answer_category, keywords_item, list_selection[index_reference_item-1][1][2]
                sql_result = tuple(sql_result)
@@ -200,13 +200,13 @@ class UserDialog:
             process_result, y = self.interface.left_window_display_string_textpad(y+1,1,2,cfg.SELECT_Y_N)
             running = True
             while running:
-               process_result = self.ascii_to_string(process_result)
-               if process_result not in ["Y","y", "N","n"]:
+               process_result = self.ascii_to_string(process_result).upper()
+               if process_result not in ["Y", "N"]:
                   self.interface.right_window_display_info(cfg.WARNING_MESSAGE_0, "warning")
                   process_result = self.interface.display_textpad(y-2,1,3)              
                   running = True
                else:
-                  if process_result in ["N", "n"]:
+                  if process_result == "N":
                      self.interface.right_window_display_info( cfg.BACK_MAIN_MENU)
                      running = False
                      time.sleep(1)
@@ -235,24 +235,23 @@ class UserDialog:
             decide_record_item, y = self.interface.left_window_display_string_textpad(y, 1, 2, cfg.S_A_ASK_RECORD_SELECTED_ITEM)
             running = True
             while running:
-               decide_record_item = self.ascii_to_string(decide_record_item)
-               if decide_record_item not in ["Y","y", "N","n"]:
+               decide_record_item = self.ascii_to_string(decide_record_item).upper()
+               if decide_record_item not in ["Y", "N"]:
                   self.interface.right_window_display_info(cfg.WARNING_MESSAGE_0,"warning")
                   decide_record_item = self.interface.display_textpad(y-2,1,2)              
                   running = True
                else:
-                  if decide_record_item in ["N", "n"]:
+                  if decide_record_item == "N":
                      self.interface.right_window_display_info(cfg.BACK_MAIN_MENU)
                      time.sleep(2)
-                     user.step_select_action()
-                  elif decide_record_item in ["y", "Y"]:
+                     running = False
+                  else:
                      record_date_time = datetime.now()
                      record_date_time = record_date_time.strftime('%Y-%m-%d %H:%M:%S')
                      best_product_record  = code_product, record_date_time, list_selection[index_reference_item -1][1][3]
                      self.queries.upload_product(cq.query_record_best_product, best_product_record)
-                     
-                     
-               self.interface.right_window_display_info(cfg.S_A_PROCESSING_RECORD)
+                     self.interface.right_window_display_info(cfg.S_A_PROCESSING_RECORD)
+                     running = False              
                running = False
             user.step_select_action()
 
@@ -266,8 +265,8 @@ class UserDialog:
                self.interface.right_window_display_result(cfg.S_A_INDEX_NAME .format(item[0], item[1][0]))
                self.interface.right_window_display_result(cfg.S_A_DISPLAY_BRAND_NUTRISCORE.format(item[1][1], item[1][3]))
                self.interface.right_window_display_result(cfg.S_A_DISPLAY_STORES.format(item[1][4]))
-               self.interface.right_window_display_result("Initial product was: {}\n".format(item[1][6]))
-               self.interface.right_window_display_result("Comparrison was on: {: %d %B %y %H:%M}.\n".format(item[1][5]))
+               self.interface.right_window_display_result(cfg.S_A_DISPLAY_INITIAL_PRODUCT.format(item[1][6]))
+               self.interface.right_window_display_result(cfg.S_A_COMPARRISON_DATE.format(item[1][5]))
                self.interface.right_window_display_result(cfg.S_A_SINGLE_RETURN)
                index_list_products.append(str(item[0]))
 
@@ -294,20 +293,19 @@ class UserDialog:
                      
                      running_approval = True
                      while running_approval:
-                        process_result = self.ascii_to_string(process_result)
-                        if process_result not in ["Y","y", "N","n"]:
+                        process_result = self.ascii_to_string(process_result).upper()
+                        if process_result not in ["Y", "N"]:
                            self.interface.right_window_display_info(cfg.WARNING_MESSAGE_0,"warning")
                            process_result = self.interface.display_textpad(y-2, 1, 2)              
                            running_approval = True
                         else:
-                           if process_result in ["N", "n"]:
+                           if process_result == "N":
                               self.interface.right_window_display_info(cfg.BACK_MAIN_MENU)
-                              time.sleep(1)
                               user.step_select_action()
                            else:
                               running_approval = False
                         running = False
-                     running_recorded_products = True
+                  running_recorded_products = True
 
          # This part of the program is for adding a new category   
          elif answer == cfg.S_A_OPERATE_ON_DB[2]:
@@ -329,7 +327,7 @@ class UserDialog:
             while running:
                if answer_category.isdigit() and int(answer_category) in self.categories.keys():
                   selected_category = self.categories.get(int(answer_category))
-                  display_chosen_category = "You will import : " + str(selected_category)
+                  display_chosen_category = cfg.S_A_INFO_NAME_IMPORTED_CATEGORY + str(selected_category)
                   self.interface.right_window_display_info(display_chosen_category)
                   running = False 
                else:
