@@ -38,8 +38,7 @@ class UserDialog:
          self.interface.clear_window('left')
          self.interface.left_window_display_string(y, cfg.T_C_APPROVAL)
          time.sleep(1)
-      elif answer == "No":
-         self.interface.quit_display()
+      return answer
 
    def ascii_to_string(self, ascii_string):
       """
@@ -100,7 +99,7 @@ class UserDialog:
                y = 0    
                self.interface.left_window_display_string(y, cfg.KEYPAD_INSTRUCTION_1)
                self.interface.left_window_display_string(y+1, cfg.S_A_SELECT_CATEGORY)
-               self.interface.display_users_guide_textpad()   
+               self.interface.display_users_guide_textpad(cfg.USER_GUIDE)   
                y = y+3                            
                # These fields help to characterize the food item the user is looking for
                answer_category = self.interface.display_textpad(y,1,3)
@@ -184,7 +183,7 @@ class UserDialog:
                   keywords_item = self.interface.display_textpad(y-2, 1, 25)
                         
             self.interface.clear_window()
-            self.interface.display_users_guide_textpad()
+            self.interface.display_users_guide_textpad(cfg.USER_GUIDE)
             # This is where all the features of each and every food item are displayed.
             index_list_best_products = []
             for item in list_best_products:
@@ -318,7 +317,7 @@ class UserDialog:
             for (key, value) in self.categories.items():
                self.interface.right_window_display_result(cfg.S_A_INDEX_NAME .format(key, value))
 
-            self.interface.display_users_guide_textpad()
+            self.interface.display_users_guide_textpad(cfg.USER_GUIDE)
             # The user is requested to designate a category to be uploaded.
             answer_category, y = self.interface.left_window_display_string_textpad(y,1,3, cfg.S_A_INFO_ADD_NEW_CATEGORY)
             answer_category = self.ascii_to_string(answer_category)
@@ -352,18 +351,19 @@ class UserDialog:
 
          # This last option is to close properly the program and reinitialize the shell.
          elif answer == cfg.S_A_OPERATE_ON_DB[3]:
-            self.queries.close_connection()
-            self.interface.quit_display()
+            running_main = False
 
-      time.sleep(1)
+      self.queries.close_connection()
 
 def main(user):
    # The graphic interface is initialized right there.
    user.interface.display_message(cfg.WELCOME_MESSAGE)
    time.sleep(1)
-   user.interface.split_screen(cfg.TITLE_0)
-   user.step_terms_and_conditions(cfg.T_C_FILE)
-   user.step_select_action()
+   user.interface.split_screen()
+   answer = user.step_terms_and_conditions(cfg.T_C_FILE)
+   if answer == "Yes":
+      user.step_select_action()
+   user.interface.quit_display()
    
 if __name__ == "__main__":
    user = UserDialog()

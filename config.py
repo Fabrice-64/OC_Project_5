@@ -52,7 +52,7 @@ S_A_ASK_CHECK_DETAILED_RESULTS = "Do you want to check the result on the Web and
 S_A_ASK_RECORD_SELECTED_ITEM = "Do you want to record this research for further use (Y/N)\n?"
 
 # These are the dialog strings to download and upload an excerpt of Open Food Facts DB
-S_A_INFO_ADD_NEW_CATEGORY = "You ought to look into Open Food Facts which category you want to add to your local DB."
+S_A_INFO_ADD_NEW_CATEGORY = "You ought to select a category to import to your local DB.\n"
 S_A_INFO_NAME_IMPORTED_CATEGORY = "You will import : "
 
 # These are the dialog strings displayed when retrieving recorded previous searches
@@ -83,3 +83,4 @@ WARNING_MESSAGE_1 = "YOUR SEARCH IS TO RESTRICTIVE, BE LESS SPECIFIC"
 
 # Miscellaneous messages.
 BACK_MAIN_MENU = "You are going back to the main menu."
+QUIT_MESSAGE = "The program will quit in a few seconds\n"
