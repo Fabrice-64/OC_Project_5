@@ -14,10 +14,10 @@ import datetime
 
 class MySQLQueries:
     def __init__(self):
-        self.cnx = mysql.connector.connect(**config.db_connection_parameters)
+        self.cnx = mysql.connector.connect(**config.DB_CONNECTION_PARAMETERS)
         self.cursor = self.cnx.cursor(buffered= True)
         self.test_outside = self.cnx.is_connected()
-        print("externe :", self.test_outside)
+        #print("externe :", self.test_outside)
 
     def get_categories(self, query):
     # Purpose of this function is to send a query to the DB and fetch the required data

@@ -1,10 +1,18 @@
 """
-Purpose of this module is to set the constant datas used all along this program
+    
+    Purpose of this module is to gather the various constants used all along this program
 
-payload, headers and url are used fetch data from the Open Food Facts DB
+    Classes:
+        NIL.
+    
+    Exceptions:
+        NIL.
+    
+    Functions:
+        NIL.
 
 """
-db_connection_parameters = {'user' :'root', 'host' : 'localhost', 'database' : 'get_better_diet'}
+DB_CONNECTION_PARAMETERS = {'user' :'root', 'host' : 'localhost', 'database' : 'get_better_diet'}
 
 #Message displayed when launching the programm. Used by the method display_message()
 WELCOME_MESSAGE = "WELCOME TO 'GET A BETTER DIET' APP \n"
