@@ -26,7 +26,9 @@ query_upload_new_category_products = """REPLACE INTO product (brand, name, categ
         FROM category WHERE name = %s), %s, %s, %s, %s)"""
 
 query_searched_item = """SELECT LEFT(product.name,40), product.brand, product.nutrition_grade, \
-        product.code FROM category, product WHERE category.name = \"{}\" \
+        product.code FROM product JOIN category \
+        ON product.category_id = category.idcategory \
+        WHERE category.name = \"{}\" \
         AND product.name LIKE \"{}\" AND product.brand LIKE \"{}\" \
         AND product.code LIKE \"{}\" \
         ORDER BY product.nutrition_grade ASC LIMIT 10"""

@@ -55,7 +55,7 @@ class Interface:
 
     clear_window(): reinitialize the sub-windows.
 
-    display_file_right_window(): display larger files for which this method allows to scroll them down.
+    display_file_right_window(): display larger files for to be scrolled down.
 
     right_window_display_result():  display the results of the queries sent to the DB.
 

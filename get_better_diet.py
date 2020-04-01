@@ -61,7 +61,8 @@ class UserDialog:
         while running:
             answer_category = self.interface.display_textpad(y+3, 1, 3)
             answer_category = self.ascii_to_string(answer_category)
-            if answer_category.isdigit() == False or int(answer_category) not in categories.keys():
+            if answer_category.isdigit() == False or int(answer_category) \
+                    not in categories.keys():
                 self.interface.right_window_display_info(
                     cfg.WARNING_MESSAGE_0, "warning")
                 running = True
@@ -121,7 +122,8 @@ class UserDialog:
                     while running:
                         # The category is the only field which is compulsary
                         answer_category = self.ascii_to_string(answer_category)
-                        if answer_category.isdigit() == False or int(answer_category) not in categories.keys():
+                        if answer_category.isdigit() is False or \
+                                int(answer_category) not in categories.keys():
                             self.interface.right_window_display_info(
                                 cfg.WARNING_MESSAGE_0, "warning")
                             answer_category = self.interface.display_textpad(
@@ -175,10 +177,10 @@ class UserDialog:
                             cfg.S_A_SINGLE_RETURN)
                         list_item = [key, values]
                     list_selection.append(list_item)
-
-                # Requests the user to select a food item with which a comparrison is to be made.
-                index_reference_item, y = self.interface.left_window_display_string_textpad(
-                    y, 1, 3, cfg.S_A_COMPARE_FOOD_ITEMS)
+                # Requests the user to select a food item to be compared with.
+                index_reference_item, y = \
+                    self.interface.left_window_display_string_textpad(
+                        y, 1, 3, cfg.S_A_COMPARE_FOOD_ITEMS)
 
                 item_key_list = [
                     key for item in detailed_products for key in item]
@@ -186,7 +188,8 @@ class UserDialog:
                 while running:
                     index_reference_item = self.ascii_to_string(
                         index_reference_item)
-                    if index_reference_item.isdigit() == False or int(index_reference_item) not in item_key_list:
+                    if index_reference_item.isdigit() == False \
+                            or int(index_reference_item) not in item_key_list:
                         self.interface.right_window_display_info(
                             cfg.WARNING_MESSAGE_0, "warning")
                         index_reference_item = self.interface.display_textpad(
@@ -233,7 +236,8 @@ class UserDialog:
                         cfg.S_A_SINGLE_RETURN)
                     index_list_best_products.append(str(item[0]))
 
-                # Here is an interaction with the user, so that he can select the food item he would like to see in detail.
+                """Here is an interaction with the user, so that he can select 
+               the food item he would like to see in detail."""
                 y = 0
                 self.interface.left_window_display_string(
                     y, cfg.S_A_ASK_CHECK_DETAILED_RESULTS)
