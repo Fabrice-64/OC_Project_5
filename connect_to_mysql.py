@@ -38,6 +38,8 @@ class MySQLQueries:
 
     upload_product(): upload a single product into the local DB, e.g. a selected best product.
 
+    update_best_product_date(): updates the best product record with the date.
+
     upload_dataset(): upload to the local DB a bunch of rows downloaded from OFF.
 
     close_connection(): closes the connection to mySQL iot to avoid free access.

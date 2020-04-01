@@ -98,8 +98,6 @@ class UserDialog:
         y = 0
         running_main = True
         while running_main:
-            self.interface.right_window_display_info("Intérieur boucle principale")
-            time.sleep(1)
             # Look for a product !! 
             if answer == cfg.S_A_OPERATE_ON_DB[0]:
                 self.interface.title_bar(cfg.TITLE_3)
@@ -138,7 +136,6 @@ class UserDialog:
                                     y, 1, 3)
                             else:
                                 running_category_choice = False
-                        self.interface.right_window_display_info("Sortir Boucle sélection categorie")
                         answer_category = int(answer_category)
                         answer_category = categories.get(answer_category)
                         answer_name, y = self.interface.left_window_display_string_textpad(
@@ -164,9 +161,6 @@ class UserDialog:
                         else:
                             running_data_not_null = False
                     
-                self.interface.right_window_display_info("Sortir Boucle sélection Aliment")
-                self.interface.right_window_display_info("Affichage liste des aliments")
-
                 list_selection = []
                 list_item = []
                 self.interface.clear_window("right")
@@ -200,7 +194,6 @@ class UserDialog:
                         running_check_selection = True
                     else:
                         running_check_selection = False
-                self.interface.right_window_display_info("Sortir Boucle Contrôle numero aliment")   
                 # The user is requested to enter keywords iot broaden the search.
                 index_reference_item = int(index_reference_item)
                 keywords_item, y = self.interface.left_window_display_string_textpad(
@@ -222,7 +215,6 @@ class UserDialog:
                                 y-2, 1, 25)
                         else:
                             running_fetch_best_products = False
-                            self.interface.right_window_display_info("Plusieurs produits trouvés")
                 self.interface.clear_window()
                 self.interface.display_users_guide_textpad(cfg.USER_GUIDE)
                 # This is where all the features of each and every food item are displayed.                
@@ -253,7 +245,6 @@ class UserDialog:
                         running_get_details = True
                     elif check_answer == 'N':
                         running_get_details = False
-                        self.interface.right_window_display_info("Quitter boucle accès aux détails")
                     elif check_answer == "Y":
                         y = 0
                         self.interface.clear_window("left")
@@ -274,7 +265,6 @@ class UserDialog:
                                 self.OFF.open_product_file_OFF(code_product)
                             running_detailed_product = False
 
-                        self.interface.right_window_display_info("Decider si enregistre ou pas Item")
                         record_item, y = self.interface.left_window_display_string_textpad(
                         y, 1, 2, cfg.S_A_ASK_RECORD_SELECTED_ITEM)
 
@@ -303,19 +293,10 @@ class UserDialog:
                                 self.interface.right_window_display_info(
                                     cfg.S_A_PROCESSING_RECORD)
                                 running_record_item = False
-                            self.interface.right_window_display_info("Quitter enregistrement produit")
-
-
-                        self.interface.right_window_display_info("Quitter boucle du produit détaillé")
                         running_get_details = False
 
-                self.interface.right_window_display_info("QUitter boucle récupérer best products")
-
-                self.interface.right_window_display_info("Sortir choix aliment à substituer")
-
-
                 # Used to quit this loop
-                self.interface.clear_window("left")
+                self.interface.clear_window()
                 answer = self.interface.set_up_drop_down(
                     cfg.S_A_OPERATE_ON_DB, cfg.SELECT_ANSWER)
 
@@ -324,7 +305,6 @@ class UserDialog:
                 last_recorded_products = self.queries.retrieve_recorded_products(
                         cq.query_retrieve_recorded_product)
                 index_list_products = []
-                self.interface.right_window_display_info(str(len(last_recorded_products)))
                 for item in last_recorded_products:
                     self.interface.right_window_display_result(
                             cfg.S_A_INDEX_NAME .format(item[0], item[1][0]))
@@ -348,7 +328,6 @@ class UserDialog:
                         y, cfg.S_A_INFO_LAST_RECORDS)
                         check_item, y = self.interface.left_window_display_string_textpad(
                             y+1, 1, 2, cfg.S_A_USE_BROWSER)
-                        self.interface.right_window_display_info("Intérieur Boucle Analyse produit")
                         running_use_browser = True
                         while running_use_browser:
                             check_item = self.ascii_to_string(check_item)
@@ -381,15 +360,9 @@ class UserDialog:
                                 elif check_item == "N":
                                     running_recorded_products = False  
                                 else:
-                                    record_date_time = datetime.now()
-                                    record_date_time = record_date_time.strftime(
-                                    '%Y-%m-%d %H:%M:%S')
-                                    update_best_product = record_date_time, code_product
-                                    self.sql.update_best_product_date(cq.query_update_product,update_best_product)
                                     running_recorded_products = True
                                 running_go_on = False
                            
-                self.interface.right_window_display_info("Sortir Best Product")
                 # Used to quit this loop
                 self.interface.clear_window()   
                 # Used to quit this loop
@@ -397,7 +370,6 @@ class UserDialog:
                     cfg.S_A_OPERATE_ON_DB, cfg.SELECT_ANSWER)
 
             elif answer == cfg.S_A_OPERATE_ON_DB[2]:
-                self.interface.right_window_display_info("Entrer Boucle Nouvelle catégorie")
                 y = 0
                 self.interface.clear_window()
                 # A short sample of OFF categories is imported and displayed in the right window.
@@ -419,8 +391,9 @@ class UserDialog:
                     if answer_category.isdigit() and int(answer_category) \
                         in self.categories.keys():
                         selected_category = self.categories.get(int(answer_category))
+                        selected_category = str(selected_category)
                         display_chosen_category = cfg.S_A_INFO_NAME_IMPORTED_CATEGORY + \
-                                str(selected_category)
+                            selected_category
                         self.interface.right_window_display_info(display_chosen_category)
                         running = False
                     else:
@@ -448,8 +421,6 @@ class UserDialog:
                         cfg.S_A_SIZE_LOCAL_DB.format(nb_rows))
                     time.sleep(1)
                     running = False
-
-                self.interface.right_window_display_info("Sortir Nouvelle catégorie")
                 # Used to quit this loop
                 self.interface.clear_window()
                 answer = self.interface.set_up_drop_down(
@@ -458,10 +429,8 @@ class UserDialog:
             # This last option is to close properly the program and reinitialize the shell.
             elif answer == cfg.S_A_OPERATE_ON_DB[3]:
                 self.interface.clear_window()
-                self.interface.right_window_display_info("Choix : Quitter")
                 running_main = False
                 decision = "Quit"
-        self.interface.right_window_display_info("Sortie boucle")
         return decision
 
 def main(user):
@@ -478,7 +447,6 @@ def main(user):
         if quit == "Quit":
             user.queries.close_connection()
             user.interface.quit_display()
-
 
 if __name__ == "__main__":
     user = UserDialog()
