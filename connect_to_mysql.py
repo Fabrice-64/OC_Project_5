@@ -218,7 +218,7 @@ class MySQLQueries:
     def upload_dataset(self, query, item_list):
         """
 
-        After the selection of a new category, comes it upload in the local DB.
+        After the selection of a new category, comes its upload in the local DB.
 
         Arguments:
         query: self explanatory

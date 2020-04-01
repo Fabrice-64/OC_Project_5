@@ -107,7 +107,7 @@ class ConnectToOFF:
         for product in data['products']:
             brand = self.check_special_characters(product.get('brands'))
             name = self.check_special_characters(product.get('product_name'))
-            category = self.check_special_characters(category)
+            category = category
             code = product.get('code')
             nutrition_grade = product.get('nutrition_grade_fr')
             stores = self.check_special_characters(product.get('stores'))
@@ -168,3 +168,6 @@ class ConnectToOFF:
 
 if __name__ == "__main__":
     connection = ConnectToOFF()
+    connection.import_products_list("Snacks")
+    
+    
