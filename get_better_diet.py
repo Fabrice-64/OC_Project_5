@@ -91,7 +91,6 @@ class UserDialog:
                 cfg.S_A_INFO_LOC_DISPLAY_RESULTS)
             answer = self.interface.set_up_drop_down(
                 cfg.S_A_OPERATE_ON_DB, cfg.SELECT_ANSWER)
-            time.sleep(1)
 
             # This part deals with the use of the local DB to search and find food items.
             if answer == cfg.S_A_OPERATE_ON_DB[0]:
@@ -159,7 +158,7 @@ class UserDialog:
                         running_data_not_null = False
                     else:
                         self.interface.right_window_display_info(
-                            cfg.WARNING_MESSAGE_0, "warning")
+                            cfg.WARNING_MESSAGE_2, "warning")
 
                 # Displays the answers fetched from the local DB
                 list_selection = []
@@ -382,7 +381,6 @@ class UserDialog:
                                         running_approval = False
                                 running = False
                         running_recorded_products = True
-
             # This part of the program is for adding a new category
             elif answer == cfg.S_A_OPERATE_ON_DB[2]:
                 y = 0
@@ -442,8 +440,8 @@ class UserDialog:
             # This last option is to close properly the program and reinitialize the shell.
             elif answer == cfg.S_A_OPERATE_ON_DB[3]:
                 running_main = False
-
-        self.queries.close_connection()
+                break
+        return "Quit"
 
 
 def main(user):
@@ -452,9 +450,15 @@ def main(user):
     time.sleep(1)
     user.interface.split_screen()
     answer = user.step_terms_and_conditions(cfg.T_C_FILE)
-    if answer == "Yes":
-        user.step_select_action()
-    user.interface.quit_display()
+    if answer == "No":
+        user.queries.close_connection()
+        user.interface.quit_display()
+    else:
+        quit = user.step_select_action()
+        if quit == "Quit":
+            user.queries.close_connection()
+            user.interface.quit_display()
+    
 
 
 if __name__ == "__main__":
