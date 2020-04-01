@@ -9,18 +9,21 @@ Exceptions:
 NIL.
     
 Functions:
-query_settings(answer): insert a % before and after each word of selected fields in order to broaden the search.
+query_settings(answer): insert a % before and after each word of selected fields \
+    in order to broaden the search.
 
 """
 import mysql.connector
-import config 
+import config
 import config_queries as cq
 import datetime
 
+
 class MySQLQueries:
     """
-        
-    Organized around an initialization of the connection to the DB at the instanciation, followed by different queries to be used as the program unfolds.
+
+    Organized around an initialization of the connection to the DB at the instanciation, \
+    followed by different queries to be used as the program unfolds.
 
     Methods:
     get_categories(): get the names of the categories from which the user can afterwards load the data from OFF.
@@ -28,7 +31,7 @@ class MySQLQueries:
     get_product(): get a selection of product from the local DB, iaw the criterion filled by the user.
 
     get_best_product(): get a filtered list of products as close as possible to a selected product.
-    
+
     retrieve_recorded_products(): get the list of best products recorded in the local DB.
 
     get_numbers_on_DB(): fetch some figures related to the local DB, like the number of rows, etc.
@@ -49,20 +52,21 @@ class MySQLQueries:
     can be included in the __init__ to check the connection.
 
     """
+
     def __init__(self):
         """
-           
+
         Initialize the connexion with the local DB with parameters stored in config.
 
         Arguments:
         NIL.
-            
+
         Returns:
         NIL.
 
         """
         self.cnx = mysql.connector.connect(**config.DB_CONNECTION_PARAMETERS)
-        self.cursor = self.cnx.cursor(buffered= True)
+        self.cursor = self.cnx.cursor(buffered=True)
 
     def get_categories(self, query):
         """
@@ -79,12 +83,12 @@ class MySQLQueries:
         categories = {}
         self.cursor.execute(query)
         for (key, category) in self.cursor:
-            categories.update({int(key) : category})
+            categories.update({int(key): category})
         return categories
-    
+
     def get_product(self, query, searched_item):
         """
-           
+
         Get a list of 10 products as close as possible to the criterion filled by the user
 
         Arguments:
@@ -96,42 +100,43 @@ class MySQLQueries:
 
         """
         products = []
-        query = query.format(searched_item[0], searched_item[1], searched_item[2], searched_item[3])
+        query = query.format(
+            searched_item[0], searched_item[1], searched_item[2], searched_item[3])
         self.cursor.execute(query)
-        results = self.cursor.fetchmany(size = 10)
-        counter  = 1
+        results = self.cursor.fetchmany(size=10)
+        counter = 1
         for result in results:
-            result = {int(counter) : result}
+            result = {int(counter): result}
             products.append(result)
             counter += 1
         return products
 
     def get_best_product(self, query, best_product):
         """
-           
+
         Get a list of products with a better nutrition grade that the initially selected.
 
         Arguments: 
         query: self explanatory.
 
         best-product (tuple): contain the criterion to sort out the matching products.
-            
+
         Returns:
         best_products (list): list of selected products, with an index number.
-        
+
         """
         best_products = []
         result = []
         query = query.format(best_product[0], best_product[1], best_product[2])
         self.cursor.execute(query)
-        results = self.cursor.fetchmany(size = 5)
-        counter  = 1
+        results = self.cursor.fetchmany(size=5)
+        counter = 1
         for result in results:
             result_list = [int(counter), result]
             best_products.append(result_list)
             counter += 1
         return best_products
-    
+
     def retrieve_recorded_products(self, query):
         """
 
@@ -147,7 +152,7 @@ class MySQLQueries:
         recorded_products = []
         result = []
         self.cursor.execute(query)
-        results = self.cursor.fetchmany(size = 5)
+        results = self.cursor.fetchmany(size=5)
         counter = 1
         for result in results:
             result_list = [int(counter), result]
@@ -155,18 +160,17 @@ class MySQLQueries:
             counter += 1
         return recorded_products
 
-
-    def get_numbers_on_DB(self,query):
+    def get_numbers_on_DB(self, query):
         """
 
         Gets simple figures from the local DB.
-        
+
         Arguments:
         query: self explanatory
-            
+
         Returns:
         result[0][0]: currently the number of rows in the table product.
-        
+
         """
         self.cursor.execute(query)
         result = self.cursor.fetchmany()
@@ -180,18 +184,18 @@ class MySQLQueries:
         Arguments:
         query: self explanatory
         item: the food item to be recorded in the table best_product.
-            
+
         Returns:
         NIL
-        
+
         """
         query = query.format(item[0], item[1], item[2])
         self.cursor.execute(query)
         self.cnx.commit()
 
-    def upload_dataset(self, query,item_list):
+    def upload_dataset(self, query, item_list):
         """
-            
+
         After the selection of a new category, comes it upload in the local DB.
 
         Arguments:
@@ -208,17 +212,18 @@ class MySQLQueries:
 
     def close_connection(self):
         """
-            
+
         Close the connection with the local DB.
 
         Arguments:
         NIL
-            
+
         Returns:
         NIL
 
         """
         self.cursor.close()
+
 
 def query_settings(answer):
     """
@@ -239,8 +244,10 @@ def query_settings(answer):
     item_features = " ".join(temporary_list)
     return item_features
 
+
 if __name__ == "__main__":
     requete = MySQLQueries()
     query = cq.query_retrieve_recorded_product
-    result = requete.retrieve_recorded_products(cq.query_retrieve_recorded_product)
+    result = requete.retrieve_recorded_products(
+        cq.query_retrieve_recorded_product)
     print(result)

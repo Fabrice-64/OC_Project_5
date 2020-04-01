@@ -12,9 +12,10 @@ Functions:
 NIL.
 
 """
-DB_CONNECTION_PARAMETERS = {'user' :'root', 'host' : 'localhost', 'database' : 'get_better_diet'}
+DB_CONNECTION_PARAMETERS = {'user': 'root',
+                            'host': 'localhost', 'database': 'get_better_diet'}
 
-#Message displayed when launching the programm. Used by the method display_message()
+# Message displayed when launching the programm. Used by the method display_message()
 WELCOME_MESSAGE = "WELCOME TO 'GET A BETTER DIET' APP \n"
 TITLE_0 = "Initial Window"
 
@@ -32,7 +33,8 @@ T_C_APPROVAL = "You have decided to go on with this App\n"
 TITLE_2 = "Working with the Databases"
 S_A_INFO_LINE_1 = "Please select in the list below the action you are interested in\n"
 S_A_INFO_LOC_DISPLAY_RESULTS = "The results will be displayed in this window\n"
-S_A_OPERATE_ON_DB = ["Look for a substitution food item", "Get to the previous searches", "Upload a new category", "Quit"]
+S_A_OPERATE_ON_DB = ["Look for a substitution food item",
+                     "Get to the previous searches", "Upload a new category", "Quit"]
 
 S_A_SIZE_LOCAL_DB = 'Your local database currently counts : {} food items'
 
@@ -70,21 +72,21 @@ S_A_GO_ON_CHECK_FOOD_ITEMS_Y_N = "Do you want to select another food item (Y/N?\
 
 
 # These are the keyboard information lines to deal with the textpad
-USER_GUIDE = [ "User's Guide:",
-    "THE NUMERIC KEYPAD IS NOT ACTIVATED",
-    "Press Ctrl+B to have the cursor go left.",
-    "Press Ctrl+D to delete the character under the cursor.",
-    "Press Ctrl+H to delete a character backwards.",
-    "Press Ctrl+E to go to the end of line.",
-    "Press Ctrl+G or ENTER to terminate the operation."]
+USER_GUIDE = ["User's Guide:",
+              "THE NUMERIC KEYPAD IS NOT ACTIVATED",
+              "Press Ctrl+B to have the cursor go left.",
+              "Press Ctrl+D to delete the character under the cursor.",
+              "Press Ctrl+H to delete a character backwards.",
+              "Press Ctrl+E to go to the end of line.",
+              "Press Ctrl+G or ENTER to terminate the operation."]
 
-#These are the instructions displayed when using the keypad
+# These are the instructions displayed when using the keypad
 KEYPAD_INSTRUCTION_1 = "Please input your selection in the box below.\n"
 
 
 SELECT_ANSWER = "Please select the appropriate answer and press ENTER\n"
 SELECT_Y_N = "Press Y to continue, N to interrupt.\n"
-REPLY_YES_NO = ["Yes","No"]
+REPLY_YES_NO = ["Yes", "No"]
 
 WARNING_MESSAGE_0 = "PLEASE ENTER A CORRECT VALUE"
 WARNING_MESSAGE_1 = "YOUR SEARCH IS TO RESTRICTIVE, BE LESS SPECIFIC"
