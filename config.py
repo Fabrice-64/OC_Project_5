@@ -58,7 +58,8 @@ S_A_COMPARRISON_DATE = "Comparrison was on: {: %d %B %y %H:%M}.\n"
 S_A_SINGLE_RETURN = "\n"
 
 # These are the dialog strings dealing with the DB consultation.
-S_A_ASK_CHECK_DETAILED_RESULTS = "Do you want to check the result on the Web and record it (Y/N)?\n"
+S_A_ASK_CHECK_DETAILED_RESULT = "Do you want to check the result on the Web (Y/N)?\n"
+S_A_USE_BROWSER = "Please select the item you want to check on the official website:\n"
 S_A_ASK_RECORD_SELECTED_ITEM = "Do you want to record this research for further use (Y/N)\n?"
 
 # These are the dialog strings to download and upload an excerpt of Open Food Facts DB

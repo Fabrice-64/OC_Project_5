@@ -457,6 +457,7 @@ class Interface:
         self.left_window_display_string(0, config.QUIT_MESSAGE)
         time.sleep(1)
         self.screen.clear()
+        self.screen.keypad(False)
         curses.curs_set(1)
         curses.echo()
         curses.nocbreak()

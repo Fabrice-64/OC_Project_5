@@ -54,3 +54,5 @@ query_retrieve_recorded_product = """SELECT LEFT(product.name, 40), product.bran
         (SELECT product.nutrition_grade FROM product WHERE best_product.reference_product = product.code)  \
         FROM product JOIN  best_product ON best_product.product_id = product.code \
         ORDER BY best_product.query_created DESC"""
+
+query_update_product = "UPDATE best_product SET best_product.query_created = '{}' WHERE product_id = {}"

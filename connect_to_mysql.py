@@ -179,10 +179,11 @@ class MySQLQueries:
     def upload_product(self, query, item):
         """
 
-        Uploads only one item in the local DB. Currently formatted to record a best product.
+        Upload only one item in the local DB. Currently formatted to record a best product.
 
         Arguments:
         query: self explanatory
+
         item: the food item to be recorded in the table best_product.
 
         Returns:
@@ -190,6 +191,25 @@ class MySQLQueries:
 
         """
         query = query.format(item[0], item[1], item[2])
+        self.cursor.execute(query)
+        self.cnx.commit()
+    
+    def update_best_product_date(self, query, item):
+        """
+
+        Update the field date of a recorded best product
+
+        Arguments:
+        query: self explanatory.
+
+        item: date-time of the record and product code.
+
+        Returns:
+        NIL.
+
+
+        """
+        query = query.format(item[0], item[1])
         self.cursor.execute(query)
         self.cnx.commit()
 
