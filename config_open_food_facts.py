@@ -24,9 +24,9 @@ OFF_PAGE = 1
 HEADERS = {'User-Agent': 'python-requests/2.22.0'}
 
 # This payload is used in the API to get selected data.
-PAYLOAD = {'tagtype_0': 'categories', 'tag_contains_0': 'contains', 'tag_0': '', \
-    'tag_types_1': 'countries', 'tag_contains_1': 'contains', 'tag_0': 'fr', 'json': 1, \
-        'action': "process", 'fields': "brands,product_name, categories,code,\
+PAYLOAD = {'tagtype_0': 'categories', 'tag_contains_0': 'contains', 'tag_0': '',
+           'tag_types_1': 'countries', 'tag_contains_1': 'contains', 'tag_0': 'fr', 'json': 1,
+           'action': "process", 'fields': "brands,product_name, categories,code,\
             stores,nutrition_grade_fr,ingredients_text", "page_size": 1000, "page": OFF_PAGE}
 
 # This url is where the OFF DB is to be found. It is completed by other components, \
