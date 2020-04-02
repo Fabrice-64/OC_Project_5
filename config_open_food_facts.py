@@ -1,17 +1,20 @@
 """
 
-This module encompasses all the parameters needed for Open Food Facts API.
+    This module encompasses all the parameters needed for Open Food Facts API.
 
-Class:
- NIL
+    Class:
     
-Exceptions: 
-NIL
+    NIL
+        
+    Exceptions: 
 
-Functions:
-NIL
+    NIL
 
-"""
+    Functions:
+    
+    NIL
+
+    """
 
 # Updload data from Open Food Facts
 NUMBER_REJECTED_ITEMS = '{} food items have rejected because of bad data'

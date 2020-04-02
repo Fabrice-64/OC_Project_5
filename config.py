@@ -1,17 +1,20 @@
 """
     
-Purpose of this module is to gather the various constants used all along this program
+    Purpose of this module is to gather the various constants used all along this program
 
-Classes:
-NIL.
-    
-Exceptions:
-NIL.
-    
-Functions:
-NIL.
+    Classes:
 
-"""
+    NIL.
+        
+    Exceptions:
+
+    NIL.
+        
+    Functions:
+    
+    NIL.
+
+    """
 DB_CONNECTION_PARAMETERS = {'user': 'root',
                             'host': 'localhost', 'database': 'get_better_diet'}
 

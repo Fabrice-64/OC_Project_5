@@ -1,18 +1,21 @@
 """
 
-In this module, all the mySQL queries are listed.
-They interact with the Controller via the module connect_to_mysql.py
+        In this module, all the mySQL queries are listed.
+        They interact with the Controller via the module connect_to_mysql.py
 
-Classes:
-NIL
-        
-Exceptions:
-NIL.
-        
-Functions:
-NIL.
+        Classes:
 
-"""
+        NIL
+                
+        Exceptions:
+
+        NIL.
+                
+        Functions:
+        
+        NIL.
+
+        """
 
 query_categories = """SELECT * FROM category ORDER BY idcategory ASC"""
 
