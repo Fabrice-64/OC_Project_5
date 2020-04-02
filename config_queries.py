@@ -17,7 +17,7 @@
 
         """
 
-query_categories = """SELECT * FROM category ORDER BY idcategory ASC"""
+query_categories = """SELECT name FROM category ORDER BY idcategory ASC"""
 
 query_count_rows = """SELECT COUNT(*) FROM product"""
 
@@ -43,9 +43,9 @@ query_best_product = """SELECT LEFT(product.name,40), product.brand, product.nut
         ORDER BY product.nutrition_grade ASC LIMIT 5"""
 
 
-query_retrieve_available_categories = """SELECT DISTINCT category.idcategory, category.name \
-        FROM category RIGHT JOIN product \
-        ON category.idcategory = product.category_id"""
+query_retrieve_available_categories = """SELECT category.name, COUNT(*)\
+         FROM product JOIN category ON product.category_id = category.idcategory\
+         GROUP BY product.category_id HAVING COUNT(*) >200"""
 
 query_record_best_product = """REPLACE INTO best_product VALUES (NULL, {}, '{}',{})"""
 

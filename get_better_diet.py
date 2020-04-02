@@ -145,14 +145,16 @@ class UserDialog:
                 # list of categories previously recorded is displayed on the right window
                 categories = self.queries.get_categories(
                     cq.query_retrieve_available_categories)
-                for (key, category) in categories.items():
+                index_categories = []
+                for category in categories:
                     self.interface.right_window_display_result(
-                        cfg.S_A_INDEX_NAME.format(key, category))
+                        cfg.S_A_INDEX_NAME_QTY.format(category[0], category[1][0], category[1][1]))
+                    index_categories.append(int(category[0]))
 
                 self.interface.display_users_guide_textpad(cfg.USER_GUIDE)
 
-                running_data_not_null = True
                 # This loop is intended to avoid that a too precise request leads to an empty selection.
+                running_data_not_null = True
                 while running_data_not_null:
                     if running_data_not_null is True:
                         y = 0
@@ -166,22 +168,26 @@ class UserDialog:
                         # These fields help to characterize the food item the user is looking for.
                         answer_category = self.interface.display_textpad(
                             y, 1, 3)
+                        answer_category = self.ascii_to_string(answer_category)
+                        # The category is the only field which is compulsary.
                         running_category_choice = True
                         while running_category_choice:
-                            # The category is the only field which is compulsary.
-                            answer_category = self.ascii_to_string(
-                                answer_category)
-                            if answer_category.isdigit() is False or \
-                                    int(answer_category) not in categories.keys():
+                            if answer_category.isdigit() and int(answer_category) \
+                                in index_categories:
+                                answer_category = int(answer_category)
+                                answer_category = categories[answer_category-1][1][0]                  
+                                running_category_choice = False
+                            else:
                                 self.interface.right_window_display_info(
                                     cfg.WARNING_MESSAGE_0, "warning")
+                                answer_category = ""
                                 answer_category = self.interface.display_textpad(
                                     y, 1, 3)
-                            else:
-                                running_category_choice = False
+                                answer_category = self.ascii_to_string(
+                                    answer_category)
+                                running_category_choice = True
+                        
                         # Input the parameters to search for a food item.
-                        answer_category = int(answer_category)
-                        answer_category = categories.get(answer_category)
                         answer_name, y = self.interface.left_window_display_string_textpad(
                             5, 1, 25, cfg.S_A_ITEM_NAME)
                         answer_name = sql.query_settings(answer_name)
@@ -428,24 +434,24 @@ class UserDialog:
                 # A short sample of OFF categories is imported and displayed in the right window.
                 categories = self.queries.get_categories(
                     cq.query_categories)
-                y_categories = 0
-                for (key, value) in categories.items():
+                index_categories = []
+                for category in categories:
                     self.interface.right_window_display_result(
-                        cfg.S_A_INDEX_NAME .format(key, value))
+                        cfg.S_A_INDEX_NAME .format(category[0], category[1][0]))
+                    index_categories.append(int(category[0]))
 
                 self.interface.display_users_guide_textpad(cfg.USER_GUIDE)
                 # The user is requested to designate a category to be uploaded.
                 answer_category, y = self.interface.left_window_display_string_textpad(
                     y, 1, 3, cfg.S_A_INFO_ADD_NEW_CATEGORY)
                 answer_category = self.ascii_to_string(answer_category)
-
                 running = True
                 while running:
                     if answer_category.isdigit() and int(answer_category) \
-                            in categories.keys():
-                        selected_category = categories.get(
-                            int(answer_category))
-                        selected_category = str(selected_category)
+                            in index_categories:
+                        answer_category = int(answer_category)
+                        selected_category = categories[answer_category-1][1][0]
+                        #selected_category = str(selected_category)
                         display_chosen_category = cfg.S_A_INFO_NAME_IMPORTED_CATEGORY + \
                             selected_category
                         self.interface.right_window_display_info(

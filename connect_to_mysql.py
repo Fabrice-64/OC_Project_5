@@ -87,17 +87,20 @@ class MySQLQueries:
 
             Arguments:
 
-            query: query designed to fetch the categories, including their id number.
+            query: query designed to fetch the categories.
 
             Returns:
             
-            categories with their id number.
+            categories with an index number.
 
             """
-        categories = {}
+        categories = []
         self.cursor.execute(query)
-        for (key, category) in self.cursor:
-            categories.update({int(key): category})
+        counter = 1
+        for category in self.cursor:
+            category = [int(counter), category]
+            counter += 1
+            categories.append(category)
         return categories
 
     def get_product(self, query, searched_item):
@@ -247,7 +250,7 @@ class MySQLQueries:
 
             Arguments:
 
-            query: self explanatory
+            query: self explanatory, based on a category as main criterion.
 
             item_list: list of items downloaded from OFF. They have been largely cleaned beforehand.
 
@@ -255,7 +258,7 @@ class MySQLQueries:
 
             NIL
 
-        """
+            """
         self.cursor.executemany(query, item_list)
         self.cnx.commit()
 
@@ -300,7 +303,7 @@ def query_settings(answer):
 
 if __name__ == "__main__":
     requete = MySQLQueries()
-    query = cq.query_retrieve_recorded_product
-    result = requete.retrieve_recorded_products(
-        cq.query_retrieve_recorded_product)
-    print(result)
+    query = cq.query_retrieve_available_categories
+    result = requete.get_categories(query)
+    for category in result:
+        print(category)

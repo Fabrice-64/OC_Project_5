@@ -45,7 +45,7 @@ S_A_PROCESSING_RECORD = "Your selection is being recorded."
 
 # These are the dialog strings to select a substition food item
 TITLE_3 = "Looking for a substitution food item"
-S_A_SELECT_CATEGORY = "Please type the number of the selected category if you wish to:\n"
+S_A_SELECT_CATEGORY = "Please type the number of the selected category (requiredeu):\n"
 S_A_ITEM_NAME = "Please name the food item for which you are looking for a substitution:\n"
 S_A_ITEM_BRAND = "Please name the brand of this food item:\n"
 S_A_ITEM_CODE = "Please type the id code of the product:\n"
@@ -53,7 +53,7 @@ S_A_INFO_ITEM_SEARCH_OUTCOME = "Here is a selection of food items we have found:
 S_A_COMPARE_FOOD_ITEMS = "Please Enter the Food Item you wish to compare with:\n"
 S_A_ADD_KEYWORDS = "Please enter one or two keywords in order to have a larger choice:\n"
 
-S_A_INDEX_NAME = "{}:  {}\n"
+S_A_INDEX_NAME_QTY = "{}:  {} (counts: {} items)\n"
 S_A_DISPLAY_BRAND_NUTRISCORE = "Brand: {}, Nutrition grade: {}\n"
 S_A_DISPLAY_STORES = "Stores: {}\n"
 S_A_DISPLAY_INITIAL_PRODUCT = "Initial product was: {}\n"
