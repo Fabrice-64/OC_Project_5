@@ -128,6 +128,7 @@ class UserDialog:
 
             """
         self.interface.title_bar(cfg.TITLE_2)
+        # Display a drop down menu to navigate in the application
         self.interface.clear_window()
         self.interface.left_window_display_string(0, cfg.S_A_INFO_LINE_1)
         self.interface.right_window_display_result(
@@ -151,7 +152,7 @@ class UserDialog:
                 self.interface.display_users_guide_textpad(cfg.USER_GUIDE)
 
                 running_data_not_null = True
-                # This loop is intended to avoid that a too precise request leads to an empty selection
+                # This loop is intended to avoid that a too precise request leads to an empty selection.
                 while running_data_not_null:
                     if running_data_not_null is True:
                         y = 0
@@ -162,12 +163,12 @@ class UserDialog:
                         self.interface.display_users_guide_textpad(
                             cfg.USER_GUIDE)
                         y = y+3
-                        # These fields help to characterize the food item the user is looking for
+                        # These fields help to characterize the food item the user is looking for.
                         answer_category = self.interface.display_textpad(
                             y, 1, 3)
                         running_category_choice = True
                         while running_category_choice:
-                            # The category is the only field which is compulsary
+                            # The category is the only field which is compulsary.
                             answer_category = self.ascii_to_string(
                                 answer_category)
                             if answer_category.isdigit() is False or \
@@ -178,6 +179,7 @@ class UserDialog:
                                     y, 1, 3)
                             else:
                                 running_category_choice = False
+                        # Input the parameters to search for a food item.
                         answer_category = int(answer_category)
                         answer_category = categories.get(answer_category)
                         answer_name, y = self.interface.left_window_display_string_textpad(
@@ -190,12 +192,12 @@ class UserDialog:
                             y, 1, 13, cfg.S_A_ITEM_CODE)
                         answer_code = sql.query_settings(answer_code)
                         answer_nutrition_grade = ""
-
+                        # Launch the query in the local DB.
                         item_search = [answer_category, answer_name, answer_brand,
                                        answer_code]
                         detailed_products = self.queries.get_product(
                             cq.query_searched_item, item_search)
-
+                        # If the criterion are too specific, avoid a null outcome.
                         if len(detailed_products) == 0:
                             running_data_not_null = True
                             self.interface.right_window_display_info(
@@ -203,6 +205,7 @@ class UserDialog:
                         else:
                             running_data_not_null = False
 
+                # Display a selection of products.
                 list_selection = []
                 list_item = []
                 self.interface.clear_window("right")
@@ -243,6 +246,7 @@ class UserDialog:
                 keywords_item, y = self.interface.left_window_display_string_textpad(
                     y, 1, 25, cfg.S_A_ADD_KEYWORDS)
 
+                # If the keywords are too restrictive new ones are demanded.
                 running_fetch_best_products = True
                 while running_fetch_best_products:
                     if running_fetch_best_products is True:
@@ -275,6 +279,7 @@ class UserDialog:
                     index_list_best_products.append(str(item[0]))
 
                 y = 0
+                # The user is offered to view the item in a browser and to record it.
                 self.interface.left_window_display_string(
                     y, cfg.S_A_ASK_CHECK_DETAILED_RESULT)
                 check_answer, y = self.interface.left_window_display_string_textpad(
@@ -315,6 +320,7 @@ class UserDialog:
                             y, 1, 2, cfg.S_A_ASK_RECORD_SELECTED_ITEM)
 
                         running_record_item = True
+                        # Invite to record the food item in the local DB
                         while running_record_item:
                             record_item = self.ascii_to_string(
                                 record_item).upper()
@@ -346,7 +352,7 @@ class UserDialog:
                 self.interface.clear_window()
                 answer = self.interface.set_up_drop_down(
                     cfg.S_A_OPERATE_ON_DB, cfg.SELECT_ANSWER)
-
+            # Step where the user looks into the best products he has recorded.
             elif answer == cfg.S_A_OPERATE_ON_DB[1]:
                 self.interface.clear_window()
                 last_recorded_products = self.queries.retrieve_recorded_products(
@@ -366,7 +372,7 @@ class UserDialog:
                     self.interface.right_window_display_result(
                         cfg.S_A_SINGLE_RETURN)
                     index_list_products.append(str(item[0]))
-
+                # The user can see a product in detail.
                 running_recorded_products = True
                 while running_recorded_products:
                     if running_recorded_products is True:
@@ -415,7 +421,7 @@ class UserDialog:
                 # Used to quit this loop
                 answer = self.interface.set_up_drop_down(
                     cfg.S_A_OPERATE_ON_DB, cfg.SELECT_ANSWER)
-
+            # This is to import products from one of the most popular categories.
             elif answer == cfg.S_A_OPERATE_ON_DB[2]:
                 y = 0
                 self.interface.clear_window()
