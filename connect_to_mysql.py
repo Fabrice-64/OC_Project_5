@@ -16,10 +16,12 @@
         in order to broaden the search.
 
     """
+import datetime
+
 import mysql.connector
+
 import config
 import config_queries as cq
-import datetime
 
 
 class MySQLQueries:

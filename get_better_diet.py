@@ -21,14 +21,15 @@
     main(): launch the application and interrupts it when requested by the user.        
 
     """
-import interface_management as im
-import connect_to_mysql as sql
-import connect_to_OFF as OFF
-import config_open_food_facts as coff
-import config_queries as cq
-import config as cfg
 import time
 from datetime import datetime
+
+import config as cfg
+import config_open_food_facts as coff
+import config_queries as cq
+import connect_to_mysql as sql
+import connect_to_OFF as OFF
+import interface_management as im
 
 
 class UserDialog:

@@ -18,10 +18,12 @@
     NIL.
 
     """
-import requests
 import json
-import config_open_food_facts as coff
 import webbrowser
+
+import requests
+
+import config_open_food_facts as coff
 
 
 class ConnectToOFF:
@@ -183,5 +185,3 @@ class ConnectToOFF:
 if __name__ == "__main__":
     connection = ConnectToOFF()
     connection.import_products_list("Snacks")
-    
-    

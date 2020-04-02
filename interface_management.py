@@ -19,12 +19,13 @@
     No function has been implemented. All methods belong to the Interface class.
 
     """
+import curses
+import os
 import time
 import webbrowser
-import os
-import curses
-import config
 from curses import textpad
+
+import config
 
 
 class Interface:
