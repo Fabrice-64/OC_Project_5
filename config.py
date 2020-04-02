@@ -54,6 +54,7 @@ S_A_COMPARE_FOOD_ITEMS = "Please Enter the Food Item you wish to compare with:\n
 S_A_ADD_KEYWORDS = "Please enter one or two keywords in order to have a larger choice:\n"
 
 S_A_INDEX_NAME_QTY = "{}:  {} (counts: {} items)\n"
+S_A_INDEX_NAME = "{}:  {}\n"
 S_A_DISPLAY_BRAND_NUTRISCORE = "Brand: {}, Nutrition grade: {}\n"
 S_A_DISPLAY_STORES = "Stores: {}\n"
 S_A_DISPLAY_INITIAL_PRODUCT = "Initial product was: {}\n"
@@ -95,6 +96,7 @@ REPLY_YES_NO = ["Yes", "No"]
 WARNING_MESSAGE_0 = "PLEASE ENTER A CORRECT VALUE"
 WARNING_MESSAGE_1 = "YOUR SEARCH IS TO RESTRICTIVE, BE LESS SPECIFIC"
 WARNING_MESSAGE_2 = "NO FOOD ITEM MATCHES YOUR REQUEST, NEW CRITERION ARE NEEDED"
+WARNING_MESSAGE_3 = "NO BEST PRODUCT RECORDED IN THE DB (WAS MAY BE UPDATED)"
 
 # Miscellaneous messages.
 BACK_MAIN_MENU = "You are going back to the main menu."

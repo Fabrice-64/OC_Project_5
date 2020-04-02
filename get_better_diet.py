@@ -220,7 +220,7 @@ class UserDialog:
                 for item in detailed_products:
                     for (key, values) in item.items():
                         self.interface.right_window_display_result(
-                            cfg.S_A_INDEX_NAME .format(key, values[0]))
+                            cfg.S_A_INDEX_NAME.format(key, values[0]))
                         self.interface.right_window_display_result(
                             cfg.S_A_DISPLAY_BRAND_NUTRISCORE.format(values[1], values[2]))
                         self.interface.right_window_display_result(
@@ -381,46 +381,50 @@ class UserDialog:
                 # The user can see a product in detail.
                 running_recorded_products = True
                 while running_recorded_products:
-                    if running_recorded_products is True:
-                        y = 0
-                        self.interface.left_window_display_string(
-                            y, cfg.S_A_INFO_LAST_RECORDS)
-                        check_item, y = self.interface.left_window_display_string_textpad(
-                            y+1, 1, 2, cfg.S_A_USE_BROWSER)
-                        running_use_browser = True
-                        while running_use_browser:
-                            check_item = self.ascii_to_string(check_item)
-                            if check_item not in index_list_products:
-                                self.interface.right_window_display_info(
-                                    cfg.WARNING_MESSAGE_0, "warning")
-                                check_item = self.interface.display_textpad(
-                                    y-2, 1, 2)
-                                running_use_browser = True
-                            else:
-                                # Calls the hyperlink to open the product file in the browser.
-                                check_item = int(check_item)
-                                code_product = last_recorded_products[check_item-1][1][2]
-                                self.OFF.open_product_file_OFF(code_product)
-                                running_use_browser = False
-                            # The user is asked whether he wants to check another item.
-                        go_on_items, y = self.interface.left_window_display_string_textpad(
-                            y, 1, 2, cfg.S_A_GO_ON_CHECK_FOOD_ITEMS_Y_N)
-                        running_go_on = True
-                        while running_go_on:
-                            if running_go_on is True:
-                                check_item = self.ascii_to_string(
-                                    go_on_items).upper()
-                                if check_item not in ["Y", "N"]:
+                    if len(index_list_products) == 0:
+                        self.interface.right_window_display_info(cfg.WARNING_MESSAGE_3, "warning")
+                        running_recorded_products = False
+                    else:
+                        if running_recorded_products is True:
+                            y = 0
+                            self.interface.left_window_display_string(
+                                y, cfg.S_A_INFO_LAST_RECORDS)
+                            check_item, y = self.interface.left_window_display_string_textpad(
+                                y+1, 1, 2, cfg.S_A_USE_BROWSER)
+                            running_use_browser = True
+                            while running_use_browser:
+                                check_item = self.ascii_to_string(check_item)
+                                if check_item not in index_list_products:
                                     self.interface.right_window_display_info(
                                         cfg.WARNING_MESSAGE_0, "warning")
-                                    go_on_items = self.interface.display_textpad(
+                                    check_item = self.interface.display_textpad(
                                         y-2, 1, 2)
-                                    running_go_on = True
-                                elif check_item == "N":
-                                    running_recorded_products = False
+                                    running_use_browser = True
                                 else:
-                                    running_recorded_products = True
-                                running_go_on = False
+                                    # Calls the hyperlink to open the product file in the browser.
+                                    check_item = int(check_item)
+                                    code_product = last_recorded_products[check_item-1][1][2]
+                                    self.OFF.open_product_file_OFF(code_product)
+                                    running_use_browser = False
+                                # The user is asked whether he wants to check another item.
+                            go_on_items, y = self.interface.left_window_display_string_textpad(
+                                y, 1, 2, cfg.S_A_GO_ON_CHECK_FOOD_ITEMS_Y_N)
+                            running_go_on = True
+                            while running_go_on:
+                                if running_go_on is True:
+                                    check_item = self.ascii_to_string(
+                                        go_on_items).upper()
+                                    if check_item not in ["Y", "N"]:
+                                        self.interface.right_window_display_info(
+                                            cfg.WARNING_MESSAGE_0, "warning")
+                                        go_on_items = self.interface.display_textpad(
+                                            y-2, 1, 2)
+                                        running_go_on = True
+                                    elif check_item == "N":
+                                        running_recorded_products = False
+                                    else:
+                                        running_recorded_products = True
+                                    running_go_on = False
 
                 # Used to quit this loop
                 self.interface.clear_window()
