@@ -25,4 +25,4 @@ MySQL-connector
 * Activate a Python virtual environment
 * Install Requests
 * Install MySQL-connector
-* Launch the App via get_better_diet.py module
+* Launch the App in command line via get_better_diet.py module
