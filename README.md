@@ -8,3 +8,20 @@ As this project is to be developed using documentation driven development, a Wik
 
 ## Important Notice
 In order to properly use this short program, which works with the terminal, the window size should be at least 160 x 50
+
+## Requirements
+Python 3.8
+mySQL
+Requests
+MySQL-connector
+
+## How to use Get a Better Diet on your Computer
+* Install the last version of Python
+* Install MySQL 8
+* Download the files in .py listed in this repository
+* Create an empty DB using the schema available on this GitHub
+* Of course correct the DB access parameters in the config.py file
+* Activate a Python virtual environment
+* Install Requests
+* Install MySQL-connector
+* Launch the App via get_better_diet.py module
