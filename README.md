@@ -3,7 +3,7 @@
 ## Context
 The purpose of this project is to set up a DB linked to Open Food Facts within the framework of an OpenClassrooms education program on Python.
 
-** Notice: This Application is conceived as a stand-alone. Therefore it does not encompass the required protection measures, like protection of the DB against injections, etc**
+**Notice: This Application is conceived as a stand-alone. Therefore it does not encompass the required protection measures, like protection of the DB against injections, etc**
 
 ## Detailed information on this project
 As this project is to be developed using documentation driven development, a Wiki has been set up in order to help the readers to understand the various functionalities.  
