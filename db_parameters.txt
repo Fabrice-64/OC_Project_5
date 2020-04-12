@@ -1,0 +1,1 @@
+{'user': '', 'host': 'localhost', 'database': 'get_better_diot', 'password': ''}

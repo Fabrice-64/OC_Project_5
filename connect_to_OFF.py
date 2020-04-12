@@ -184,4 +184,5 @@ class ConnectToOFF:
 
 if __name__ == "__main__":
     connection = ConnectToOFF()
-    connection.import_products_list("Snacks")
+    report = connection.import_products_list("Snacks")
+    print(report[0])

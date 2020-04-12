@@ -40,7 +40,9 @@ class UserDialog:
         It is a composite class, with following components:
         im.Interface(): manage the interface.
 
-        sql.MySQLQueries(): manage the queries to the local DB.
+        sql.MySQLQueries(): manage the queries to the local DB. In order to check\
+            whether there already exists a DB, this class is instanciated\
+            in the step_select_action() method.
 
         OFF.ConnectToOFF(): manage the download of data from Open Food Facts.
 
@@ -62,7 +64,7 @@ class UserDialog:
 
     def __init__(self):
         self.interface = im.Interface()
-        self.queries = sql.MySQLQueries()
+        #self.queries = sql.MySQLQueries()
         self.OFF = OFF.ConnectToOFF()
 
     def step_terms_and_conditions(self, file):
@@ -78,7 +80,6 @@ class UserDialog:
             NIL
 
             """
-
         y = 0
         self.interface.title_bar(cfg.TITLE_1)
         self.interface.left_window_display_string(y, cfg.T_C_LINE_1)
@@ -117,6 +118,7 @@ class UserDialog:
         """
 
             Represent the main menu to navigate in the application.
+            This is where the connection with the class MySQLQueries is instantiated.
 
             Arguments:
 
@@ -127,6 +129,14 @@ class UserDialog:
             decision: used to give the main function the order to quit the app.
 
             """
+        try:
+            self.queries = sql.MySQLQueries()
+        except Exception:
+            self.interface.clear_window("right")
+            self.interface.right_window_display_info(cfg.WARNING_MESSAGE_4, "warning")
+            self.create_database()
+            time.sleep(3)
+            pass
         self.interface.title_bar(cfg.TITLE_2)
         # Display a drop down menu to navigate in the application
         self.interface.clear_window()
@@ -470,24 +480,24 @@ class UserDialog:
                         answer_category = self.ascii_to_string(answer_category)
                         running = True
 
-                    # This methods fetches a range of data from Open Food Facts.
-                    (nb_imported_items, items_left_apart,
-                     list_items) = self.OFF.import_products_list(selected_category)
-                    # Here some pieces of info related to the downloaded data are given for info.
-                    self.interface.right_window_display_info(
-                        coff.NUMBER_REJECTED_ITEMS.format(items_left_apart))
-                    self.interface.right_window_display_info(
-                        coff.NUMBER_DOWNLOADED_ITEMS.format(nb_imported_items))
+                # This methods fetches a range of data from Open Food Facts.
+                (nb_imported_items, items_left_apart,
+                    list_items) = self.OFF.import_products_list(selected_category)
+                # Here some pieces of info related to the downloaded data are given for info.
+                self.interface.right_window_display_info(
+                    coff.NUMBER_REJECTED_ITEMS.format(items_left_apart))
+                self.interface.right_window_display_info(
+                    coff.NUMBER_DOWNLOADED_ITEMS.format(nb_imported_items))
 
-                    # This is where the excerpt of OFF is uploaded in the local DB.
-                    self.queries.upload_dataset(
-                        cq.query_upload_new_category_products, list_items)
-                    nb_rows = self.queries.get_numbers_on_DB(
-                        cq.query_count_rows)
-                    self.interface.right_window_display_info(
-                        cfg.S_A_SIZE_LOCAL_DB.format(nb_rows))
-                    time.sleep(1)
-                    running = False
+                # This is where the excerpt of OFF is uploaded in the local DB.
+                self.queries.upload_dataset(
+                    cq.query_upload_new_category_products, list_items)
+                nb_rows = self.queries.get_numbers_on_DB(
+                    cq.query_count_rows)
+                self.interface.right_window_display_info(
+                    cfg.S_A_SIZE_LOCAL_DB.format(nb_rows))
+                time.sleep(1)
+                running = False
                 # Used to quit this loop
                 self.interface.clear_window()
                 answer = self.interface.set_up_drop_down(
@@ -499,6 +509,28 @@ class UserDialog:
                 running_main = False
                 decision = "Quit"
         return decision
+
+    def create_database(self):
+        """
+            This method is activated if no DB has been created. All the parameters\
+                are asked and the script for the creation is run
+            """
+        self.interface.clear_window("left")
+        y = 0
+        self.interface.left_window_display_string(y, cfg.C_DB_INITIAL_INFO)
+        user, y = self.interface.left_window_display_string_textpad(1, 1, 15, \
+            cfg.C_DB_USER)
+        user = self.ascii_to_string(user)
+        if user is not None:
+            cfg.DB_CONNECTION_PARAMETERS['user'] = user
+        password, y = self.interface.left_window_display_string_textpad(y,1, 20, \
+            cfg.C_DB_PASSWORD)
+        password = self.ascii_to_string(password)
+        cfg.DB_CONNECTION_PARAMETERS['password'] = password
+        with open("db_parameters.txt", "w") as file:
+            file.write(str(cfg.DB_CONNECTION_PARAMETERS))
+
+
 
 
 def main(user):
@@ -522,12 +554,10 @@ def main(user):
     user.interface.split_screen()
     answer = user.step_terms_and_conditions(cfg.T_C_FILE)
     if answer == "No":
-        user.queries.close_connection()
         user.interface.quit_display()
     else:
         quit = user.step_select_action()
         if quit == "Quit":
-            user.queries.close_connection()
             user.interface.quit_display()
 
 

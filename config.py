@@ -16,7 +16,8 @@
 
     """
 DB_CONNECTION_PARAMETERS = {'user': 'root',
-                            'host': 'localhost', 'database': 'get_better_diet'}
+                            'host': 'localhost', 'database': 'get_better_diot',
+                            'password': ""}
 
 # Message displayed when launching the programm. Used by the method display_message()
 WELCOME_MESSAGE = "WELCOME TO 'GET A BETTER DIET' APP \n"
@@ -32,12 +33,18 @@ T_C_QUESTION_ACCEPT_T_C = "Do you accept the Terms and Conditions?\n"
 T_C_IF_REFUSAL = "If you do not accept the Terms and Conditions, you'll quit automatically\n"
 T_C_APPROVAL = "You have decided to go on with this App\n"
 
+# These are the dialog strings related to the creation of the DB
+C_DB_INITIAL_INFO = "Please follow the instructions to create a new DB\n"
+C_DB_USER = "Please enter the user if you have defined one ('root' per default)\n"
+C_DB_PASSWORD = "Please enter the password to your DB (None per default)\n"
+
 # These are the dialog strings related to the step dealing with the actions to be conducted
 TITLE_2 = "Working with the Databases"
 S_A_INFO_LINE_1 = "Please select in the list below the action you are interested in\n"
 S_A_INFO_LOC_DISPLAY_RESULTS = "The results will be displayed in this window\n"
 S_A_OPERATE_ON_DB = ["Look for a substitution food item",
-                     "Get to the previous searches", "Upload a new category", "Quit"]
+                     "Get to the previous searches", "Upload a new category",
+                      "Quit"]
 
 S_A_SIZE_LOCAL_DB = 'Your local database currently counts : {} food items'
 
@@ -97,6 +104,7 @@ WARNING_MESSAGE_0 = "PLEASE ENTER A CORRECT VALUE"
 WARNING_MESSAGE_1 = "YOUR SEARCH IS TO RESTRICTIVE, BE LESS SPECIFIC"
 WARNING_MESSAGE_2 = "NO FOOD ITEM MATCHES YOUR REQUEST, NEW CRITERION ARE NEEDED"
 WARNING_MESSAGE_3 = "NO BEST PRODUCT RECORDED IN THE DB (WAS MAY BE UPDATED)"
+WARNING_MESSAGE_4 = "THE APP COULD NOT ACCESS THE DB, PLEASE CREATE ONE FIRST"
 
 # Miscellaneous messages.
 BACK_MAIN_MENU = "You are going back to the main menu."

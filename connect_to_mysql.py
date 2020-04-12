@@ -79,7 +79,7 @@ class MySQLQueries:
             """
         self.cnx = mysql.connector.connect(**config.DB_CONNECTION_PARAMETERS)
         self.cursor = self.cnx.cursor(buffered=True)
-
+        
     def get_categories(self, query):
         """
 
@@ -278,6 +278,14 @@ class MySQLQueries:
             """
         self.cursor.close()
 
+    def create_DB(self):
+        """
+
+            This method aims at creating a new DB, e.g at the first use of the App.
+
+        """
+        pass
+
 
 def query_settings(answer):
     """
@@ -299,6 +307,7 @@ def query_settings(answer):
     temporary_list = ["%"+word+"%" for word in temporary_list]
     item_features = " ".join(temporary_list)
     return item_features
+
 
 
 if __name__ == "__main__":
