@@ -174,7 +174,7 @@ class ConnectToOFF:
             code_product: completes the address where to find this very food item.
 
             Returns:
-            
+
             NIL.
 
             """

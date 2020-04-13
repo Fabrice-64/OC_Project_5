@@ -44,7 +44,7 @@ S_A_INFO_LINE_1 = "Please select in the list below the action you are interested
 S_A_INFO_LOC_DISPLAY_RESULTS = "The results will be displayed in this window\n"
 S_A_OPERATE_ON_DB = ["Look for a substitution food item",
                      "Get to the previous searches", "Upload a new category",
-                      "Quit"]
+                     "Quit"]
 
 S_A_SIZE_LOCAL_DB = 'Your local database currently counts : {} food items'
 
@@ -104,7 +104,7 @@ WARNING_MESSAGE_0 = "PLEASE ENTER A CORRECT VALUE"
 WARNING_MESSAGE_1 = "YOUR SEARCH IS TO RESTRICTIVE, BE LESS SPECIFIC"
 WARNING_MESSAGE_2 = "NO FOOD ITEM MATCHES YOUR REQUEST, NEW CRITERION ARE NEEDED"
 WARNING_MESSAGE_3 = "NO BEST PRODUCT RECORDED IN THE DB (WAS MAY BE UPDATED)"
-WARNING_MESSAGE_4 = "THE APP COULD NOT ACCESS THE DB, PLEASE CREATE ONE FIRST"
+WARNING_MESSAGE_4 = "THE APP COULD NOT FIND THE DB, PLEASE CREATE ONE FIRST"
 
 # Miscellaneous messages.
 BACK_MAIN_MENU = "You are going back to the main menu."

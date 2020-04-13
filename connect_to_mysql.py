@@ -82,7 +82,7 @@ class MySQLQueries:
             connection_parameters = pickle.load(file)
         self.cnx = mysql.connector.connect(**connection_parameters)
         self.cursor = self.cnx.cursor(buffered=True)
-        
+
     def get_categories(self, query):
         """
 
@@ -93,7 +93,7 @@ class MySQLQueries:
             query: query designed to fetch the categories.
 
             Returns:
-            
+
             categories with an index number.
 
             """
@@ -224,7 +224,7 @@ class MySQLQueries:
         query = query.format(item[0], item[1], item[2])
         self.cursor.execute(query)
         self.cnx.commit()
-    
+
     def update_best_product_date(self, query, item):
         """
 
@@ -285,6 +285,7 @@ class MySQLQueries:
         print("Database is to be created")
         pass
 
+
 def query_settings(answer):
     """
 
@@ -295,7 +296,7 @@ def query_settings(answer):
         answer: keyword, search criterion to be prepared for the search.
 
         Returns:
-        
+
         item_features: keyword made ready to be appended to the query.
 
         """
@@ -312,7 +313,6 @@ if __name__ == "__main__":
     with open("db_parameters.txt", "wb") as file:
         pickle.dump(config.DB_CONNECTION_PARAMETERS, file)
 
-    
     requete = MySQLQueries()
     query = cq.query_retrieve_available_categories
     result = requete.get_categories(query)

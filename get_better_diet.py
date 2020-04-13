@@ -134,7 +134,8 @@ class UserDialog:
             self.queries = sql.MySQLQueries()
         except Exception:
             self.interface.clear_window("right")
-            self.interface.right_window_display_info(cfg.WARNING_MESSAGE_4, "warning")
+            self.interface.right_window_display_info(
+                cfg.WARNING_MESSAGE_4, "warning")
             self.create_connection()
             self.create_db = True
         finally:
@@ -142,7 +143,8 @@ class UserDialog:
 
         if self.create_db is True:
             self.queries.create_database()
-            self.interface.right_window_display_info("A new DB will be created")
+            self.interface.right_window_display_info(
+                "A new DB will be created")
 
         self.interface.title_bar(cfg.TITLE_2)
         # Display a drop down menu to navigate in the application
@@ -190,9 +192,9 @@ class UserDialog:
                         running_category_choice = True
                         while running_category_choice:
                             if answer_category.isdigit() and int(answer_category) \
-                                in index_categories:
+                                    in index_categories:
                                 answer_category = int(answer_category)
-                                answer_category = categories[answer_category-1][1][0]                  
+                                answer_category = categories[answer_category-1][1][0]
                                 running_category_choice = False
                             else:
                                 self.interface.right_window_display_info(
@@ -203,7 +205,7 @@ class UserDialog:
                                 answer_category = self.ascii_to_string(
                                     answer_category)
                                 running_category_choice = True
-                        
+
                         # Input the parameters to search for a food item.
                         answer_name, y = self.interface.left_window_display_string_textpad(
                             5, 1, 25, cfg.S_A_ITEM_NAME)
@@ -399,7 +401,8 @@ class UserDialog:
                 running_recorded_products = True
                 while running_recorded_products:
                     if len(index_list_products) == 0:
-                        self.interface.right_window_display_info(cfg.WARNING_MESSAGE_3, "warning")
+                        self.interface.right_window_display_info(
+                            cfg.WARNING_MESSAGE_3, "warning")
                         running_recorded_products = False
                     else:
                         if running_recorded_products is True:
@@ -421,7 +424,8 @@ class UserDialog:
                                     # Calls the hyperlink to open the product file in the browser.
                                     check_item = int(check_item)
                                     code_product = last_recorded_products[check_item-1][1][2]
-                                    self.OFF.open_product_file_OFF(code_product)
+                                    self.OFF.open_product_file_OFF(
+                                        code_product)
                                     running_use_browser = False
                                 # The user is asked whether he wants to check another item.
                             go_on_items, y = self.interface.left_window_display_string_textpad(
@@ -525,18 +529,19 @@ class UserDialog:
         self.interface.clear_window("left")
         y = 0
         self.interface.left_window_display_string(y, cfg.C_DB_INITIAL_INFO)
-        user, y = self.interface.left_window_display_string_textpad(1, 1, 15, \
-            cfg.C_DB_USER)
+        user, y = self.interface.left_window_display_string_textpad(1, 1, 15,
+                                                                    cfg.C_DB_USER)
         user = self.ascii_to_string(user)
         if user != '':
             cfg.DB_CONNECTION_PARAMETERS['user'] = user
-        password, y = self.interface.left_window_display_string_textpad(y,1, 20, \
-            cfg.C_DB_PASSWORD)
+        password, y = self.interface.left_window_display_string_textpad(y, 1, 20,
+                                                                        cfg.C_DB_PASSWORD)
         password = self.ascii_to_string(password)
         if password != '':
             cfg.DB_CONNECTION_PARAMETERS['password'] = password
         with open("db_parameters.txt", "wb") as file:
             pickle.dump(cfg.DB_CONNECTION_PARAMETERS, file)
+
 
 def main(user):
     """
