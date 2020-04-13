@@ -17,6 +17,7 @@
 
     """
 import datetime
+import pickle
 
 import mysql.connector
 
@@ -77,7 +78,9 @@ class MySQLQueries:
             NIL.
 
             """
-        self.cnx = mysql.connector.connect(**config.DB_CONNECTION_PARAMETERS)
+        with open("db_parameters.txt", "rb") as file:
+            connection_parameters = pickle.load(file)
+        self.cnx = mysql.connector.connect(**connection_parameters)
         self.cursor = self.cnx.cursor(buffered=True)
         
     def get_categories(self, query):
@@ -278,14 +281,9 @@ class MySQLQueries:
             """
         self.cursor.close()
 
-    def create_DB(self):
-        """
-
-            This method aims at creating a new DB, e.g at the first use of the App.
-
-        """
+    def create_database(self):
+        print("Database is to be created")
         pass
-
 
 def query_settings(answer):
     """
@@ -309,8 +307,12 @@ def query_settings(answer):
     return item_features
 
 
-
 if __name__ == "__main__":
+    import pickle
+    with open("db_parameters.txt", "wb") as file:
+        pickle.dump(config.DB_CONNECTION_PARAMETERS, file)
+
+    
     requete = MySQLQueries()
     query = cq.query_retrieve_available_categories
     result = requete.get_categories(query)

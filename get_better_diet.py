@@ -23,6 +23,7 @@
     """
 import time
 from datetime import datetime
+import pickle
 
 import config as cfg
 import config_open_food_facts as coff
@@ -134,9 +135,15 @@ class UserDialog:
         except Exception:
             self.interface.clear_window("right")
             self.interface.right_window_display_info(cfg.WARNING_MESSAGE_4, "warning")
-            self.create_database()
-            time.sleep(3)
-            pass
+            self.create_connection()
+            self.create_db = True
+        finally:
+            self.queries = sql.MySQLQueries()
+
+        if self.create_db is True:
+            self.queries.create_database()
+            self.interface.right_window_display_info("A new DB will be created")
+
         self.interface.title_bar(cfg.TITLE_2)
         # Display a drop down menu to navigate in the application
         self.interface.clear_window()
@@ -510,7 +517,7 @@ class UserDialog:
                 decision = "Quit"
         return decision
 
-    def create_database(self):
+    def create_connection(self):
         """
             This method is activated if no DB has been created. All the parameters\
                 are asked and the script for the creation is run
@@ -521,17 +528,15 @@ class UserDialog:
         user, y = self.interface.left_window_display_string_textpad(1, 1, 15, \
             cfg.C_DB_USER)
         user = self.ascii_to_string(user)
-        if user is not None:
+        if user != '':
             cfg.DB_CONNECTION_PARAMETERS['user'] = user
         password, y = self.interface.left_window_display_string_textpad(y,1, 20, \
             cfg.C_DB_PASSWORD)
         password = self.ascii_to_string(password)
-        cfg.DB_CONNECTION_PARAMETERS['password'] = password
-        with open("db_parameters.txt", "w") as file:
-            file.write(str(cfg.DB_CONNECTION_PARAMETERS))
-
-
-
+        if password != '':
+            cfg.DB_CONNECTION_PARAMETERS['password'] = password
+        with open("db_parameters.txt", "wb") as file:
+            pickle.dump(cfg.DB_CONNECTION_PARAMETERS, file)
 
 def main(user):
     """

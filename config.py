@@ -16,7 +16,7 @@
 
     """
 DB_CONNECTION_PARAMETERS = {'user': 'root',
-                            'host': 'localhost', 'database': 'get_better_diot',
+                            'host': 'localhost', 'database': 'get_better_diet',
                             'password': ""}
 
 # Message displayed when launching the programm. Used by the method display_message()
