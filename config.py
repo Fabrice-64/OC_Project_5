@@ -35,11 +35,11 @@ T_C_IF_REFUSAL = "If you do not accept the Terms and Conditions, you'll quit aut
 T_C_APPROVAL = "You have decided to go on with this App\n"
 
 # These are the dialog strings related to the creation of the DB
-C_DB_CREATE_LOCAL_DB = "A new DB will be created"
-C_DB_INFO_CATEGORIES_FETCHED = "Categories have been uploaded"
+C_DB_CREATE_LOCAL_DB = "A new DB will be created\n"
+C_DB_INFO_CATEGORIES_FETCHED = "The names of the main categories have been uploaded\n"
 C_DB_INITIAL_INFO = "Please follow the instructions to create a new DB\n"
-C_DB_USER = "Please enter the user if you have defined one ('root' per default)\n"
-C_DB_PASSWORD = "Please enter the password to your DB (None per default)\n"
+C_DB_USER = "Please enter the user if you have defined one ('root' by default)\n"
+C_DB_PASSWORD = "Please enter the password to your DB (None by default)\n"
 
 # These are the dialog strings related to the step dealing with the actions to be conducted
 TITLE_2 = "Working with the Databases"
@@ -55,7 +55,7 @@ S_A_PROCESSING_RECORD = "Your selection is being recorded."
 
 # These are the dialog strings to select a substition food item
 TITLE_3 = "Looking for a substitution food item"
-S_A_SELECT_CATEGORY = "Please type the number of the selected category (requiredeu):\n"
+S_A_SELECT_CATEGORY = "Please type the number of the selected category (REQUIRED):\n"
 S_A_ITEM_NAME = "Please name the food item for which you are looking for a substitution:\n"
 S_A_ITEM_BRAND = "Please name the brand of this food item:\n"
 S_A_ITEM_CODE = "Please type the id code of the product:\n"

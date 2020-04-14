@@ -542,6 +542,7 @@ class UserDialog:
             NIL
             """
         self.interface.clear_window("left")
+        self.interface.display_users_guide_textpad(cfg.USER_GUIDE)
         y = 0
         # Ask for the connection parameters. Default value in config.py
         connection_parameters = {'host': 'localhost'}
