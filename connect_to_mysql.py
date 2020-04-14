@@ -29,28 +29,39 @@ import script_create_database as scr
 class MySQLQueries:
     """
 
-        Organized around an initialization of the connection to the DB at the instanciation, \
-        followed by different queries to be used as the program unfolds.
+        Organized around an initialization of the connection to the DB 
+        at the instanciation,followed by different queries to be used 
+        as the program unfolds.
 
         Methods:
 
-        get_categories(): get the names of the categories from which the user can afterwards load the data from OFF.
+        get_categories(): get the names of the categories from which the user can
+        afterwards load the data from OFF.
 
-        get_product(): get a selection of product from the local DB, iaw the criterion filled by the user.
+        get_product(): get a selection of product from the local DB, iaw the criterion 
+        filled by the user.
 
-        get_best_product(): get a filtered list of products as close as possible to a selected product.
+        get_best_product(): get a filtered list of products as close as possible 
+        to a selected product.
 
-        retrieve_recorded_products(): get the list of best products recorded in the local DB.
+        retrieve_recorded_products(): get the list of best products recorded in 
+        the local DB.
 
-        get_numbers_on_DB(): fetch some figures related to the local DB, like the number of rows, etc.
+        get_numbers_on_DB(): fetch some figures related to the local DB, like 
+        the number of rows, etc.
 
-        upload_product(): upload a single product into the local DB, e.g. a selected best product.
+        upload_product(): upload a single product into the local DB, 
+        e.g. a selected best product.
 
         update_best_product_date(): updates the best product record with the date.
 
         upload_dataset(): upload to the local DB a bunch of rows downloaded from OFF.
 
-        close_connection(): closes the connection to mySQL iot to avoid free access.
+        close_connection(): close the connection to mySQL iot to avoid free access.
+
+        upload_categories(): upload a list of categories from Open Food Facts
+
+        create_database(): create a local DB for the first use of the App
 
         Instance variables:
 
@@ -68,7 +79,8 @@ class MySQLQueries:
     def __init__(self):
         """
 
-            Initialize the connexion with the local DB with parameters stored in config.
+            Initialize the connexion with the local DB with parameters stored
+            in a separate file.
 
             Arguments:
 
@@ -284,16 +296,43 @@ class MySQLQueries:
         self.cursor.close()
 
     def upload_categories(self, query, categories):
+        """
+
+            When creating a new DB, uploads a list of categories to start working 
+            with the DB.
+
+            Arguments:
+
+            query: self explanatory
+
+            categories: list of categories downloaded from Open Food Facts.
+
+            Returns:
+
+            NIL
+
+            """
         category_tuple = [(category,) for category in categories]
         self.cursor.executemany(cq.query_upload_new_category,category_tuple)
         self.cnx.commit()
 
-
     def create_database(self):
+        """
 
+            Create a local DB to operate the application.
+            Activated solely at the first use.
+
+            Arguments:
+
+            NIL
+
+            Returns:
+
+            NIL
+
+            """
         # Create a new and empty database
         self.cursor.execute(scr.DB_CREATION.format(config.DB_NAME['database']))
-
         # Add the name of the database to the parameters file for further use
         with open("db_parameters.txt",'rb') as file:
             connection_parameters = pickle.load(file)
@@ -306,10 +345,6 @@ class MySQLQueries:
         for table_name in scr.DB_TABLES:
             table_schema = scr.DB_TABLES[table_name]
             self.cursor.execute(table_schema)
-        # Add a list of categories fetched from Open Food Facts
-
-        # Reports the correct creation of the database
-        pass
 
 
 def query_settings(answer):

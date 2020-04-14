@@ -35,6 +35,8 @@ T_C_IF_REFUSAL = "If you do not accept the Terms and Conditions, you'll quit aut
 T_C_APPROVAL = "You have decided to go on with this App\n"
 
 # These are the dialog strings related to the creation of the DB
+C_DB_CREATE_LOCAL_DB = "A new DB will be created"
+C_DB_INFO_CATEGORIES_FETCHED = "Categories have been uploaded"
 C_DB_INITIAL_INFO = "Please follow the instructions to create a new DB\n"
 C_DB_USER = "Please enter the user if you have defined one ('root' per default)\n"
 C_DB_PASSWORD = "Please enter the password to your DB (None per default)\n"

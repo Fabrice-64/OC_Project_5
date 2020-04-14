@@ -53,9 +53,10 @@ class UserDialog:
 
         ascii_to_string(): convert the inputs from the textpad from ASCII into strings.
 
-        check_category_selection():
+        select_action(): main loop through which the whole program runs.
 
-        select_action()
+        create_cnx_parameters(): create connection parameters for a further use
+        of a local DB.
 
         Instance variables:
 
@@ -129,6 +130,7 @@ class UserDialog:
             decision: used to give the main function the order to quit the app.
 
             """
+        # Check whether a local DB has already been created. If not, starts a process.
         create_db = False
         while True:
             try:
@@ -144,10 +146,12 @@ class UserDialog:
         if create_db == True:
             self.queries.create_database()
             self.interface.right_window_display_info(
-                "A new DB will be created")
+                cfg.C_DB_CREATE_LOCAL_DB)
             OFF_categories = self.OFF.import_static_data()
-            self.queries.upload_categories(cq.query_upload_new_category, OFF_categories)
-            self.interface.right_window_display_info("Categories have been uploaded")
+            self.queries.upload_categories(
+                cq.query_upload_new_category, OFF_categories)
+            self.interface.right_window_display_info(
+                cfg.C_DB_INFO_CATEGORIES_FETCHED)
 
         self.interface.title_bar(cfg.TITLE_2)
         # Display a drop down menu to navigate in the application
@@ -528,19 +532,29 @@ class UserDialog:
         """
             This method is activated if no DB has been created. All the parameters\
                 are asked and the script for the creation is run
+
+            Arguments:
+
+            NIL
+
+            Returns:
+
+            NIL
             """
         self.interface.clear_window("left")
         y = 0
+        # Ask for the connection parameters. Default value in config.py
         connection_parameters = {'host': 'localhost'}
         self.interface.left_window_display_string(y, cfg.C_DB_INITIAL_INFO)
         user, y = self.interface.left_window_display_string_textpad(1, 1, 15,
                                                                     cfg.C_DB_USER)
         user = self.ascii_to_string(user)
-        
+
         if user != '':
             connection_parameters['user'] = user
         else:
-            connection_parameters['user'] = cfg.DB_CONNECTION_PARAMETERS.get('user')
+            connection_parameters['user'] = cfg.DB_CONNECTION_PARAMETERS.get(
+                'user')
 
         password, y = self.interface.left_window_display_string_textpad(y, 1, 20,
                                                                         cfg.C_DB_PASSWORD)
@@ -548,9 +562,9 @@ class UserDialog:
         if password != '':
             connection_parameters['password'] = password
         else:
-           connection_parameters['password'] = cfg.DB_CONNECTION_PARAMETERS.get('password')
-        print(connection_parameters)
-        time.sleep(3)
+            connection_parameters['password'] = cfg.DB_CONNECTION_PARAMETERS.get(
+                'password')
+        # Connection parameters are saved in a separate file to be reused.
         with open("db_parameters.txt", "wb") as file:
             pickle.dump(connection_parameters, file)
 
