@@ -21,7 +21,7 @@ query_categories = """SELECT name FROM category ORDER BY idcategory ASC"""
 
 query_count_rows = """SELECT COUNT(*) FROM product"""
 
-query_upload_new_category = """REPLACE INTO category (name) VALUES (%s)"""
+query_upload_new_category = """REPLACE INTO category (idcategory, name) VALUES (NULL, %s)"""
 
 query_upload_new_category_products = """REPLACE INTO product (brand, name, category_id, \
         code, nutrition_grade, stores, ingredients) \

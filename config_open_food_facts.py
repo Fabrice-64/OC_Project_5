@@ -39,7 +39,7 @@ URL = 'https://fr.openfoodfacts.org/cgi/search.pl?search_simple=1'
 URL_STATIC = 'https://fr.openfoodfacts.org/categories.json'
 STATIC_TAG = 'tags'
 STATIC_FIELD_0 = 'name'
-STATIC_VOLUME = 20
+STATIC_VOLUME = 25
 
 # This is the address to be used to import a product. The product code is added right behind.
 OFF_PRODUCT_ADDRESS = "https://world.openfoodfacts.org/product/"

@@ -65,7 +65,6 @@ class UserDialog:
 
     def __init__(self):
         self.interface = im.Interface()
-        #self.queries = sql.MySQLQueries()
         self.OFF = OFF.ConnectToOFF()
 
     def step_terms_and_conditions(self, file):
@@ -130,21 +129,25 @@ class UserDialog:
             decision: used to give the main function the order to quit the app.
 
             """
-        try:
-            self.queries = sql.MySQLQueries()
-        except Exception:
-            self.interface.clear_window("right")
-            self.interface.right_window_display_info(
-                cfg.WARNING_MESSAGE_4, "warning")
-            self.create_connection()
-            self.create_db = True
-        finally:
-            self.queries = sql.MySQLQueries()
+        create_db = False
+        while True:
+            try:
+                self.queries = sql.MySQLQueries()
+                break
+            except Exception:
+                self.interface.clear_window("right")
+                self.interface.right_window_display_info(
+                    cfg.WARNING_MESSAGE_4, "warning")
+                self.create_cnx_parameters()
+                create_db = True
 
-        if self.create_db is True:
+        if create_db == True:
             self.queries.create_database()
             self.interface.right_window_display_info(
                 "A new DB will be created")
+            OFF_categories = self.OFF.import_static_data()
+            self.queries.upload_categories(cq.query_upload_new_category, OFF_categories)
+            self.interface.right_window_display_info("Categories have been uploaded")
 
         self.interface.title_bar(cfg.TITLE_2)
         # Display a drop down menu to navigate in the application
@@ -521,26 +524,35 @@ class UserDialog:
                 decision = "Quit"
         return decision
 
-    def create_connection(self):
+    def create_cnx_parameters(self):
         """
             This method is activated if no DB has been created. All the parameters\
                 are asked and the script for the creation is run
             """
         self.interface.clear_window("left")
         y = 0
+        connection_parameters = {'host': 'localhost'}
         self.interface.left_window_display_string(y, cfg.C_DB_INITIAL_INFO)
         user, y = self.interface.left_window_display_string_textpad(1, 1, 15,
                                                                     cfg.C_DB_USER)
         user = self.ascii_to_string(user)
+        
         if user != '':
-            cfg.DB_CONNECTION_PARAMETERS['user'] = user
+            connection_parameters['user'] = user
+        else:
+            connection_parameters['user'] = cfg.DB_CONNECTION_PARAMETERS.get('user')
+
         password, y = self.interface.left_window_display_string_textpad(y, 1, 20,
                                                                         cfg.C_DB_PASSWORD)
         password = self.ascii_to_string(password)
         if password != '':
-            cfg.DB_CONNECTION_PARAMETERS['password'] = password
+            connection_parameters['password'] = password
+        else:
+           connection_parameters['password'] = cfg.DB_CONNECTION_PARAMETERS.get('password')
+        print(connection_parameters)
+        time.sleep(3)
         with open("db_parameters.txt", "wb") as file:
-            pickle.dump(cfg.DB_CONNECTION_PARAMETERS, file)
+            pickle.dump(connection_parameters, file)
 
 
 def main(user):

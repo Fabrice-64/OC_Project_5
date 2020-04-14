@@ -23,6 +23,7 @@ import mysql.connector
 
 import config
 import config_queries as cq
+import script_create_database as scr
 
 
 class MySQLQueries:
@@ -82,6 +83,7 @@ class MySQLQueries:
             connection_parameters = pickle.load(file)
         self.cnx = mysql.connector.connect(**connection_parameters)
         self.cursor = self.cnx.cursor(buffered=True)
+        # For maintenance purpose: use self.cnx.is_connected() to check connection
 
     def get_categories(self, query):
         """
@@ -281,8 +283,32 @@ class MySQLQueries:
             """
         self.cursor.close()
 
+    def upload_categories(self, query, categories):
+        category_tuple = [(category,) for category in categories]
+        self.cursor.executemany(cq.query_upload_new_category,category_tuple)
+        self.cnx.commit()
+
+
     def create_database(self):
-        print("Database is to be created")
+
+        # Create a new and empty database
+        self.cursor.execute(scr.DB_CREATION.format(config.DB_NAME['database']))
+
+        # Add the name of the database to the parameters file for further use
+        with open("db_parameters.txt",'rb') as file:
+            connection_parameters = pickle.load(file)
+        connection_parameters.update(config.DB_NAME)
+        with open("db_parameters.txt", "wb") as file:
+            pickle.dump(connection_parameters, file)
+        # Activate the Database to subsequently create the tables
+        self.cursor.execute(scr.DB_USE.format(config.DB_NAME['database']))
+        # Add the tables to the new database 
+        for table_name in scr.DB_TABLES:
+            table_schema = scr.DB_TABLES[table_name]
+            self.cursor.execute(table_schema)
+        # Add a list of categories fetched from Open Food Facts
+
+        # Reports the correct creation of the database
         pass
 
 
@@ -314,7 +340,4 @@ if __name__ == "__main__":
         pickle.dump(config.DB_CONNECTION_PARAMETERS, file)
 
     requete = MySQLQueries()
-    query = cq.query_retrieve_available_categories
-    result = requete.get_categories(query)
-    for category in result:
-        print(category)
+    requete.create_database()

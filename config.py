@@ -16,8 +16,9 @@
 
     """
 DB_CONNECTION_PARAMETERS = {'user': 'root',
-                            'host': 'localhost', 'database': 'get_better_diet',
+                            'host': 'localhost',
                             'password': ""}
+DB_NAME = {'database': 'get_better_diet2'}
 
 # Message displayed when launching the programm. Used by the method display_message()
 WELCOME_MESSAGE = "WELCOME TO 'GET A BETTER DIET' APP \n"
