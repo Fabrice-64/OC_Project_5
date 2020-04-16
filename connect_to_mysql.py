@@ -4,7 +4,9 @@
 
     Classes:
 
-    MySQLQueries: manage the querying methods under a same umbrella
+    MySQLQueries: manage the querying methods under a same umbrella.
+
+    Product: create an instance for each product imported from the local DB.
 
     Exceptions:
 
