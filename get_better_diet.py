@@ -161,6 +161,7 @@ class UserDialog:
             cfg.S_A_INFO_LOC_DISPLAY_RESULTS)
         answer = self.interface.set_up_drop_down(
             cfg.S_A_OPERATE_ON_DB, cfg.SELECT_ANSWER)
+        #Here start the work on the DB to find, select and record a product
         y = 0
         running_main = True
         while running_main:
@@ -173,9 +174,8 @@ class UserDialog:
                     cq.query_retrieve_available_categories)
                 index_categories = []
                 for category in categories:
-                    self.interface.right_window_display_result(
-                        cfg.S_A_INDEX_NAME_QTY.format(category[0], category[1][0], category[1][1]))
-                    index_categories.append(int(category[0]))
+                    self.interface.right_window_display_result(cfg.S_A_INDEX_NAME_QTY.format(category.index, category.item_features[0], category.item_features[1]))
+                    index_categories.append(int(category.index))
 
                 self.interface.display_users_guide_textpad(cfg.USER_GUIDE)
 
@@ -201,7 +201,7 @@ class UserDialog:
                             if answer_category.isdigit() and int(answer_category) \
                                     in index_categories:
                                 answer_category = int(answer_category)
-                                answer_category = categories[answer_category-1][1][0]
+                                answer_category = categories[answer_category-1].item_features[0]
                                 running_category_choice = False
                             else:
                                 self.interface.right_window_display_info(
@@ -238,27 +238,26 @@ class UserDialog:
                             running_data_not_null = False
 
                 # Display a selection of products.
+                item_key_list = []
                 list_selection = []
                 list_item = []
                 self.interface.clear_window("right")
                 self.interface.right_window_display_result(
                     cfg.S_A_INFO_ITEM_SEARCH_OUTCOME)
-                for item in detailed_products:
-                    for (key, values) in item.items():
-                        self.interface.right_window_display_result(
-                            cfg.S_A_INDEX_NAME.format(key, values[0]))
-                        self.interface.right_window_display_result(
-                            cfg.S_A_DISPLAY_BRAND_NUTRISCORE.format(values[1], values[2]))
-                        self.interface.right_window_display_result(
+                for product in detailed_products:
+                    self.interface.right_window_display_result(
+                            cfg.S_A_INDEX_NAME.format(product.index, product.item_features[0]))
+                    self.interface.right_window_display_result(
+                            cfg.S_A_DISPLAY_BRAND_NUTRISCORE.format(product.item_features[1], product.item_features[2]))
+                    self.interface.right_window_display_result(
                             cfg.S_A_SINGLE_RETURN)
-                        list_item = [key, values]
+                    list_item = [product.index, product.item_features]
                     list_selection.append(list_item)
+                    item_key_list.append(product.index)
 
                 # Requests the user to select a food item to be compared with.
                 index_reference_item, y = self.interface.left_window_display_string_textpad(
                     y, 1, 3, cfg.S_A_COMPARE_FOOD_ITEMS)
-                item_key_list = [
-                    key for item in detailed_products for key in item]
 
                 running_check_selection = True
                 while running_check_selection:
@@ -301,14 +300,15 @@ class UserDialog:
                 index_list_best_products = []
                 for item in list_best_products:
                     self.interface.right_window_display_result(
-                        cfg.S_A_INDEX_NAME .format(item[0], item[1][0]))
+                        cfg.S_A_INDEX_NAME .format(item.index, item.item_features[0]))
                     self.interface.right_window_display_result(
-                        cfg.S_A_DISPLAY_BRAND_NUTRISCORE.format(item[1][1], item[1][2]))
+                        cfg.S_A_DISPLAY_BRAND_NUTRISCORE.format(item.item_features[1], 
+                        item.item_features[2]))
                     self.interface.right_window_display_result(
-                        cfg.S_A_DISPLAY_STORES.format(item[1][4]))
+                        cfg.S_A_DISPLAY_STORES.format(item.item_features[4]))
                     self.interface.right_window_display_result(
                         cfg.S_A_SINGLE_RETURN)
-                    index_list_best_products.append(str(item[0]))
+                    index_list_best_products.append(str(item.index))
 
                 y = 0
                 # The user is offered to view the item in a browser and to record it.
@@ -344,7 +344,7 @@ class UserDialog:
                             else:
                                 # Call the hyperlink to open the product file in the browser
                                 check_item = int(check_item)
-                                code_product = list_best_products[check_item-1][1][3]
+                                code_product = list_best_products[check_item-1].item_features[3]
                                 self.OFF.open_product_file_OFF(code_product)
                             running_detailed_product = False
 
@@ -371,8 +371,8 @@ class UserDialog:
                                 record_date_time = datetime.now()
                                 record_date_time = record_date_time.strftime(
                                     '%Y-%m-%d %H:%M:%S')
-                                best_product_record = code_product, record_date_time, list_selection[
-                                    index_reference_item - 1][1][3]
+                                best_product_record = code_product, record_date_time,\
+                                    list_selection[index_reference_item - 1][1][3]
                                 self.queries.upload_product(
                                     cq.query_record_best_product, best_product_record)
                                 self.interface.right_window_display_info(
@@ -392,18 +392,19 @@ class UserDialog:
                 index_list_products = []
                 for item in last_recorded_products:
                     self.interface.right_window_display_result(
-                        cfg.S_A_INDEX_NAME .format(item[0], item[1][0]))
+                        cfg.S_A_INDEX_NAME .format(item.index, item.item_features[0]))
                     self.interface.right_window_display_result(
-                        cfg.S_A_DISPLAY_BRAND_NUTRISCORE.format(item[1][1], item[1][3]))
+                        cfg.S_A_DISPLAY_BRAND_NUTRISCORE.format(item.item_features[1],\
+                            item.item_features[3]))
                     self.interface.right_window_display_result(
-                        cfg.S_A_DISPLAY_STORES.format(item[1][4]))
+                        cfg.S_A_DISPLAY_STORES.format(item.item_features[4]))
                     self.interface.right_window_display_result(
-                        cfg.S_A_DISPLAY_INITIAL_PRODUCT.format(item[1][6]))
+                        cfg.S_A_DISPLAY_INITIAL_PRODUCT.format(item.item_features[6]))
                     self.interface.right_window_display_result(
-                        cfg.S_A_COMPARRISON_DATE.format(item[1][5]))
+                        cfg.S_A_COMPARRISON_DATE.format(item.item_features[5]))
                     self.interface.right_window_display_result(
                         cfg.S_A_SINGLE_RETURN)
-                    index_list_products.append(str(item[0]))
+                    index_list_products.append(str(item.index))
                 # The user can see a product in detail.
                 running_recorded_products = True
                 while running_recorded_products:
@@ -430,7 +431,8 @@ class UserDialog:
                                 else:
                                     # Calls the hyperlink to open the product file in the browser.
                                     check_item = int(check_item)
-                                    code_product = last_recorded_products[check_item-1][1][2]
+                                    code_product = last_recorded_products[check_item-1].\
+                                        item_features[2]
                                     self.OFF.open_product_file_OFF(
                                         code_product)
                                     running_use_browser = False
@@ -469,8 +471,8 @@ class UserDialog:
                 index_categories = []
                 for category in categories:
                     self.interface.right_window_display_result(
-                        cfg.S_A_INDEX_NAME .format(category[0], category[1][0]))
-                    index_categories.append(int(category[0]))
+                        cfg.S_A_INDEX_NAME .format(category.index, category.item_features[0]))
+                    index_categories.append(category.index)
 
                 self.interface.display_users_guide_textpad(cfg.USER_GUIDE)
                 # The user is requested to designate a category to be uploaded.
@@ -482,8 +484,7 @@ class UserDialog:
                     if answer_category.isdigit() and int(answer_category) \
                             in index_categories:
                         answer_category = int(answer_category)
-                        selected_category = categories[answer_category-1][1][0]
-                        #selected_category = str(selected_category)
+                        selected_category = categories[answer_category-1].item_features[0]
                         display_chosen_category = cfg.S_A_INFO_NAME_IMPORTED_CATEGORY + \
                             selected_category
                         self.interface.right_window_display_info(
