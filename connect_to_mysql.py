@@ -52,6 +52,7 @@ class Product:
         """
 
     counter = 1
+
     def __init__(self, item_features):
         self.item_features = item_features
         self.index = Product.counter
@@ -397,8 +398,8 @@ def query_settings(answer):
 
 
 if __name__ == "__main__":
+    # Used to test the interaction with the local DB
     import pickle
-    config.DB_CONNECTION_PARAMETERS['database'] = 'get_better_diet2'
     with open("db_parameters.txt", "wb") as file:
         pickle.dump(config.DB_CONNECTION_PARAMETERS, file)
 

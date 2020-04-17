@@ -131,7 +131,7 @@ class UserDialog:
 
             """
         # Check whether a local DB has already been created. If not, starts a process.
-        create_db = False
+        has_to_create_db = False
         while True:
             try:
                 self.queries = sql.MySQLQueries()
@@ -141,9 +141,9 @@ class UserDialog:
                 self.interface.right_window_display_info(
                     cfg.WARNING_MESSAGE_4, "warning")
                 self.create_cnx_parameters()
-                create_db = True
+                has_to_create_db = True
 
-        if create_db == True:
+        if has_to_create_db == True:
             self.queries.create_database()
             self.interface.right_window_display_info(
                 cfg.C_DB_CREATE_LOCAL_DB)
