@@ -43,7 +43,7 @@ query_best_product = """SELECT LEFT(product.name,40), product.brand, product.nut
         ORDER BY product.nutrition_grade ASC LIMIT 5"""
 
 
-query_retrieve_available_categories = """SELECT category.name, COUNT(*)\
+query_retrieve_available_categories = """SELECT category.name\
          FROM product JOIN category ON product.category_id = category.idcategory\
          GROUP BY product.category_id HAVING COUNT(*) >200"""
 

@@ -31,7 +31,8 @@ import script_create_database as scr
 class Product:
     """
 
-        This class convert the rows into object for further use in the controller.
+        This class convert the rows from table "product" into object 
+        for further use in the controller.
 
         Methods:
 
@@ -54,10 +55,70 @@ class Product:
     counter = 1
 
     def __init__(self, item_features):
-        self.item_features = item_features
         self.index = Product.counter
+        self.code = item_features[0]
+        self.category_id = item_features[1]
+        self.brand = item_features[2]
+        self.stores = item_features[3]
+        self.name = item_features[4]
+        self.nutrition_grade = item_features[5]
+        self.ingredients = item_features[6]
         Product.counter += 1
+    
 
+class BestProduct:
+     """
+
+        This class convert the rows from table "best_product" into object 
+        for further use in the controller.
+
+        Methods:
+
+        NIL
+
+        Instance variables:
+
+        item_features (tuple): contains all the features of the best product
+        and the reference one fetched from the DB
+
+        index: gives an index, via a counter for a more friendly display
+        of the results.
+
+        Comment:
+
+        Good to know: the counter has to be updated at each query in order to
+        avoid incrementation within the same session.
+        """
+
+
+class Category:
+    """
+
+        This class converts each category into an object for further use in the controller.
+
+        Methods:
+
+        NIL
+
+        Instance variables:
+
+        name (tuple): contains the name of the category.
+
+        index: gives an index, via a counter for a more friendly display
+        of the results.
+
+        Comment:
+
+        Good to know: the counter has to be updated at each query in order to
+        avoid incrementation within the same session.
+        """
+    counter = 1
+
+    def __init__(self, category_features):
+        self.category_features = category_features
+        self.name = category_features[0]
+        self.index = Category.counter
+        Category.counter +=1
 
 class MySQLQueries:
     """
@@ -145,10 +206,11 @@ class MySQLQueries:
 
             """
         categories = []
+        
         self.cursor.execute(query)
-        Product.counter = 1
+        Category.counter = 1
         for category in self.cursor:
-            category = Product(category)
+            category = Category(category)
             categories.append(category)
         return categories
 
@@ -400,11 +462,8 @@ def query_settings(answer):
 if __name__ == "__main__":
     # Used to test the interaction with the local DB
     import pickle
-    with open("db_parameters.txt", "wb") as file:
-        pickle.dump(config.DB_CONNECTION_PARAMETERS, file)
+
 
     requete = MySQLQueries()
-    result = requete.get_categories(cq.query_retrieve_available_categories)
+    result = requete.get_available_categories(cq.query_retrieve_available_categories)
     print(result)
-    print(result[0].index, result[0].item_features[0],
-          result[0].item_features[1])

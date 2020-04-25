@@ -174,7 +174,7 @@ class UserDialog:
                     cq.query_retrieve_available_categories)
                 index_categories = []
                 for category in categories:
-                    self.interface.right_window_display_result(cfg.S_A_INDEX_NAME_QTY.format(category.index, category.item_features[0], category.item_features[1]))
+                    self.interface.right_window_display_result(cfg.S_A_INDEX_NAME_QTY.format(category.index, category.name))
                     index_categories.append(int(category.index))
 
                 self.interface.display_users_guide_textpad(cfg.USER_GUIDE)
@@ -201,7 +201,7 @@ class UserDialog:
                             if answer_category.isdigit() and int(answer_category) \
                                     in index_categories:
                                 answer_category = int(answer_category)
-                                answer_category = categories[answer_category-1].item_features[0]
+                                answer_category = categories[answer_category-1].name
                                 running_category_choice = False
                             else:
                                 self.interface.right_window_display_info(
@@ -246,9 +246,9 @@ class UserDialog:
                     cfg.S_A_INFO_ITEM_SEARCH_OUTCOME)
                 for product in detailed_products:
                     self.interface.right_window_display_result(
-                            cfg.S_A_INDEX_NAME.format(product.index, product.item_features[0]))
+                            cfg.S_A_INDEX_NAME.format(product.index, product.name))
                     self.interface.right_window_display_result(
-                            cfg.S_A_DISPLAY_BRAND_NUTRISCORE.format(product.item_features[1], product.item_features[2]))
+                            cfg.S_A_DISPLAY_BRAND_NUTRISCORE.format(product.brand, product.nutrition_grade))
                     self.interface.right_window_display_result(
                             cfg.S_A_SINGLE_RETURN)
                     list_item = [product.index, product.item_features]
@@ -471,7 +471,7 @@ class UserDialog:
                 index_categories = []
                 for category in categories:
                     self.interface.right_window_display_result(
-                        cfg.S_A_INDEX_NAME .format(category.index, category.item_features[0]))
+                        cfg.S_A_INDEX_NAME .format(category.index, category.name))
                     index_categories.append(category.index)
 
                 self.interface.display_users_guide_textpad(cfg.USER_GUIDE)
@@ -484,7 +484,7 @@ class UserDialog:
                     if answer_category.isdigit() and int(answer_category) \
                             in index_categories:
                         answer_category = int(answer_category)
-                        selected_category = categories[answer_category-1].item_features[0]
+                        selected_category = categories[answer_category-1].name
                         display_chosen_category = cfg.S_A_INFO_NAME_IMPORTED_CATEGORY + \
                             selected_category
                         self.interface.right_window_display_info(

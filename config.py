@@ -63,7 +63,7 @@ S_A_INFO_ITEM_SEARCH_OUTCOME = "Here is a selection of food items we have found:
 S_A_COMPARE_FOOD_ITEMS = "Please Enter the Food Item you wish to compare with:\n"
 S_A_ADD_KEYWORDS = "Please enter one or two keywords in order to have a larger choice:\n"
 
-S_A_INDEX_NAME_QTY = "{}:  {} (counts: {} items)\n"
+S_A_INDEX_NAME_QTY = "{}:  {}\n"
 S_A_INDEX_NAME = "{}:  {}\n"
 S_A_DISPLAY_BRAND_NUTRISCORE = "Brand: {}, Nutrition grade: {}\n"
 S_A_DISPLAY_STORES = "Stores: {}\n"

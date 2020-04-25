@@ -185,4 +185,6 @@ class ConnectToOFF:
 if __name__ == "__main__":
     connection = ConnectToOFF()
     result = connection.import_static_data()
-    print(result)
+    for category in result:
+        print(category)
+    print(len(result))

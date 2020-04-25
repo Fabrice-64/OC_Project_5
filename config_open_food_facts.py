@@ -36,10 +36,10 @@ PAYLOAD = {'tagtype_0': 'categories', 'tag_contains_0': 'contains', 'tag_0': '',
 URL = 'https://fr.openfoodfacts.org/cgi/search.pl?search_simple=1'
 
 # These are the parameters used to import categories, as static data from OFF.
-URL_STATIC = 'https://fr.openfoodfacts.org/categories.json'
+URL_STATIC = 'https://fr.openfoodfacts.org/stores.json'
 STATIC_TAG = 'tags'
 STATIC_FIELD_0 = 'name'
-STATIC_VOLUME = 25
+STATIC_VOLUME = 20000
 
 # This is the address to be used to import a product. The product code is added right behind.
 OFF_PRODUCT_ADDRESS = "https://world.openfoodfacts.org/product/"
