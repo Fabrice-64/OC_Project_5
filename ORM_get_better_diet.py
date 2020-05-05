@@ -4,7 +4,8 @@
     """
 
 from sqlalchemy import create_engine
-from sqlalchemy import Table, Column, Integer, DateTime, String
+from sqlalchemy import Table, Column, Integer, DateTime, String, Index, \
+                    ForeignKeyConstraint, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 import mysql.connector
 
@@ -21,7 +22,16 @@ Base = declarative_base()
 
 class Category:
     __tablename__ = 'category'
-    
+    __table_args__ = (Index('category_idx', 'name'),)
+
+    idcategory = Column(Integer(6), primary_key = True, autoincrement = True,
+            nullable = False)
+    name = Column(String(45), nullable = False)
+
+class CategoryProduct:
+    __tablename__ = 'category_product'
+    __table_args__ = ()
+
 
 
 cnx = Connection()
