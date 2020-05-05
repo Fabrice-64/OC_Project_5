@@ -123,12 +123,12 @@ class ConnectToOFF:
             code = product.get('code')
             nutrition_grade = product.get('nutrition_grade_fr')
             stores = self.check_special_characters(product.get('stores'))
-            ingredients = self.check_special_characters(
-                product.get('ingredients_text'))
+            categories = self.check_special_characters(
+                product.get('categories'))
             if brand != "NaN" and name != "NaN" and nutrition_grade in ["a", "b", "c", "d", "e"]:
                 nb_imported_items += 1
                 self.list_items.append(
-                    (brand, name, category, code, nutrition_grade, stores, ingredients))
+                    (brand, name, category, code, nutrition_grade, stores, categories))
             else:
                 items_left_apart += 1
         return (nb_imported_items, items_left_apart, self.list_items)
@@ -184,7 +184,7 @@ class ConnectToOFF:
 
 if __name__ == "__main__":
     connection = ConnectToOFF()
-    result = connection.import_static_data()
-    for category in result:
-        print(category)
+    result = connection.import_products_list("Snacks")
+    for item in result:
+        print(item)
     print(len(result))

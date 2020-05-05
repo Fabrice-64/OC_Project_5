@@ -546,29 +546,23 @@ class UserDialog:
         self.interface.display_users_guide_textpad(cfg.USER_GUIDE)
         y = 0
         # Ask for the connection parameters. Default value in config.py
-        connection_parameters = {'host': 'localhost'}
         self.interface.left_window_display_string(y, cfg.C_DB_INITIAL_INFO)
         user, y = self.interface.left_window_display_string_textpad(1, 1, 15,
                                                                     cfg.C_DB_USER)
         user = self.ascii_to_string(user)
-
         if user != '':
-            connection_parameters['user'] = user
-        else:
-            connection_parameters['user'] = cfg.DB_CONNECTION_PARAMETERS.get(
-                'user')
-
+            cfg.DB_USER = user
+        
         password, y = self.interface.left_window_display_string_textpad(y, 1, 20,
                                                                         cfg.C_DB_PASSWORD)
         password = self.ascii_to_string(password)
         if password != '':
-            connection_parameters['password'] = password
-        else:
-            connection_parameters['password'] = cfg.DB_CONNECTION_PARAMETERS.get(
-                'password')
+            cfg.DB_PASSWORD = password
+        
+        connection_string = cfg.DB_CONNEXION_STRING.format(cfg.DB_USER, cfg.DB_PASSWORD)
         # Connection parameters are saved in a separate file to be reused.
-        with open("db_parameters.txt", "wb") as file:
-            pickle.dump(connection_parameters, file)
+        with open("db_parameters.txt", "w") as file:
+            file.write(connection_string)
 
 
 def main(user):

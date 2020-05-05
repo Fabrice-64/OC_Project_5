@@ -20,7 +20,7 @@
     """
 import datetime
 import pickle
-
+from sqlalchemy import create_engine
 import mysql.connector
 
 import config
@@ -185,10 +185,11 @@ class MySQLQueries:
             NIL.
 
             """
-        with open("db_parameters.txt", "rb") as file:
-            connection_parameters = pickle.load(file)
-        self.cnx = mysql.connector.connect(**connection_parameters)
-        self.cursor = self.cnx.cursor(buffered=True)
+        with open("db_parameters.txt") as file:
+            connection_parameters = file.read()
+        engine = create_engine(connection_parameters,
+        echo = True, encoding = 'utf-8')
+        res = engine.connect()
         # For maintenance purpose: use self.cnx.is_connected() to check connection
 
     def get_categories(self, query):

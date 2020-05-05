@@ -15,10 +15,9 @@
     NIL.
 
     """
-DB_CONNECTION_PARAMETERS = {'user': 'root',
-                            'host': 'localhost',
-                            'password': ""}
-DB_NAME = {'database': 'get_better_diet2'}
+DB_USER = 'root'
+DB_PASSWORD = ''
+DB_CONNEXION_STRING = "mysql+mysqlconnector://{}:{}@localhost/get_better_diet"
 
 # Message displayed when launching the programm. Used by the method display_message()
 WELCOME_MESSAGE = "WELCOME TO 'GET A BETTER DIET' APP \n"
