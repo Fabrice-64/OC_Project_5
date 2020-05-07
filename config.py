@@ -17,7 +17,8 @@
     """
 DB_USER = 'root'
 DB_PASSWORD = ''
-DB_CONNEXION_STRING = "mysql+mysqlconnector://{}:{}@localhost/get_better_diet"
+DB_NAME = '/get_better_diet'
+DB_CONNEXION_STRING = "mysql+mysqlconnector://{}:{}@localhost{}"
 
 # Message displayed when launching the programm. Used by the method display_message()
 WELCOME_MESSAGE = "WELCOME TO 'GET A BETTER DIET' APP \n"

@@ -134,7 +134,7 @@ class UserDialog:
         has_to_create_db = False
         while True:
             try:
-                self.queries = sql.MySQLQueries()
+                self.queries = sql.ORMConnection()
                 break
             except Exception:
                 self.interface.clear_window("right")
@@ -559,7 +559,7 @@ class UserDialog:
         if password != '':
             cfg.DB_PASSWORD = password
         
-        connection_string = cfg.DB_CONNEXION_STRING.format(cfg.DB_USER, cfg.DB_PASSWORD)
+        connection_string = cfg.DB_CONNEXION_STRING.format(cfg.DB_USER, cfg.DB_PASSWORD, "")
         # Connection parameters are saved in a separate file to be reused.
         with open("db_parameters.txt", "w") as file:
             file.write(connection_string)

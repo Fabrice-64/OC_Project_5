@@ -1,0 +1,214 @@
+def get_categories(self, query):
+        """
+
+            Get the name of categories already recorded in the local DB.
+
+            Arguments:
+
+            query: query designed to fetch the categories.
+
+            Returns:
+
+            categories with an index number.
+
+            """
+        categories = []
+        
+        self.cursor.execute(query)
+        Category.counter = 1
+        for category in self.cursor:
+            category = Category(category)
+            categories.append(category)
+        return categories
+
+    def get_product(self, query, searched_item):
+        """
+
+            Get a list of 10 products as close as possible to the criterion filled by the user
+
+            Arguments:
+
+            query: self explanatory
+
+            searched_item (list): criterion to apply for the query.
+
+            Returns:
+
+            products: list of food items, augmented with an index starting at 1.
+
+            """
+        products = []
+        query = query.format(
+            searched_item[0], searched_item[1], searched_item[2], searched_item[3])
+        self.cursor.execute(query)
+        results = self.cursor.fetchmany(size=10)
+        Product.counter = 1
+        for product in results:
+            product = Product(product)
+            products.append(product)
+        return products
+
+    def get_best_product(self, query, best_product):
+        """
+
+            Get a list of products with a better nutrition grade that the initially selected.
+
+            Arguments:
+
+            query: self explanatory.
+
+            best-product(tuple): contain the criterion to sort out the matching products.
+
+            Returns:
+
+            best_products(list): list of selected products, with an index number.
+
+            """
+        best_products = []
+        result = []
+        query = query.format(best_product[0], best_product[1], best_product[2])
+        self.cursor.execute(query)
+        results = self.cursor.fetchmany(size=5)
+        Product.counter = 1
+        for product in results:
+            product = Product(product)
+            best_products.append(product)
+        return best_products
+
+    def retrieve_recorded_products(self, query):
+        """
+
+            Fetch the last recorded best products and the products used for the comparrison.
+
+            Arguments:
+
+            query: self explanatory
+
+            Returns:
+
+            recorded_products(list): list of both best and reference products, with a index.
+
+            """
+        recorded_products = []
+        result = []
+        self.cursor.execute(query)
+        results = self.cursor.fetchmany(size=5)
+        Product.counter = 1
+        for product in results:
+            product = Product(product)
+            recorded_products.append(product)
+        return recorded_products
+
+    def get_numbers_on_DB(self, query):
+        """
+
+            Gets simple figures from the local DB.
+
+            Arguments:
+
+            query: self explanatory
+
+            Returns:
+
+            result[0][0]: currently the number of rows in the table product.
+
+            """
+        self.cursor.execute(query)
+        result = self.cursor.fetchmany()
+        return result[0][0]
+
+    def upload_product(self, query, item):
+        """
+
+            Upload only one item in the local DB. Currently formatted to record a best product.
+
+            Arguments:
+
+            query: self explanatory
+
+            item: the food item to be recorded in the table best_product.
+
+            Returns:
+
+            NIL
+
+            """
+        query = query.format(item[0], item[1], item[2])
+        self.cursor.execute(query)
+        self.cnx.commit()
+
+    def update_best_product_date(self, query, item):
+        """
+
+            Update the field date of a recorded best product
+
+            Arguments:
+
+            query: self explanatory.
+
+            item: date-time of the record and product code.
+
+            Returns:
+
+            NIL.
+
+            """
+        query = query.format(item[0], item[1])
+        self.cursor.execute(query)
+        self.cnx.commit()
+
+    def upload_dataset(self, query, item_list):
+        """
+
+            After the selection of a new category, comes its upload in the local DB.
+
+            Arguments:
+
+            query: self explanatory, based on a category as main criterion.
+
+            item_list: list of items downloaded from OFF. They have been largely cleaned beforehand.
+
+            Returns;
+
+            NIL
+
+            """
+        self.cursor.executemany(query, item_list)
+        self.cnx.commit()
+
+    def close_connection(self):
+        """
+
+            Close the connection with the local DB.
+
+            Arguments:
+
+            NIL
+
+            Returns:
+
+            NIL
+
+            """
+        self.cursor.close()
+
+    def upload_categories(self, query, categories):
+        """
+
+            When creating a new DB, uploads a list of categories to start working
+            with the DB.
+
+            Arguments:
+
+            query: self explanatory
+
+            categories: list of categories downloaded from Open Food Facts.
+
+            Returns:
+
+            NIL
+
+            """
+        category_tuple = [(category,) for category in categories]
+        self.cursor.executemany(cq.query_upload_new_category, category_tuple)
+        self.cnx.commit()

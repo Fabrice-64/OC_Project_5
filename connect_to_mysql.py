@@ -27,100 +27,97 @@ import config
 import config_queries as cq
 import script_create_database as scr
 
+from sqlalchemy import Table, Column, Integer, DateTime, String, Index, \
+    ForeignKeyConstraint, ForeignKey
+from sqlalchemy.ext.declarative import declarative_base
 
-class Product:
-    """
+Base = declarative_base()
 
-        This class convert the rows from table "product" into object 
-        for further use in the controller.
+class Category(Base):
+    __tablename__ = 'category'
+    __table_args__ = (Index('idx_category', 'name'),)
 
-        Methods:
+    id_category = Column(Integer(), primary_key = True, autoincrement = True,
+            nullable = False)
+    name = Column(String(45), nullable = False)
 
-        NIL
 
-        Instance variables:
+class Product (Base):
+    __tablename__ = 'product'
 
-        item_features (tuple): contains all the features of the product fetched
-        from the DB.
+    code = Column(String(13), nullable = False, primary_key = True)
+    brand = Column(String(200), nullable = False)
+    name = Column(String(600), nullable = False)
+    nutrition_grade = Column(String(1), nullable = False)
 
-        index: gives an index, via a counter for a more friendly display
-        of the results.
 
-        Comment:
+class Store (Base):
+    __tablename__ = 'store'
+    __table_args__ = (Index('idx_store', 'name'),)
 
-        Good to know: the counter has to be updated at each query in order to
-        avoid incrementation within the same session.
+    id_store = Column(Integer(), nullable = False, primary_key = True, 
+        autoincrement = True)
+    name = Column(String(60), nullable = False)
+       
+
+class CategoryProduct (Base):
+    __tablename__ = 'category_product'
+
+    id_cat_prod = Column(Integer(), primary_key = True, autoincrement = True,
+        nullable = False)
+    idcategory = Column(Integer(), 
+        ForeignKey('category.id_category', name = 'FK_id_category'), 
+        nullable = False)
+    code = Column(String(13), 
+        ForeignKey('product.code', name = 'FK_product_category', 
+        ondelete = 'CASCADE', onupdate = 'CASCADE'),
+        nullable = False, )
+
+    def upload_categories(self, query, categories):
         """
 
-    counter = 1
+            When creating a new DB, uploads a list of categories to start working
+            with the DB.
 
-    def __init__(self, item_features):
-        self.index = Product.counter
-        self.code = item_features[0]
-        self.category_id = item_features[1]
-        self.brand = item_features[2]
-        self.stores = item_features[3]
-        self.name = item_features[4]
-        self.nutrition_grade = item_features[5]
-        self.ingredients = item_features[6]
-        Product.counter += 1
-    
+            Arguments:
 
-class BestProduct:
-     """
+            query: self explanatory
 
-        This class convert the rows from table "best_product" into object 
-        for further use in the controller.
+            categories: list of categories downloaded from Open Food Facts.
 
-        Methods:
+            Returns:
 
-        NIL
+            NIL
 
-        Instance variables:
+            """
+        pass
 
-        item_features (tuple): contains all the features of the best product
-        and the reference one fetched from the DB
+class StoreProduct (Base):
+    __tablename__ = 'store_product'
 
-        index: gives an index, via a counter for a more friendly display
-        of the results.
+    id_store_product = Column(Integer(), primary_key = True, autoincrement = True,
+        nullable = False)
+    product_code = Column(String(13), 
+        ForeignKey('product.code', name = 'FK_product_store',
+        onupdate = 'CASCADE', ondelete = 'CASCADE'), nullable = False)
+    store_id = Column(Integer(), 
+        ForeignKey('store.id_store', name = 'FK_store_id', onupdate = 'CASCADE',
+            ondelete = 'CASCADE'), nullable = False)
 
-        Comment:
+class ProductComparrison (Base):
+    __tablename__ = 'product_comparrison'
 
-        Good to know: the counter has to be updated at each query in order to
-        avoid incrementation within the same session.
-        """
+    id_prod_comp = Column(Integer(), primary_key = True, autoincrement = True,
+        nullable = False)
+    code_best_prod = Column(String(13), 
+        ForeignKey('product.code', name = 'FK_code_product_best',
+        onupdate = 'CASCADE', ondelete = 'CASCADE'),nullable = False)
+    code_ref_prod = Column(String(13), 
+        ForeignKey('product.code', name = 'FK_code_product_ref',
+        onupdate = 'CASCADE', ondelete = 'CASCADE'), nullable = False)
+    date_best = Column(DateTime(), nullable = False)
 
-
-class Category:
-    """
-
-        This class converts each category into an object for further use in the controller.
-
-        Methods:
-
-        NIL
-
-        Instance variables:
-
-        name (tuple): contains the name of the category.
-
-        index: gives an index, via a counter for a more friendly display
-        of the results.
-
-        Comment:
-
-        Good to know: the counter has to be updated at each query in order to
-        avoid incrementation within the same session.
-        """
-    counter = 1
-
-    def __init__(self, category_features):
-        self.category_features = category_features
-        self.name = category_features[0]
-        self.index = Category.counter
-        Category.counter +=1
-
-class MySQLQueries:
+class ORMConnection:
     """
 
         Organized around an initialization of the connection to the DB
@@ -188,224 +185,9 @@ class MySQLQueries:
         with open("db_parameters.txt") as file:
             connection_parameters = file.read()
         engine = create_engine(connection_parameters,
-        echo = True, encoding = 'utf-8')
+        echo = False, encoding = 'utf-8')
         res = engine.connect()
-        # For maintenance purpose: use self.cnx.is_connected() to check connection
 
-    def get_categories(self, query):
-        """
-
-            Get the name of categories already recorded in the local DB.
-
-            Arguments:
-
-            query: query designed to fetch the categories.
-
-            Returns:
-
-            categories with an index number.
-
-            """
-        categories = []
-        
-        self.cursor.execute(query)
-        Category.counter = 1
-        for category in self.cursor:
-            category = Category(category)
-            categories.append(category)
-        return categories
-
-    def get_product(self, query, searched_item):
-        """
-
-            Get a list of 10 products as close as possible to the criterion filled by the user
-
-            Arguments:
-
-            query: self explanatory
-
-            searched_item (list): criterion to apply for the query.
-
-            Returns:
-
-            products: list of food items, augmented with an index starting at 1.
-
-            """
-        products = []
-        query = query.format(
-            searched_item[0], searched_item[1], searched_item[2], searched_item[3])
-        self.cursor.execute(query)
-        results = self.cursor.fetchmany(size=10)
-        Product.counter = 1
-        for product in results:
-            product = Product(product)
-            products.append(product)
-        return products
-
-    def get_best_product(self, query, best_product):
-        """
-
-            Get a list of products with a better nutrition grade that the initially selected.
-
-            Arguments:
-
-            query: self explanatory.
-
-            best-product(tuple): contain the criterion to sort out the matching products.
-
-            Returns:
-
-            best_products(list): list of selected products, with an index number.
-
-            """
-        best_products = []
-        result = []
-        query = query.format(best_product[0], best_product[1], best_product[2])
-        self.cursor.execute(query)
-        results = self.cursor.fetchmany(size=5)
-        Product.counter = 1
-        for product in results:
-            product = Product(product)
-            best_products.append(product)
-        return best_products
-
-    def retrieve_recorded_products(self, query):
-        """
-
-            Fetch the last recorded best products and the products used for the comparrison.
-
-            Arguments:
-
-            query: self explanatory
-
-            Returns:
-
-            recorded_products(list): list of both best and reference products, with a index.
-
-            """
-        recorded_products = []
-        result = []
-        self.cursor.execute(query)
-        results = self.cursor.fetchmany(size=5)
-        Product.counter = 1
-        for product in results:
-            product = Product(product)
-            recorded_products.append(product)
-        return recorded_products
-
-    def get_numbers_on_DB(self, query):
-        """
-
-            Gets simple figures from the local DB.
-
-            Arguments:
-
-            query: self explanatory
-
-            Returns:
-
-            result[0][0]: currently the number of rows in the table product.
-
-            """
-        self.cursor.execute(query)
-        result = self.cursor.fetchmany()
-        return result[0][0]
-
-    def upload_product(self, query, item):
-        """
-
-            Upload only one item in the local DB. Currently formatted to record a best product.
-
-            Arguments:
-
-            query: self explanatory
-
-            item: the food item to be recorded in the table best_product.
-
-            Returns:
-
-            NIL
-
-            """
-        query = query.format(item[0], item[1], item[2])
-        self.cursor.execute(query)
-        self.cnx.commit()
-
-    def update_best_product_date(self, query, item):
-        """
-
-            Update the field date of a recorded best product
-
-            Arguments:
-
-            query: self explanatory.
-
-            item: date-time of the record and product code.
-
-            Returns:
-
-            NIL.
-
-            """
-        query = query.format(item[0], item[1])
-        self.cursor.execute(query)
-        self.cnx.commit()
-
-    def upload_dataset(self, query, item_list):
-        """
-
-            After the selection of a new category, comes its upload in the local DB.
-
-            Arguments:
-
-            query: self explanatory, based on a category as main criterion.
-
-            item_list: list of items downloaded from OFF. They have been largely cleaned beforehand.
-
-            Returns;
-
-            NIL
-
-            """
-        self.cursor.executemany(query, item_list)
-        self.cnx.commit()
-
-    def close_connection(self):
-        """
-
-            Close the connection with the local DB.
-
-            Arguments:
-
-            NIL
-
-            Returns:
-
-            NIL
-
-            """
-        self.cursor.close()
-
-    def upload_categories(self, query, categories):
-        """
-
-            When creating a new DB, uploads a list of categories to start working
-            with the DB.
-
-            Arguments:
-
-            query: self explanatory
-
-            categories: list of categories downloaded from Open Food Facts.
-
-            Returns:
-
-            NIL
-
-            """
-        category_tuple = [(category,) for category in categories]
-        self.cursor.executemany(cq.query_upload_new_category, category_tuple)
-        self.cnx.commit()
 
     def create_database(self):
         """
@@ -423,19 +205,28 @@ class MySQLQueries:
 
             """
         # Create a new and empty database
-        self.cursor.execute(scr.DB_CREATION.format(config.DB_NAME['database']))
-        # Add the name of the database to the parameters file for further use
-        with open("db_parameters.txt", 'rb') as file:
-            connection_parameters = pickle.load(file)
-        connection_parameters.update(config.DB_NAME)
-        with open("db_parameters.txt", "wb") as file:
-            pickle.dump(connection_parameters, file)
+        with open("db_parameters.txt") as file:
+            connection_parameters = file.read()
+        engine = create_engine(connection_parameters,
+        echo = False, encoding = 'utf-8')
         # Activate the Database to subsequently create the tables
-        self.cursor.execute(scr.DB_USE.format(config.DB_NAME['database']))
+        connection = engine.connect()
+        connection.execute("COMMIT")
+        connection.execute("CREATE DATABASE get_better_diet")
+        connection.close()
+        # Add the name of the database to the parameters file for further use
+        connection_parameters = connection_parameters + config.DB_NAME
+        with open("db_parameters.txt", "w") as file:
+            file.write(connection_parameters) 
         # Add the tables to the new database
-        for table_name in scr.DB_TABLES:
-            table_schema = scr.DB_TABLES[table_name]
-            self.cursor.execute(table_schema)
+        engine = create_engine(connection_parameters, echo = False, encoding = 'utf-8')
+        engine.connect()
+        Base.metadata.create_all(engine)
+
+
+        
+
+
 
 
 def query_settings(answer):
@@ -462,9 +253,8 @@ def query_settings(answer):
 
 if __name__ == "__main__":
     # Used to test the interaction with the local DB
-    import pickle
 
 
-    requete = MySQLQueries()
+    requete = ORMConnection()
     result = requete.get_available_categories(cq.query_retrieve_available_categories)
     print(result)
