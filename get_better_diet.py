@@ -130,6 +130,7 @@ class UserDialog:
             decision: used to give the main function the order to quit the app.
 
             """
+        self.category = sql.Category()
         # Check whether a local DB has already been created. If not, starts a process.
         has_to_create_db = False
         while True:
@@ -148,8 +149,12 @@ class UserDialog:
             self.interface.right_window_display_info(
                 cfg.C_DB_CREATE_LOCAL_DB)
             OFF_categories = self.OFF.import_static_data()
-            self.queries.upload_categories(
-                cq.query_upload_new_category, OFF_categories)
+            # Open the connection to the local DB
+            self.queries = sql.ORMConnection()
+            self.queries.open_session()
+            # Configure the data to import categories into the local DB
+            many_items = self.category.upload_categories(OFF_categories)
+            self.queries.upload_many(many_items)
             self.interface.right_window_display_info(
                 cfg.C_DB_INFO_CATEGORIES_FETCHED)
 

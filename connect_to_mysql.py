@@ -25,11 +25,12 @@ import mysql.connector
 
 import config
 import config_queries as cq
-import script_create_database as scr
 
 from sqlalchemy import Table, Column, Integer, DateTime, String, Index, \
     ForeignKeyConstraint, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
 
 Base = declarative_base()
 
@@ -39,7 +40,31 @@ class Category(Base):
 
     id_category = Column(Integer(), primary_key = True, autoincrement = True,
             nullable = False)
-    name = Column(String(45), nullable = False)
+    name = Column(String(600), nullable = False)
+
+    def upload_categories(self, categories):
+        """
+
+            When creating a new DB, uploads a list of categories to start working
+            with the DB.
+
+            Arguments:
+
+            query: self explanatory
+
+            categories: list of categories downloaded from Open Food Facts.
+
+            Returns:
+
+            NIL
+
+            """
+        obj_category = []
+        for category in categories:
+            category = Category(name = category)
+            obj_category.append(category)
+        
+        return obj_category
 
 
 class Product (Base):
@@ -73,25 +98,7 @@ class CategoryProduct (Base):
         ondelete = 'CASCADE', onupdate = 'CASCADE'),
         nullable = False, )
 
-    def upload_categories(self, query, categories):
-        """
-
-            When creating a new DB, uploads a list of categories to start working
-            with the DB.
-
-            Arguments:
-
-            query: self explanatory
-
-            categories: list of categories downloaded from Open Food Facts.
-
-            Returns:
-
-            NIL
-
-            """
-        pass
-
+    
 class StoreProduct (Base):
     __tablename__ = 'store_product'
 
@@ -184,9 +191,9 @@ class ORMConnection:
             """
         with open("db_parameters.txt") as file:
             connection_parameters = file.read()
-        engine = create_engine(connection_parameters,
+        self.engine = create_engine(connection_parameters,
         echo = False, encoding = 'utf-8')
-        res = engine.connect()
+        res = self.engine.connect()
 
 
     def create_database(self):
@@ -207,10 +214,10 @@ class ORMConnection:
         # Create a new and empty database
         with open("db_parameters.txt") as file:
             connection_parameters = file.read()
-        engine = create_engine(connection_parameters,
+        self.engine = create_engine(connection_parameters,
         echo = False, encoding = 'utf-8')
         # Activate the Database to subsequently create the tables
-        connection = engine.connect()
+        connection = self.engine.connect()
         connection.execute("COMMIT")
         connection.execute("CREATE DATABASE get_better_diet")
         connection.close()
@@ -219,9 +226,23 @@ class ORMConnection:
         with open("db_parameters.txt", "w") as file:
             file.write(connection_parameters) 
         # Add the tables to the new database
-        engine = create_engine(connection_parameters, echo = False, encoding = 'utf-8')
-        engine.connect()
-        Base.metadata.create_all(engine)
+        self.engine = create_engine(connection_parameters, echo = False, encoding = 'utf-8')
+        self.engine.connect()
+        Base.metadata.create_all(self.engine)
+
+    def open_session(self):
+        Session = sessionmaker(bind = self.engine)
+        self.session = Session()
+    
+    def upload_many(self, many_items):
+        self.session.bulk_save_objects(many_items)
+        self.session.commit()
+
+    def close_session(self):
+        self.session.close()
+
+
+        
 
 
         
@@ -256,5 +277,12 @@ if __name__ == "__main__":
 
 
     requete = ORMConnection()
-    result = requete.get_available_categories(cq.query_retrieve_available_categories)
-    print(result)
+    requete.open_session()
+    obj_category = []
+    categories = ['Snacks', 'Fromages', 'Viandes']
+    for category in categories:
+        category = Category(name = category)
+        obj_category.append(category)
+    requete.session.bulk_save_objects(obj_category)
+    requete.session.commit()
+    

@@ -116,6 +116,7 @@ class ConnectToOFF:
         data = r.json()
         items_left_apart = 0
         nb_imported_items = 0
+
         for product in data['products']:
             brand = self.check_special_characters(product.get('brands'))
             name = self.check_special_characters(product.get('product_name'))
@@ -139,7 +140,6 @@ class ConnectToOFF:
             This method import categories, which are static data and therefore doesn't \
                 include the parameters needed in an API.
             On Open Food Facts DB, the categories are sorted out by number of entries. \
-                Therefore, this method picks some of the most popular categories in OFF DB.
 
             Arguments:
 
@@ -150,19 +150,16 @@ class ConnectToOFF:
             self.OFF_category_list : list of categories selected for later download. 
 
             """
-        self.OFF_category_list = []
-        r = requests.get(coff.URL_STATIC)
+        self.OFF_list = []
+        r = requests.get(coff.URL_STATIC_CAT)
         data = r.json()
-        counter = 1
         for tag in data[coff.STATIC_TAG]:
             name = tag.get(coff.STATIC_FIELD_0)
             # Some inconsistant fields have been remarked. This is an ad hoc way to remove those rows.
-            if ":" not in name and counter <= coff.STATIC_VOLUME:
-                if name not in self.OFF_category_list:
-                    name = str(name)
-                    self.OFF_category_list.append(name)
-                    counter += 1
-        return self.OFF_category_list
+            if name not in self.OFF_list:
+                name = str(name)
+                self.OFF_list.append(name)
+        return self.OFF_list
 
     def open_product_file_OFF(self, code_product):
         """
@@ -184,7 +181,6 @@ class ConnectToOFF:
 
 if __name__ == "__main__":
     connection = ConnectToOFF()
-    result = connection.import_products_list("Snacks")
-    for item in result:
-        print(item)
+    result = connection.import_static_data()
     print(len(result))
+    print(type(result))
