@@ -63,8 +63,10 @@ class Category(Base):
         for category in categories:
             category = Category(name = category)
             obj_category.append(category)
-        
         return obj_category
+
+    def display_categories(self):
+        passch
 
 
 class Product (Base):

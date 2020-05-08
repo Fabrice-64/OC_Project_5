@@ -69,7 +69,8 @@ class ConnectToOFF:
     def check_special_characters(self, value):
         """
 
-            Cleans the fields of the downloaded rows in order to avoid conflicts with mySQL syntax.
+            Cleans the fields of the downloaded rows in order to avoid conflicts 
+                with mySQL syntax.
 
             Arguments:
 
@@ -77,7 +78,8 @@ class ConnectToOFF:
 
             Returns:
 
-                result: value cleaned from the various quotation marks or identified as empty.
+                result: value cleaned from the various quotation marks 
+                    or identified as empty.
 
             """
         if value is None:
@@ -88,6 +90,9 @@ class ConnectToOFF:
         elif "'" in value:
             new_value = value
             result = new_value.replace("'", "\'")
+        elif "-" in value:
+            new_value = value
+            result = new_value.replace("-"," ")
         else:
             result = value
         return result
@@ -134,7 +139,7 @@ class ConnectToOFF:
                 items_left_apart += 1
         return (nb_imported_items, items_left_apart, self.list_items)
 
-    def import_static_data(self):
+    def import_static_data(self, import_type):
         """
 
             This method import categories, which are static data and therefore doesn't \
@@ -147,14 +152,15 @@ class ConnectToOFF:
 
             Returns:
 
-            self.OFF_category_list : list of categories selected for later download. 
+            self.OFF_list : list of categories or products selected for later upload. 
 
             """
         self.OFF_list = []
-        r = requests.get(coff.URL_STATIC_CAT)
+        r = requests.get(import_type)
         data = r.json()
         for tag in data[coff.STATIC_TAG]:
             name = tag.get(coff.STATIC_FIELD_0)
+            name = self.check_special_characters(name)
             # Some inconsistant fields have been remarked. This is an ad hoc way to remove those rows.
             if name not in self.OFF_list:
                 name = str(name)
@@ -181,6 +187,8 @@ class ConnectToOFF:
 
 if __name__ == "__main__":
     connection = ConnectToOFF()
-    result = connection.import_static_data()
+    result = connection.import_static_data(coff.URL_STATIC_STORES)
     print(len(result))
     print(type(result))
+    print(result[0])
+    print(result[-1])

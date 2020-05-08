@@ -192,23 +192,4 @@ def get_categories(self, query):
             """
         self.cursor.close()
 
-    def upload_categories(self, query, categories):
-        """
-
-            When creating a new DB, uploads a list of categories to start working
-            with the DB.
-
-            Arguments:
-
-            query: self explanatory
-
-            categories: list of categories downloaded from Open Food Facts.
-
-            Returns:
-
-            NIL
-
-            """
-        category_tuple = [(category,) for category in categories]
-        self.cursor.executemany(cq.query_upload_new_category, category_tuple)
-        self.cnx.commit()
+   

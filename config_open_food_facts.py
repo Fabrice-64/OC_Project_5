@@ -40,7 +40,7 @@ URL_STATIC_STORES = 'https://fr.openfoodfacts.org/stores.json'
 URL_STATIC_CAT = 'https://fr.openfoodfacts.org/categories.json'
 STATIC_TAG = 'tags'
 STATIC_FIELD_0 = 'name'
-STATIC_VOLUME = 20000
+STATIC_VOLUME = 30000
 
 # This is the address to be used to import a product. The product code is added right behind.
 OFF_PRODUCT_ADDRESS = "https://world.openfoodfacts.org/product/"
