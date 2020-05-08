@@ -28,11 +28,10 @@ import config
 import config_queries as cq
 
 from sqlalchemy import Table, Column, Integer, DateTime, String, Index, \
-    ForeignKeyConstraint, ForeignKey
+    ForeignKeyConstraint, ForeignKey, select, and_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-
-
+import connect_to_OFF as cof
 Base = declarative_base()
 
 class Category(Base):
@@ -253,6 +252,19 @@ class ORMConnection:
         selected_categories = self.session.query(Category).\
             order_by(Category.id_category)[:30]
         return selected_categories
+    
+    def upload_products(self, products):
+        obj_product = []
+        obj_stores = []
+        obj_category = []
+        for product in products:
+            product = Product(brand = product[0],
+                    name = product[1],
+                    code = product[2],
+                    nutrition_grade = product[3])
+            obj_product.append(product)
+            
+        return obj_product, 
 
     def open_session(self):
         Session = sessionmaker(bind = self.engine)
@@ -266,6 +278,9 @@ class ORMConnection:
         self.session.close()
 
 
+    def test(self):
+        test = self.session.query(Category.id_category).filter(Category.name.ilike("Produits à tartiner sucrés"))
+        return test
         
 
 
@@ -298,11 +313,12 @@ def query_settings(answer):
 
 if __name__ == "__main__":
     # Used to test the interaction with the local DB
-
+    connection = cof.ConnectToOFF()
+    #nb_items, nb_rejected, results = connection.import_products_list('Fromages')
 
     requete = ORMConnection()
     requete.open_session()
-    categories = requete.display_categories()
-    for category in categories:
-        print(category.name, category.id_category)
+    result = requete.test()
+    for res in result:
+        print(res[0])
     

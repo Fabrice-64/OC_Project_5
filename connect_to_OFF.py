@@ -82,7 +82,7 @@ class ConnectToOFF:
                     or identified as empty.
 
             """
-        if value is None:
+        if value is None or value == "":
             result = "NaN"
         elif '"' in value:
             new_value = value
@@ -125,16 +125,16 @@ class ConnectToOFF:
         for product in data['products']:
             brand = self.check_special_characters(product.get('brands'))
             name = self.check_special_characters(product.get('product_name'))
-            category = category
             code = product.get('code')
             nutrition_grade = product.get('nutrition_grade_fr')
             stores = self.check_special_characters(product.get('stores'))
             categories = self.check_special_characters(
                 product.get('categories'))
-            if brand != "NaN" and name != "NaN" and nutrition_grade in ["a", "b", "c", "d", "e"]:
+            if brand != "NaN" and name != "NaN" and stores != "NaN" \
+                and nutrition_grade in ["a", "b", "c", "d", "e"]:
                 nb_imported_items += 1
                 self.list_items.append(
-                    (brand, name, category, code, nutrition_grade, stores, categories))
+                    (brand, name, code, nutrition_grade, stores, categories))
             else:
                 items_left_apart += 1
         return (nb_imported_items, items_left_apart, self.list_items)
@@ -187,8 +187,7 @@ class ConnectToOFF:
 
 if __name__ == "__main__":
     connection = ConnectToOFF()
-    result = connection.import_static_data(coff.URL_STATIC_STORES)
-    print(len(result))
-    print(type(result))
-    print(result[0])
-    print(result[-1])
+    nb_items, nb_rejected, results = connection.import_products_list('Fromages')
+    print(nb_items, nb_rejected)
+    for res in results:
+        print(res)
