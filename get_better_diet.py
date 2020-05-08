@@ -23,7 +23,6 @@
     """
 import time
 from datetime import datetime
-import pickle
 
 import config as cfg
 import config_open_food_facts as coff
@@ -130,10 +129,9 @@ class UserDialog:
             decision: used to give the main function the order to quit the app.
 
             """
-        self.category = sql.Category()
         # Check whether a local DB has already been created. If not, starts a process.
         has_to_create_db = False
-        while True:
+        while check_DB := True:
             try:
                 self.queries = sql.ORMConnection()
                 break
@@ -143,20 +141,31 @@ class UserDialog:
                     cfg.WARNING_MESSAGE_4, "warning")
                 self.create_cnx_parameters()
                 has_to_create_db = True
+                check_DB = False
 
         if has_to_create_db == True:
+            print("Database should be created now")
+            time.sleep(2)
             self.queries.create_database()
             self.interface.right_window_display_info(
                 cfg.C_DB_CREATE_LOCAL_DB)
-            OFF_categories = self.OFF.import_static_data()
             # Open the connection to the local DB
             self.queries = sql.ORMConnection()
             self.queries.open_session()
-            # Configure the data to import categories into the local DB
-            many_items = self.category.upload_categories(OFF_categories)
+            # Import categories from Open Food Facts
+            OFF_categories = self.OFF.import_static_data(coff.URL_STATIC_CAT)
+            # Configure the data and upload categories into the local DB
+            many_items = self.queries.upload_categories(OFF_categories)
             self.queries.upload_many(many_items)
             self.interface.right_window_display_info(
                 cfg.C_DB_INFO_CATEGORIES_FETCHED)
+            # Import stores from Open Food Facts
+            OFF_stores = self.OFF.import_static_data(coff.URL_STATIC_STORES)
+            # Configure the data and upload stores into the local DB
+            many_items = self.queries.upload_stores(OFF_stores)
+            self.queries.upload_many(many_items)
+            self.interface.right_window_display_info(
+                cfg.C_DB_INFO_STORES_FETCHED)           
 
         self.interface.title_bar(cfg.TITLE_2)
         # Display a drop down menu to navigate in the application
@@ -568,7 +577,6 @@ class UserDialog:
         # Connection parameters are saved in a separate file to be reused.
         with open("db_parameters.txt", "w") as file:
             file.write(connection_string)
-
 
 def main(user):
     """

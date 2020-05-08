@@ -36,7 +36,8 @@ T_C_APPROVAL = "You have decided to go on with this App\n"
 
 # These are the dialog strings related to the creation of the DB
 C_DB_CREATE_LOCAL_DB = "A new DB will be created\n"
-C_DB_INFO_CATEGORIES_FETCHED = "The names of the main categories have been uploaded\n"
+C_DB_INFO_CATEGORIES_FETCHED = "The names of the french categories have been uploaded\n"
+C_DB_INFO_STORES_FETCHED = "The names of the stores have been uploaded\n"
 C_DB_INITIAL_INFO = "Please follow the instructions to create a new DB\n"
 C_DB_USER = "Please enter the user if you have defined one ('root' by default)\n"
 C_DB_PASSWORD = "Please enter the password to your DB (None by default)\n"

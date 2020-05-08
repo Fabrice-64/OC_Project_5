@@ -19,6 +19,7 @@
 
     """
 import datetime
+import time
 import pickle
 from sqlalchemy import create_engine
 import mysql.connector
@@ -42,33 +43,6 @@ class Category(Base):
             nullable = False)
     name = Column(String(600), nullable = False)
 
-    def upload_categories(self, categories):
-        """
-
-            When creating a new DB, uploads a list of categories to start working
-            with the DB.
-
-            Arguments:
-
-            query: self explanatory
-
-            categories: list of categories downloaded from Open Food Facts.
-
-            Returns:
-
-            NIL
-
-            """
-        obj_category = []
-        for category in categories:
-            category = Category(name = category)
-            obj_category.append(category)
-        return obj_category
-
-    def display_categories(self):
-        passch
-
-
 class Product (Base):
     __tablename__ = 'product'
 
@@ -84,7 +58,7 @@ class Store (Base):
 
     id_store = Column(Integer(), nullable = False, primary_key = True, 
         autoincrement = True)
-    name = Column(String(60), nullable = False)
+    name = Column(String(600), nullable = False)
        
 
 class CategoryProduct (Base):
@@ -169,10 +143,6 @@ class ORMConnection:
 
         self.cursor(tuple): contain the data gathered in the local DB.
 
-        Comment:
-
-        self.test_outside = self.cnx.is_connected()
-        can be included in the __init__ to check the connection.
 
         """
 
@@ -194,8 +164,8 @@ class ORMConnection:
         with open("db_parameters.txt") as file:
             connection_parameters = file.read()
         self.engine = create_engine(connection_parameters,
-        echo = False, encoding = 'utf-8')
-        res = self.engine.connect()
+        echo = False)
+        self.engine.connect()
 
 
     def create_database(self):
@@ -217,20 +187,70 @@ class ORMConnection:
         with open("db_parameters.txt") as file:
             connection_parameters = file.read()
         self.engine = create_engine(connection_parameters,
-        echo = False, encoding = 'utf-8')
+        echo = False)
         # Activate the Database to subsequently create the tables
         connection = self.engine.connect()
         connection.execute("COMMIT")
-        connection.execute("CREATE DATABASE get_better_diet")
+        connection.execute("CREATE DATABASE get_better_diet \
+                            CHARACTER SET utf8mb4")
         connection.close()
         # Add the name of the database to the parameters file for further use
         connection_parameters = connection_parameters + config.DB_NAME
         with open("db_parameters.txt", "w") as file:
             file.write(connection_parameters) 
         # Add the tables to the new database
-        self.engine = create_engine(connection_parameters, echo = False, encoding = 'utf-8')
+        self.engine = create_engine(connection_parameters, echo = False)
         self.engine.connect()
         Base.metadata.create_all(self.engine)
+
+    def upload_categories(self, categories):
+        """
+
+            When creating a new DB, uploads a list of categories to start working
+            with the DB.
+
+            Arguments:
+
+            query: self explanatory
+
+            categories: list of categories downloaded from Open Food Facts.
+
+            Returns:
+
+            NIL
+
+            """
+        obj_category = []
+        for category in categories:
+            category = Category(name = category)
+            obj_category.append(category)
+        return obj_category
+
+    def upload_stores(self, stores):
+        """
+
+            When creating a new DB, uploads a list of stores to start working
+            with the DB.
+
+            Arguments:
+
+            query: self explanatory
+
+            categories: list of french stores downloaded from Open Food Facts.
+
+            Returns:
+
+            List of stores
+
+            """
+        obj_store = []
+        for store in stores:
+            store = Store(name = store)
+            obj_store.append(store)
+        return obj_store
+
+    def display_categories(self):
+        pass
 
     def open_session(self):
         Session = sessionmaker(bind = self.engine)
