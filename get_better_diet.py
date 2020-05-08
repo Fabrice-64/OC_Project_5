@@ -179,6 +179,8 @@ class UserDialog:
         y = 0
         running_main = True
         while running_main:
+            # Open a session with the ORM iot work with the DB
+            self.queries.open_session()
             # Look for a product !!
             if answer == cfg.S_A_OPERATE_ON_DB[0]:
                 self.interface.title_bar(cfg.TITLE_3)
@@ -480,13 +482,12 @@ class UserDialog:
                 y = 0
                 self.interface.clear_window()
                 # A short sample of OFF categories is imported and displayed in the right window.
-                categories = self.queries.get_categories(
-                    cq.query_categories)
+                categories = self.queries.display_categories()
                 index_categories = []
                 for category in categories:
                     self.interface.right_window_display_result(
-                        cfg.S_A_INDEX_NAME .format(category.index, category.name))
-                    index_categories.append(category.index)
+                        cfg.S_A_INDEX_NAME .format(category.id_category, category.name))
+                    index_categories.append(category.id_category)
 
                 self.interface.display_users_guide_textpad(cfg.USER_GUIDE)
                 # The user is requested to designate a category to be uploaded.

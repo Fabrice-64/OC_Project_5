@@ -250,7 +250,9 @@ class ORMConnection:
         return obj_store
 
     def display_categories(self):
-        pass
+        selected_categories = self.session.query(Category).\
+            order_by(Category.id_category)[:30]
+        return selected_categories
 
     def open_session(self):
         Session = sessionmaker(bind = self.engine)
@@ -300,11 +302,7 @@ if __name__ == "__main__":
 
     requete = ORMConnection()
     requete.open_session()
-    obj_category = []
-    categories = ['Snacks', 'Fromages', 'Viandes']
+    categories = requete.display_categories()
     for category in categories:
-        category = Category(name = category)
-        obj_category.append(category)
-    requete.session.bulk_save_objects(obj_category)
-    requete.session.commit()
+        print(category.name, category.id_category)
     
