@@ -155,15 +155,13 @@ class UserDialog:
             # Import categories from Open Food Facts
             OFF_categories = self.OFF.import_static_data(coff.URL_STATIC_CAT)
             # Configure the data and upload categories into the local DB
-            many_items = self.queries.upload_categories(OFF_categories)
-            self.queries.upload_many(many_items)
+            self.queries.upload_categories(OFF_categories)
             self.interface.right_window_display_info(
                 cfg.C_DB_INFO_CATEGORIES_FETCHED)
             # Import stores from Open Food Facts
             OFF_stores = self.OFF.import_static_data(coff.URL_STATIC_STORES)
             # Configure the data and upload stores into the local DB
-            many_items = self.queries.upload_stores(OFF_stores)
-            self.queries.upload_many(many_items)
+            self.queries.upload_stores(OFF_stores)
             self.interface.right_window_display_info(
                 cfg.C_DB_INFO_STORES_FETCHED)           
 
@@ -186,8 +184,7 @@ class UserDialog:
                 self.interface.title_bar(cfg.TITLE_3)
                 self.interface.clear_window()
                 # list of categories previously recorded is displayed on the right window
-                categories = self.queries.get_categories(
-                    cq.query_retrieve_available_categories)
+                categories = self.queries.get_categories()
                 index_categories = []
                 for category in categories:
                     self.interface.right_window_display_result(cfg.S_A_INDEX_NAME_QTY.format(category.index, category.name))
@@ -523,14 +520,15 @@ class UserDialog:
                 self.interface.right_window_display_info(
                     coff.NUMBER_DOWNLOADED_ITEMS.format(nb_imported_items))
 
+                self.interface.right_window_display_info(cfg.S_A_BE_PATIENT)
                 # This is where the excerpt of OFF is uploaded in the local DB.
-                self.queries.upload_dataset(
-                    cq.query_upload_new_category_products, list_items)
-                nb_rows = self.queries.get_numbers_on_DB(
+                self.queries.upload_products(list_items)
+                    
+                """nb_rows = self.queries.get_numbers_on_DB(
                     cq.query_count_rows)
                 self.interface.right_window_display_info(
                     cfg.S_A_SIZE_LOCAL_DB.format(nb_rows))
-                time.sleep(1)
+                time.sleep(1)"""
                 running = False
                 # Used to quit this loop
                 self.interface.clear_window()

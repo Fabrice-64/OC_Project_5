@@ -223,7 +223,7 @@ class ORMConnection:
         for category in categories:
             category = Category(name = category)
             obj_category.append(category)
-        return obj_category
+        self.upload_many(obj_category)
 
     def upload_stores(self, stores):
         """
@@ -246,7 +246,7 @@ class ORMConnection:
         for store in stores:
             store = Store(name = store)
             obj_store.append(store)
-        return obj_store
+        self.upload_many(obj_store)
 
     def display_categories(self):
         selected_categories = self.session.query(Category).\
@@ -255,16 +255,43 @@ class ORMConnection:
     
     def upload_products(self, products):
         obj_product = []
-        obj_stores = []
-        obj_category = []
-        for product in products:
-            product = Product(brand = product[0],
-                    name = product[1],
-                    code = product[2],
-                    nutrition_grade = product[3])
-            obj_product.append(product)
-            
-        return obj_product, 
+        obj_stores_product = []
+        obj_category_product = []
+        # Create a list including product characteristics for table product
+        for item in products:
+            if self.check_duplicate(item[2]) is False:
+                product = Product(brand = item[0],
+                    name = item[1],
+                    code = item[2],
+                    nutrition_grade = item[3])
+                obj_product.append(product)
+                    # Get for each product the list of stores it is sold in
+                store_list = item[4].split(",")
+                # Bind each store name with its id
+                for store in store_list:
+                    store_id = self.get_store_id(store)
+                    # Instantiate product_code and store_id  in join table
+                    for store in store_id:
+                        store_product = StoreProduct(product_code = product.code, 
+                            store_id = store[0])
+                        # Add the instance to the list of all duets  store - product
+                        obj_stores_product.append(store_product)
+                # Get for each product the list of categories it belongs to
+                category_list = item[5].split(",")
+                # Bind each category name of the product with its category_id
+                for category in category_list:
+                    category_id = self.get_category_id(category)
+                    # Instantiate both category id and product code in join table
+                    for category in category_id:
+                        category_product = CategoryProduct(idcategory = category[0], 
+                            code = product.code)
+                        obj_category_product.append(category_product)
+        self.upload_many(obj_product)
+        self.upload_many(obj_stores_product)
+        self.upload_many(obj_category_product)
+
+    def get_categories(self):
+        pass
 
     def open_session(self):
         Session = sessionmaker(bind = self.engine)
@@ -278,12 +305,19 @@ class ORMConnection:
         self.session.close()
 
 
-    def test(self):
-        test = self.session.query(Category.id_category).filter(Category.name.ilike("Produits à tartiner sucrés"))
-        return test
+    def get_category_id(self, category):
+        category_id = self.session.query(Category.id_category).filter(Category.name.ilike(category))
+        return category_id
+    
+    def get_store_id(self, store):
+        store_id = self.session.query(Store.id_store).filter(Store.name.ilike(store))
+        return store_id
+
         
-
-
+    def check_duplicate(self, code):
+        duplicate = self.session.query(self.session.query(Product).
+                    filter_by(code = code).exists()).scalar()
+        return duplicate
         
 
 
@@ -313,12 +347,11 @@ def query_settings(answer):
 
 if __name__ == "__main__":
     # Used to test the interaction with the local DB
-    connection = cof.ConnectToOFF()
+    #connection = cof.ConnectToOFF()
     #nb_items, nb_rejected, results = connection.import_products_list('Fromages')
 
     requete = ORMConnection()
     requete.open_session()
-    result = requete.test()
-    for res in result:
-        print(res[0])
-    
+    result= requete.check_duplicate("Fabrice jaouën")
+    print(result)
+

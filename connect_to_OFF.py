@@ -131,7 +131,7 @@ class ConnectToOFF:
             categories = self.check_special_characters(
                 product.get('categories'))
             if brand != "NaN" and name != "NaN" and stores != "NaN" \
-                and nutrition_grade in ["a", "b", "c", "d", "e"]:
+                and nutrition_grade in ["a", "b", "c", "d", "e"] and categories != "NaN":
                 nb_imported_items += 1
                 self.list_items.append(
                     (brand, name, code, nutrition_grade, stores, categories))

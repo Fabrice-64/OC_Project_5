@@ -53,6 +53,7 @@ S_A_OPERATE_ON_DB = ["Look for a substitution food item",
 S_A_SIZE_LOCAL_DB = 'Your local database currently counts : {} food items'
 
 S_A_PROCESSING_RECORD = "Your selection is being recorded."
+S_A_BE_PATIENT = "Be patient, Work in Progress"
 
 # These are the dialog strings to select a substition food item
 TITLE_3 = "Looking for a substitution food item"
