@@ -28,7 +28,7 @@ import config
 import config_queries as cq
 
 from sqlalchemy import Table, Column, Integer, DateTime, String, Index, \
-    ForeignKeyConstraint, ForeignKey, select, and_
+    ForeignKeyConstraint, ForeignKey, select, and_, func, asc, desc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import connect_to_OFF as cof
@@ -291,7 +291,12 @@ class ORMConnection:
         self.upload_many(obj_category_product)
 
     def get_categories(self):
-        pass
+        query = self.session.query \
+            (Category, func.count(CategoryProduct.idcategory))
+        query = query.join(CategoryProduct).group_by(CategoryProduct.idcategory).\
+            order_by(desc(func.count(CategoryProduct.idcategory)))[:20]
+        return query
+        
 
     def open_session(self):
         Session = sessionmaker(bind = self.engine)
@@ -352,6 +357,7 @@ if __name__ == "__main__":
 
     requete = ORMConnection()
     requete.open_session()
-    result= requete.check_duplicate("Fabrice jaouën")
-    print(result)
+    result= requete.get_categories()
+    for res in result:
+        print(res[0].name, res[1])
 
