@@ -30,7 +30,7 @@ import config_queries as cq
 from sqlalchemy import Table, Column, Integer, DateTime, String, Index, \
     ForeignKeyConstraint, ForeignKey, select, and_, func, asc, desc
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, aliased
 import connect_to_OFF as cof
 Base = declarative_base()
 
@@ -373,7 +373,14 @@ class ORMConnection:
         self.add_one_item(compared_prod)
 
     def retrieve_compared_products(self):
-        pass
+        best_p = aliased(Product)
+        ref_p = aliased(Product)
+        p_c = aliased(ProductComparrison)
+        query = self.session.query(best_p, p_c.date_best, ref_p)
+        query = query.join(best_p, best_p.code == p_c.code_best_prod)
+        query = query.join(ref_p, ref_p.code == p_c.code_ref_prod)
+        query = query.order_by(desc(p_c.date_best))
+        return query
 
     def total_items(self):
         result = self.session.query(func.count(Product.code))
@@ -441,6 +448,8 @@ if __name__ == "__main__":
     requete = ORMConnection()
     requete.open_session()
     item_search = ["Desserts", "", "8000430172010"]
-    result= requete.total_items()
+    result= requete.retrieve_compared_products()
     print(result)
+    for res in result:
+        print(res[0].name, res[1])
    
