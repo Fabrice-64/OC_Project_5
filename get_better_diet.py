@@ -400,8 +400,7 @@ class UserDialog:
             # Step where the user looks into the best products he has recorded.
             elif answer == cfg.S_A_OPERATE_ON_DB[1]:
                 self.interface.clear_window()
-                last_recorded_products = self.queries.retrieve_recorded_products(
-                    cq.query_retrieve_recorded_product)
+                last_recorded_products = self.queries.retrieve_compared_products()
                 best_products_dict = dict()
                 rank_counter = 0 
                 for item in last_recorded_products:
@@ -524,12 +523,9 @@ class UserDialog:
                 self.interface.right_window_display_info(cfg.S_A_BE_PATIENT)
                 # This is where the excerpt of OFF is uploaded in the local DB.
                 self.queries.upload_products(list_items)
-                    
-                """nb_rows = self.queries.get_numbers_on_DB(
-                    cq.query_count_rows)
+                nb_rows = self.queries.total_items()
                 self.interface.right_window_display_info(
                     cfg.S_A_SIZE_LOCAL_DB.format(nb_rows))
-                time.sleep(1)"""
                 running = False
                 # Used to quit this loop
                 self.interface.clear_window()

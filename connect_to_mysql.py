@@ -375,6 +375,12 @@ class ORMConnection:
     def retrieve_compared_products(self):
         pass
 
+    def total_items(self):
+        result = self.session.query(func.count(Product.code))
+        for nb_rows in result:
+            nb_rows = nb_rows[0]
+        return nb_rows
+
     def open_session(self):
         Session = sessionmaker(bind = self.engine)
         self.session = Session()
@@ -435,11 +441,6 @@ if __name__ == "__main__":
     requete = ORMConnection()
     requete.open_session()
     item_search = ["Desserts", "", "8000430172010"]
-    result= requete.top_products(item_search)
+    result= requete.total_items()
     print(result)
-    for res in result:
-        print(res.name)
-
-        liste = [result.name for result in res.stores]
-        print(liste)
    
