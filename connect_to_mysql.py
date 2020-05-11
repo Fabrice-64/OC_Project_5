@@ -100,30 +100,19 @@ class ProductComparrison (Base):
     date_best = Column(DateTime(), nullable = False)
 
 class TopCategory:
-    _counter = 0
 
     def __init__(self, category_ranking):
-        TopCategory._counter += 1
-        self.rank = TopCategory._counter
         self.name = category_ranking[0]
         self.number_items = category_ranking[1]
 
-    def reset_counter():
-        TopCategory._counter = 0
-
 class SelectedProduct:
-    _counter = 0
 
     def __init__(self, selected_product, stores = 0):
-        SelectedProduct._counter +=1
-        self.rank = SelectedProduct._counter
         self.name = selected_product[0]
         self.brand = selected_product[1]
         self.nutrition_grade = selected_product[2]
         self.code = selected_product[3]
         self.stores = stores
-    def reset_counter():
-        SelectedProduct._counter = 0
 
 class SelectedStore:
     def __init__(self,name):
@@ -331,7 +320,6 @@ class ORMConnection:
         for category in result:
             top_category = TopCategory(category)
             list_top_categories.append(top_category)
-        TopCategory.reset_counter()
         return list_top_categories
     
     def refer_products(self, item_search):
@@ -351,7 +339,6 @@ class ORMConnection:
         return list_refer_products
         
     def top_products(self, item_search):
-        SelectedProduct.reset_counter()
         list_top_products = []
         product_name = self.query_settings(item_search[1])
         query = self.session.query(Product.name, Product.brand, \
@@ -380,6 +367,13 @@ class ORMConnection:
             stores_list.append(store)
         return stores_list
 
+    def record_comparred_products(self, comparrison):
+        compared_prod = ProductComparrison(code_best_prod = comparrison[0],
+            date_best = comparrison[1], code_ref_prod = comparrison[2])
+        self.add_one_item(compared_prod)
+
+    def retrieve_compared_products(self):
+        pass
 
     def open_session(self):
         Session = sessionmaker(bind = self.engine)
@@ -392,6 +386,9 @@ class ORMConnection:
     def close_session(self):
         self.session.close()
 
+    def add_one_item(self, one_item):
+        self.session.add(one_item)
+        self.session.commit()
 
     def get_category_id(self, category):
         category_id = self.session.query(Category.id_category).filter(Category.name.ilike(category))

@@ -185,12 +185,14 @@ class UserDialog:
                 self.interface.clear_window()
                 # list of categories previously recorded is displayed on the right window
                 top_categories = self.queries.get_categories()
-                index_categories = []
+                rank_categories = dict()
+                rank_counter = 0
                 for category in top_categories:
+                    rank_counter += 1
                     self.interface.right_window_display_result\
-                        (cfg.RANK_NAME_QTY.format(category.rank, category.name,\
+                        (cfg.RANK_NAME_QTY.format(rank_counter, category.name,\
                         category.number_items))
-                    index_categories.append(int(category.rank))
+                    rank_categories[rank_counter] = category.name
 
                 self.interface.display_users_guide_textpad(cfg.USER_GUIDE)
 
@@ -207,26 +209,26 @@ class UserDialog:
                             cfg.USER_GUIDE)
                         y = y + 3
                         # Characterize the food item the user is looking for.
-                        answer_category = self.interface.display_textpad(
+                        answer_rank = self.interface.display_textpad(
                             y, 1, 3)
-                        answer_category = self.ascii_to_string(answer_category)
+                        answer_rank = self.ascii_to_string(answer_rank)
                         y = y + 3
                         # The category is the only field which is compulsary.
                         running_category_choice = True
                         while running_category_choice:
-                            if answer_category.isdigit() and int(answer_category) \
-                                    in index_categories:
-                                answer_category = int(answer_category)
-                                answer_category = top_categories[answer_category-1].name
+                            if answer_rank.isdigit() and int(answer_rank) \
+                                    in rank_categories.keys():
+                                answer_rank= int(answer_rank)
+                                answer_category = rank_categories.get(answer_rank)
                                 running_category_choice = False
                             else:
                                 self.interface.right_window_display_info(
                                     cfg.WARNING_MESSAGE_0, "warning")
-                                answer_category = ""
-                                answer_category= self.interface.display_textpad(
+                                answer_rank = ""
+                                answer_rank= self.interface.display_textpad(
                                     y, 1, 3)
-                                answer_category = self.ascii_to_string(
-                                    answer_category)
+                                answer_rank = self.ascii_to_string(
+                                    answer_rank)
                                 running_category_choice = True
 
                         # Input the parameters to search for a food item.
@@ -281,7 +283,7 @@ class UserDialog:
                         running_check_selection = False
                 # The user is requested to enter keywords iot broaden the search.
                 rank_reference_item = int(rank_reference_item)
-                ref_product_code = rank_item_dict.get(rank_reference_item)
+                code_ref_prod = rank_item_dict.get(rank_reference_item)
 
                 keywords_item, y = self.interface.left_window_display_string_textpad(
                     y, 1, 25, cfg.S_A_ADD_KEYWORDS)
@@ -292,7 +294,7 @@ class UserDialog:
                     # Create tuple with characteristics of reference product
                     if running_fetch_top_products is True:
                         # Set up search criterion
-                        selected_prod = answer_category, keywords_item, ref_product_code
+                        selected_prod = answer_category, keywords_item, code_ref_prod
                         selected_prod = tuple(selected_prod)
                         list_top_products = self.queries.top_products(selected_prod)
                         if len(list_top_products) == 0:
@@ -306,10 +308,11 @@ class UserDialog:
                 self.interface.display_users_guide_textpad(cfg.USER_GUIDE)
                 # This is where all the features of each and every food item are displayed.
                 top_products_dict = {}
-                
+                rank_counter = 0
                 for item in list_top_products:
+                    rank_counter += 1
                     self.interface.right_window_display_result(
-                        cfg.S_A_INDEX_NAME .format(item.rank, item.name))
+                        cfg.S_A_INDEX_NAME .format(rank_counter, item.name))
                     self.interface.right_window_display_result(
                         cfg.S_A_DISPLAY_BRAND_NUTRISCORE.format(item.brand, 
                         item.nutrition_grade))
@@ -318,7 +321,7 @@ class UserDialog:
                         cfg.S_A_DISPLAY_STORES.format(", ".join(stores)))
                     self.interface.right_window_display_result(
                         cfg.S_A_SINGLE_RETURN)
-                    top_products_dict[item.rank] = item.code
+                    top_products_dict[rank_counter] = item.code
 
                 y = 0
                 # The user is offered to view the item in a browser and to record it.
@@ -340,23 +343,23 @@ class UserDialog:
                     elif check_answer == "Y":
                         y = 0
                         self.interface.clear_window("left")
-                        check_item, y = self.interface.left_window_display_string_textpad(
+                        rank_item, y = self.interface.left_window_display_string_textpad(
                             y, 1, 2, cfg.S_A_USE_BROWSER)
                         running_detailed_product = True
                         while running_detailed_product:
-                            check_item = self.ascii_to_string(check_item)
-                            check_item = int(check_item)
-                            if check_item not in top_products_dict.keys():
+                            rank_item = self.ascii_to_string(rank_item)
+                            rank_item = int(rank_item)
+                            if rank_item not in top_products_dict.keys():
                                 self.interface.right_window_display_info(
                                     cfg.WARNING_MESSAGE_0, "warning")
-                                check_item = self.interface.display_textpad(
+                                rank_item = self.interface.display_textpad(
                                     y-2, 1, 3)
                                 running_detailed_product = True
                             else:
                                 # Call the hyperlink to open the product file in the browser
-                                check_item = int(check_item)
-                                code_product = top_products_dict.get(check_item)
-                                self.OFF.open_product_file_OFF(code_product)
+                                rank_item = int(rank_item)
+                                code_best_prod = top_products_dict.get(rank_item)
+                                self.OFF.open_product_file_OFF(code_best_prod)
                             running_detailed_product = False
 
                         record_item, y = self.interface.left_window_display_string_textpad(
@@ -376,16 +379,15 @@ class UserDialog:
                             elif record_item == "N":
                                 self.interface.right_window_display_info(
                                     cfg.BACK_MAIN_MENU)
-                                time.sleep(2)
+                                time.sleep(1)
                                 running_record_item = False
                             else:
                                 record_date_time = datetime.now()
                                 record_date_time = record_date_time.strftime(
                                     '%Y-%m-%d %H:%M:%S')
-                                best_product_record = code_product, record_date_time,\
-                                    list_selection[index_reference_item - 1][1][3]
-                                self.queries.upload_product(
-                                    cq.query_record_best_product, best_product_record)
+                                compared_prods = code_best_prod, record_date_time,\
+                                    code_ref_prod
+                                self.queries.record_comparred_products(compared_prods)
                                 self.interface.right_window_display_info(
                                     cfg.S_A_PROCESSING_RECORD)
                                 running_record_item = False
@@ -400,10 +402,12 @@ class UserDialog:
                 self.interface.clear_window()
                 last_recorded_products = self.queries.retrieve_recorded_products(
                     cq.query_retrieve_recorded_product)
-                index_list_products = []
+                best_products_dict = dict()
+                rank_counter = 0 
                 for item in last_recorded_products:
+                    rank_counter += 1
                     self.interface.right_window_display_result(
-                        cfg.S_A_INDEX_NAME .format(item.index, item.item_features[0]))
+                        cfg.S_A_INDEX_NAME .format(rank_counter, item.item_features[0]))
                     self.interface.right_window_display_result(
                         cfg.S_A_DISPLAY_BRAND_NUTRISCORE.format(item.item_features[1],\
                             item.item_features[3]))
@@ -415,11 +419,11 @@ class UserDialog:
                         cfg.S_A_COMPARRISON_DATE.format(item.item_features[5]))
                     self.interface.right_window_display_result(
                         cfg.S_A_SINGLE_RETURN)
-                    index_list_products.append(str(item.index))
+                    best_products_dict[rank_counter] = item.code
                 # The user can see a product in detail.
                 running_recorded_products = True
                 while running_recorded_products:
-                    if len(index_list_products) == 0:
+                    if len(best_products_dict) == 0:
                         self.interface.right_window_display_info(
                             cfg.WARNING_MESSAGE_3, "warning")
                         running_recorded_products = False
@@ -432,18 +436,17 @@ class UserDialog:
                                 y+1, 1, 2, cfg.S_A_USE_BROWSER)
                             running_use_browser = True
                             while running_use_browser:
-                                check_item = self.ascii_to_string(check_item)
-                                if check_item not in index_list_products:
+                                rank_item = self.ascii_to_string(rank_item)
+                                if rank_item not in best_products_dict.keys():
                                     self.interface.right_window_display_info(
                                         cfg.WARNING_MESSAGE_0, "warning")
-                                    check_item = self.interface.display_textpad(
+                                    rank_item = self.interface.display_textpad(
                                         y-2, 1, 2)
                                     running_use_browser = True
                                 else:
                                     # Calls the hyperlink to open the product file in the browser.
-                                    check_item = int(check_item)
-                                    code_product = last_recorded_products[check_item-1].\
-                                        item_features[2]
+                                    rank_item = int(rank_item)
+                                    code_product = best_products_dict.get(rank_item)
                                     self.OFF.open_product_file_OFF(
                                         code_product)
                                     running_use_browser = False
