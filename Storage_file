@@ -1,52 +1,4 @@
-def get_categories(self, query):
-        """
 
-            Get the name of categories already recorded in the local DB.
-
-            Arguments:
-
-            query: query designed to fetch the categories.
-
-            Returns:
-
-            categories with an index number.
-
-            """
-        categories = []
-        
-        self.cursor.execute(query)
-        Category.counter = 1
-        for category in self.cursor:
-            category = Category(category)
-            categories.append(category)
-        return categories
-
-    def get_product(self, query, searched_item):
-        """
-
-            Get a list of 10 products as close as possible to the criterion filled by the user
-
-            Arguments:
-
-            query: self explanatory
-
-            searched_item (list): criterion to apply for the query.
-
-            Returns:
-
-            products: list of food items, augmented with an index starting at 1.
-
-            """
-        products = []
-        query = query.format(
-            searched_item[0], searched_item[1], searched_item[2], searched_item[3])
-        self.cursor.execute(query)
-        results = self.cursor.fetchmany(size=10)
-        Product.counter = 1
-        for product in results:
-            product = Product(product)
-            products.append(product)
-        return products
 
     def get_best_product(self, query, best_product):
         """
@@ -156,40 +108,5 @@ def get_categories(self, query):
         query = query.format(item[0], item[1])
         self.cursor.execute(query)
         self.cnx.commit()
-
-    def upload_dataset(self, query, item_list):
-        """
-
-            After the selection of a new category, comes its upload in the local DB.
-
-            Arguments:
-
-            query: self explanatory, based on a category as main criterion.
-
-            item_list: list of items downloaded from OFF. They have been largely cleaned beforehand.
-
-            Returns;
-
-            NIL
-
-            """
-        self.cursor.executemany(query, item_list)
-        self.cnx.commit()
-
-    def close_connection(self):
-        """
-
-            Close the connection with the local DB.
-
-            Arguments:
-
-            NIL
-
-            Returns:
-
-            NIL
-
-            """
-        self.cursor.close()
 
    

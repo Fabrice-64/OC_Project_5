@@ -184,11 +184,13 @@ class UserDialog:
                 self.interface.title_bar(cfg.TITLE_3)
                 self.interface.clear_window()
                 # list of categories previously recorded is displayed on the right window
-                categories = self.queries.get_categories()
+                top_categories = self.queries.get_categories()
                 index_categories = []
-                for category in categories:
-                    self.interface.right_window_display_result(cfg.S_A_INDEX_NAME_QTY.format(category.index, category.name))
-                    index_categories.append(int(category.index))
+                for category in top_categories:
+                    self.interface.right_window_display_result\
+                        (cfg.RANK_NAME_QTY.format(category.rank, category.name,\
+                        category.number_items))
+                    index_categories.append(int(category.rank))
 
                 self.interface.display_users_guide_textpad(cfg.USER_GUIDE)
 
@@ -200,27 +202,28 @@ class UserDialog:
                         self.interface.left_window_display_string(
                             y, cfg.KEYPAD_INSTRUCTION_1)
                         self.interface.left_window_display_string(
-                            y+1, cfg.S_A_SELECT_CATEGORY)
+                            y+1, cfg.SELECT_CATEGORY)
                         self.interface.display_users_guide_textpad(
                             cfg.USER_GUIDE)
-                        y = y+3
-                        # These fields help to characterize the food item the user is looking for.
+                        y = y + 3
+                        # Characterize the food item the user is looking for.
                         answer_category = self.interface.display_textpad(
                             y, 1, 3)
                         answer_category = self.ascii_to_string(answer_category)
+                        y = y + 3
                         # The category is the only field which is compulsary.
                         running_category_choice = True
                         while running_category_choice:
                             if answer_category.isdigit() and int(answer_category) \
                                     in index_categories:
                                 answer_category = int(answer_category)
-                                answer_category = categories[answer_category-1].name
+                                answer_category = top_categories[answer_category-1].name
                                 running_category_choice = False
                             else:
                                 self.interface.right_window_display_info(
                                     cfg.WARNING_MESSAGE_0, "warning")
                                 answer_category = ""
-                                answer_category = self.interface.display_textpad(
+                                answer_category= self.interface.display_textpad(
                                     y, 1, 3)
                                 answer_category = self.ascii_to_string(
                                     answer_category)
@@ -228,22 +231,14 @@ class UserDialog:
 
                         # Input the parameters to search for a food item.
                         answer_name, y = self.interface.left_window_display_string_textpad(
-                            5, 1, 25, cfg.S_A_ITEM_NAME)
-                        answer_name = sql.query_settings(answer_name)
-                        answer_brand, y = self.interface.left_window_display_string_textpad(
-                            y, 1, 25, cfg.S_A_ITEM_BRAND)
-                        answer_brand = sql.query_settings(answer_brand)
-                        answer_code, y = self.interface.left_window_display_string_textpad(
-                            y, 1, 13, cfg.S_A_ITEM_CODE)
-                        answer_code = sql.query_settings(answer_code)
-                        answer_nutrition_grade = ""
+                            y, 1, 25, cfg.ITEM_NAME)
                         # Launch the query in the local DB.
-                        item_search = [answer_category, answer_name, answer_brand,
-                                       answer_code]
-                        detailed_products = self.queries.get_product(
-                            cq.query_searched_item, item_search)
+                        brand_name, y = self.interface.left_window_display_string_textpad(
+                            y, 1, 25, cfg.ITEM_BRAND)
+                        item_search = [answer_category, answer_name, brand_name]
+                        refer_products = self.queries.refer_products(item_search)
                         # If the criterion are too specific, avoid a null outcome.
-                        if len(detailed_products) == 0:
+                        if len(refer_products) == 0:
                             running_data_not_null = True
                             self.interface.right_window_display_info(
                                 cfg.WARNING_MESSAGE_2, "warning")
@@ -251,67 +246,66 @@ class UserDialog:
                             running_data_not_null = False
 
                 # Display a selection of products.
-                item_key_list = []
-                list_selection = []
-                list_item = []
+                rank_item_dict = dict()
+                rank_counter = 0
                 self.interface.clear_window("right")
                 self.interface.right_window_display_result(
                     cfg.S_A_INFO_ITEM_SEARCH_OUTCOME)
-                for product in detailed_products:
+                for product in refer_products:
+                    rank_counter += 1
                     self.interface.right_window_display_result(
-                            cfg.S_A_INDEX_NAME.format(product.index, product.name))
+                            cfg.S_A_INDEX_NAME.format(rank_counter, product.name))
                     self.interface.right_window_display_result(
                             cfg.S_A_DISPLAY_BRAND_NUTRISCORE.format(product.brand, product.nutrition_grade))
                     self.interface.right_window_display_result(
                             cfg.S_A_SINGLE_RETURN)
-                    list_item = [product.index, product.item_features]
-                    list_selection.append(list_item)
-                    item_key_list.append(product.index)
+                    # Create key_value of rank and product for further check
+                    rank_item_dict[rank_counter] = product.code
 
                 # Requests the user to select a food item to be compared with.
-                index_reference_item, y = self.interface.left_window_display_string_textpad(
+                rank_reference_item, y = self.interface.left_window_display_string_textpad(
                     y, 1, 3, cfg.S_A_COMPARE_FOOD_ITEMS)
 
                 running_check_selection = True
                 while running_check_selection:
-                    index_reference_item = self.ascii_to_string(
-                        index_reference_item)
-                    if index_reference_item.isdigit() == False \
-                            or int(index_reference_item) not in item_key_list:
+                    rank_reference_item = self.ascii_to_string(
+                        rank_reference_item)
+                    if rank_reference_item.isdigit() == False \
+                            or int(rank_reference_item) not in rank_item_dict.keys():
                         self.interface.right_window_display_info(
                             cfg.WARNING_MESSAGE_0, "warning")
-                        index_reference_item = self.interface.display_textpad(
+                        rank_reference_item = self.interface.display_textpad(
                             y-2, 1, 3)
                         running_check_selection = True
                     else:
                         running_check_selection = False
                 # The user is requested to enter keywords iot broaden the search.
-                index_reference_item = int(index_reference_item)
+                rank_reference_item = int(rank_reference_item)
+                ref_product_code = rank_item_dict.get(rank_reference_item)
                 keywords_item, y = self.interface.left_window_display_string_textpad(
                     y, 1, 25, cfg.S_A_ADD_KEYWORDS)
 
                 # If the keywords are too restrictive new ones are demanded.
-                running_fetch_best_products = True
-                while running_fetch_best_products:
-                    if running_fetch_best_products is True:
-                        keywords_item = sql.query_settings(keywords_item)
-                        sql_result = answer_category, keywords_item, list_selection[
-                            index_reference_item-1][1][2]
-                        sql_result = tuple(sql_result)
-                        list_best_products = self.queries.get_best_product(
-                            cq.query_best_product, sql_result)
-                        if len(list_best_products) == 0:
+                running_fetch_top_products = True
+                while running_fetch_top_products:
+                    # Create tuple with characteristics of reference product
+                    if running_fetch_top_products is True:
+                        # Set up search criterion
+                        selected_prod = answer_category, keywords_item, ref_product_code
+                        selected_prod = tuple(selected_prod)
+                        list_top_products = self.queries.top_products(selected_prod)
+                        if len(list_top_products) == 0:
                             self.interface.right_window_display_info(
                                 cfg.WARNING_MESSAGE_1, "warning")
                             keywords_item = self.interface.display_textpad(
                                 y-2, 1, 25)
                         else:
-                            running_fetch_best_products = False
+                            running_fetch_top_products = False
                 self.interface.clear_window()
                 self.interface.display_users_guide_textpad(cfg.USER_GUIDE)
                 # This is where all the features of each and every food item are displayed.
                 index_list_best_products = []
-                for item in list_best_products:
+                for item in list_top_products:
                     self.interface.right_window_display_result(
                         cfg.S_A_INDEX_NAME .format(item.index, item.item_features[0]))
                     self.interface.right_window_display_result(
@@ -357,7 +351,7 @@ class UserDialog:
                             else:
                                 # Call the hyperlink to open the product file in the browser
                                 check_item = int(check_item)
-                                code_product = list_best_products[check_item-1].item_features[3]
+                                code_product = list_top_products[check_item-1].item_features[3]
                                 self.OFF.open_product_file_OFF(code_product)
                             running_detailed_product = False
 
