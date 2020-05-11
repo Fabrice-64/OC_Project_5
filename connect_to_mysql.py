@@ -99,7 +99,7 @@ class ProductComparrison (Base):
         onupdate = 'CASCADE', ondelete = 'CASCADE'), nullable = False)
     date_best = Column(DateTime(), nullable = False)
 
-class TopCategory():
+class TopCategory:
     _counter = 0
 
     def __init__(self, category_ranking):
@@ -111,20 +111,23 @@ class TopCategory():
     def reset_counter():
         TopCategory._counter = 0
 
-class ReferProduct:
+class SelectedProduct:
     _counter = 0
 
-    def _init__(self, refer_product, stores):
-        ReferProduct._counter +=1
-        self.rank = ReferProduct._counter
-        self.name = refer_product[0]
-        self.brand = refer_product[1]
-        self.nutrition_grade = refer_product[2]
-        self.code = refer_product[3]
+    def __init__(self, selected_product, stores = 0):
+        SelectedProduct._counter +=1
+        self.rank = SelectedProduct._counter
+        self.name = selected_product[0]
+        self.brand = selected_product[1]
+        self.nutrition_grade = selected_product[2]
+        self.code = selected_product[3]
         self.stores = stores
-
     def reset_counter():
-        TopProduct._counter = 0
+        SelectedProduct._counter = 0
+
+class SelectedStore:
+    def __init__(self,name):
+        self.name = name
 
 class ORMConnection:
     """
@@ -322,10 +325,10 @@ class ORMConnection:
         list_top_categories = []
         query = self.session.query \
             (Category.name, func.count(CategoryProduct.idcategory))
-        query = query.join(CategoryProduct).group_by(CategoryProduct.idcategory).\
+        result = query.join(CategoryProduct).group_by(CategoryProduct.idcategory).\
             order_by(desc(func.count(CategoryProduct.idcategory)))[:20]
         # Instantiate each result of the query
-        for category in query:
+        for category in result:
             top_category = TopCategory(category)
             list_top_categories.append(top_category)
         TopCategory.reset_counter()
@@ -333,40 +336,49 @@ class ORMConnection:
     
     def refer_products(self, item_search):
         # Select a list of N products matching the requirement set by the user
-        # item_search[0] : category, exact terms
-        # item_search[1] : name, like terms
-        # item_search[2] : brand, like terms
+        list_refer_products = []
         product_category = item_search[0]
         product_name = self.query_settings(item_search[1])
         brand_name = self.query_settings(item_search[2])
-        query = self.session.query(Product)
+        query = self.session.query(Product.name, Product.brand, Product.nutrition_grade, Product.code)
         query = query.join(CategoryProduct).join(Category)
-        query = query.filter(and_(Category.name == product_category, \
+        result = query.filter(and_(Category.name == product_category, \
             Product.name.ilike(product_name), Product.brand.ilike(brand_name)))[:10]
-        return query
+
+        for product in result:
+            refer_product = SelectedProduct(product)
+            list_refer_products.append(refer_product)
+        return list_refer_products
         
     def top_products(self, item_search):
+        SelectedProduct.reset_counter()
+        list_top_products = []
         product_name = self.query_settings(item_search[1])
         query = self.session.query(Product.name, Product.brand, \
-            Product.code, Product.nutrition_grade)
+            Product.nutrition_grade, Product.code)
         query = query.join(CategoryProduct).join(Category)
         query = query.filter(and_(Category.name == item_search[0], \
             Product.name.ilike(product_name)))
         query = query.filter(Product.nutrition_grade < \
             self.session.query(Product.nutrition_grade).\
-                filter(Product.code == item_search[2]))[:15]
-        return query
+                filter(Product.code == item_search[2]))[:10]
+        for product in query:
+            stores = self.find_stores(product.code)
+            selected_product = SelectedProduct(product, stores)
+            list_top_products.append(selected_product)
+        return list_top_products
+        
         
     def find_stores(self, product_code):
         stores_list = []
-        product_stores = {}
+
         query = self.session.query(Store.name)
         query = query.join(StoreProduct)
-        query = query.filter(StoreProduct.product_code == product_code)
-        for result in query:
-            stores_list.append(result[0])
-        product_stores[product_code] = stores_list
-        return product_stores
+        result = query.filter(StoreProduct.product_code == product_code)
+        for store in result:
+            store = SelectedStore(store[0])
+            stores_list.append(store)
+        return stores_list
 
 
     def open_session(self):
@@ -425,7 +437,12 @@ if __name__ == "__main__":
 
     requete = ORMConnection()
     requete.open_session()
-    item_search = ["Desserts", "Chocolat Noir", "8000430900231"]
-    result= requete.find_stores(item_search[2])
+    item_search = ["Desserts", "", "8000430172010"]
+    result= requete.top_products(item_search)
     print(result)
+    for res in result:
+        print(res.name)
+
+        liste = [result.name for result in res.stores]
+        print(liste)
    

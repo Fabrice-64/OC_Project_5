@@ -282,6 +282,7 @@ class UserDialog:
                 # The user is requested to enter keywords iot broaden the search.
                 rank_reference_item = int(rank_reference_item)
                 ref_product_code = rank_item_dict.get(rank_reference_item)
+
                 keywords_item, y = self.interface.left_window_display_string_textpad(
                     y, 1, 25, cfg.S_A_ADD_KEYWORDS)
 
@@ -304,18 +305,20 @@ class UserDialog:
                 self.interface.clear_window()
                 self.interface.display_users_guide_textpad(cfg.USER_GUIDE)
                 # This is where all the features of each and every food item are displayed.
-                index_list_best_products = []
+                top_products_dict = {}
+                
                 for item in list_top_products:
                     self.interface.right_window_display_result(
-                        cfg.S_A_INDEX_NAME .format(item.index, item.item_features[0]))
+                        cfg.S_A_INDEX_NAME .format(item.rank, item.name))
                     self.interface.right_window_display_result(
-                        cfg.S_A_DISPLAY_BRAND_NUTRISCORE.format(item.item_features[1], 
-                        item.item_features[2]))
+                        cfg.S_A_DISPLAY_BRAND_NUTRISCORE.format(item.brand, 
+                        item.nutrition_grade))
+                    stores = [store.name for store in item.stores]
                     self.interface.right_window_display_result(
-                        cfg.S_A_DISPLAY_STORES.format(item.item_features[4]))
+                        cfg.S_A_DISPLAY_STORES.format(", ".join(stores)))
                     self.interface.right_window_display_result(
                         cfg.S_A_SINGLE_RETURN)
-                    index_list_best_products.append(str(item.index))
+                    top_products_dict[item.rank] = item.code
 
                 y = 0
                 # The user is offered to view the item in a browser and to record it.
@@ -342,16 +345,17 @@ class UserDialog:
                         running_detailed_product = True
                         while running_detailed_product:
                             check_item = self.ascii_to_string(check_item)
-                            if check_item not in index_list_best_products:
+                            check_item = int(check_item)
+                            if check_item not in top_products_dict.keys():
                                 self.interface.right_window_display_info(
                                     cfg.WARNING_MESSAGE_0, "warning")
                                 check_item = self.interface.display_textpad(
-                                    y-2, 1, 2)
+                                    y-2, 1, 3)
                                 running_detailed_product = True
                             else:
                                 # Call the hyperlink to open the product file in the browser
                                 check_item = int(check_item)
-                                code_product = list_top_products[check_item-1].item_features[3]
+                                code_product = top_products_dict.get(check_item)
                                 self.OFF.open_product_file_OFF(code_product)
                             running_detailed_product = False
 
