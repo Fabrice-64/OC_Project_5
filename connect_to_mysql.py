@@ -101,18 +101,22 @@ class ProductComparrison (Base):
 
 class TopCategory:
 
-    def __init__(self, category_ranking):
-        self.name = category_ranking[0]
-        self.number_items = category_ranking[1]
+    def __init__(self, category, number_items):
+        self.name = category.name
+        self.number_items = number_items
 
 class SelectedProduct:
 
     def __init__(self, selected_product, stores = 0):
-        self.name = selected_product[0]
-        self.brand = selected_product[1]
-        self.nutrition_grade = selected_product[2]
-        self.code = selected_product[3]
-        self.stores = stores
+        self.name = selected_product.name
+        self.brand = selected_product.brand
+        self.nutrition_grade = selected_product.nutrition_grade
+        self.code = selected_product.code
+        if stores != 0:
+            self.stores = [store.name for store in stores]
+    
+    def best_date(self, date = 0):
+        self.date = "{: %d %B %y %H:%M}".format(date)
 
 class SelectedStore:
     def __init__(self,name):
@@ -313,12 +317,12 @@ class ORMConnection:
     def get_categories(self):
         list_top_categories = []
         query = self.session.query \
-            (Category.name, func.count(CategoryProduct.idcategory))
+            (Category, func.count(CategoryProduct.idcategory))
         result = query.join(CategoryProduct).group_by(CategoryProduct.idcategory).\
             order_by(desc(func.count(CategoryProduct.idcategory)))[:20]
         # Instantiate each result of the query
         for category in result:
-            top_category = TopCategory(category)
+            top_category = TopCategory(category[0], category[1])
             list_top_categories.append(top_category)
         return list_top_categories
     
@@ -340,21 +344,23 @@ class ORMConnection:
         
     def top_products(self, item_search):
         list_top_products = []
+        c_p = aliased(CategoryProduct)
+        c = aliased(Category)
+        p = aliased(Product)
         product_name = self.query_settings(item_search[1])
-        query = self.session.query(Product.name, Product.brand, \
-            Product.nutrition_grade, Product.code)
-        query = query.join(CategoryProduct).join(Category)
-        query = query.filter(and_(Category.name == item_search[0], \
-            Product.name.ilike(product_name)))
-        query = query.filter(Product.nutrition_grade < \
-            self.session.query(Product.nutrition_grade).\
-                filter(Product.code == item_search[2]))[:10]
+        query = self.session.query(p)
+        query = query.join(c_p, c_p.code == p.code)
+        query = query.join(c, c.id_category == c_p.idcategory)
+        query = query.filter(and_(c.name == item_search[0], p.name.ilike(product_name)))
+        query = query.filter(p.nutrition_grade < \
+            self.session.query(p.nutrition_grade).\
+            filter(p.code == item_search[2]))[:10]
+
         for product in query:
             stores = self.find_stores(product.code)
-            selected_product = SelectedProduct(product, stores)
-            list_top_products.append(selected_product)
+            product = SelectedProduct(product, stores)
+            list_top_products.append(product)
         return list_top_products
-        
         
     def find_stores(self, product_code):
         stores_list = []
@@ -373,14 +379,21 @@ class ORMConnection:
         self.add_one_item(compared_prod)
 
     def retrieve_compared_products(self):
+        list_compared_products = []
         best_p = aliased(Product)
         ref_p = aliased(Product)
         p_c = aliased(ProductComparrison)
         query = self.session.query(best_p, p_c.date_best, ref_p)
         query = query.join(best_p, best_p.code == p_c.code_best_prod)
         query = query.join(ref_p, ref_p.code == p_c.code_ref_prod)
-        query = query.order_by(desc(p_c.date_best))
-        return query
+        result = query.order_by(desc(p_c.date_best))
+        for tuple_items in result:
+            stores = self.find_stores(tuple_items[0].code)
+            for product in tuple_items:
+                print
+            #best_product = SelectedProduct(product[0], stores)
+            #list_compared_products.append(best_product)
+        return result
 
     def total_items(self):
         result = self.session.query(func.count(Product.code))
@@ -447,9 +460,8 @@ if __name__ == "__main__":
 
     requete = ORMConnection()
     requete.open_session()
-    item_search = ["Desserts", "", "8000430172010"]
-    result= requete.retrieve_compared_products()
+    item_search = ["Desserts", "Chocolat", "3270160587551"]
+    result= requete.top_products(item_search)
     print(result)
-    for res in result:
-        print(res[0].name, res[1])
+    
    

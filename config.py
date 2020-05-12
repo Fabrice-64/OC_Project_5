@@ -65,9 +65,11 @@ S_A_COMPARE_FOOD_ITEMS = "Please Enter the Food Item you wish to compare with:\n
 S_A_ADD_KEYWORDS = "Please enter one or two keywords in order to have a larger choice:\n"
 
 RANK_NAME_QTY = "{}:  {} ({} items)\n"
-S_A_INDEX_NAME = "{}:  {}\n"
-S_A_DISPLAY_BRAND_NUTRISCORE = "Brand: {}, Nutrition grade: {}\n"
-S_A_DISPLAY_STORES = "Stores: {}\n"
+PRODUCT_RANK_NAME = "{}:  {}\n"
+PRODUCT_BRAND_NUTR_GR = "Brand: {}, Nutrition grade: {}\n"
+DISPLAY_STORES = "Stores: {}\n"
+EMPTY_LINE = "\n"
+
 S_A_DISPLAY_INITIAL_PRODUCT = "Initial product was: {}\n"
 S_A_COMPARRISON_DATE = "Comparrison was on: {: %d %B %y %H:%M}.\n"
 S_A_SINGLE_RETURN = "\n"

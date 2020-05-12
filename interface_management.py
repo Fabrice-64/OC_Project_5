@@ -207,7 +207,7 @@ class Interface:
         curses.beep()
         self.screen.clear()
 
-    def left_window_display_string(self, y, string):
+    def left_display_string(self, y, string):
         """
 
             Display a string from module config.py. By default, x = 0.
@@ -227,7 +227,7 @@ class Interface:
         self.inner_left_window.addstr(y, 0, string)
         self.inner_left_window.refresh()
 
-    def left_window_display_string_textpad(self, y, nb_lines, length_field, message):
+    def display_string_textpad(self, y, nb_lines, length_field, message):
         """
 
             Display a string followed, at the line below by a textpad aimed at catching a user's input.
@@ -276,7 +276,7 @@ class Interface:
             self.inner_right_window.clear()
             self.inner_right_window.refresh()
 
-    def display_file_right_window(self, file):
+    def display_file(self, file):
         """
 
             Display a file line by line. The user is expected to click at every new line, \
@@ -303,7 +303,7 @@ class Interface:
                 self.inner_right_window.addstr(line)
                 self.inner_right_window.refresh()
 
-    def right_window_display_result(self, string):
+    def display_result(self, string):
         """
 
             Display the result of a query, line by line, on the right window.
@@ -320,7 +320,7 @@ class Interface:
         self.inner_right_window.addstr(string)
         self.inner_right_window.refresh()
 
-    def right_window_display_info(self, message, type="info"):
+    def right_display_info(self, message, type="info"):
         """
 
             Display a information message at the bottom line of the right window.
@@ -422,7 +422,7 @@ class Interface:
         self.inner_left_window.refresh()
         return answer
 
-    def display_users_guide_textpad(self, user_guide):
+    def display_guide(self, user_guide):
         """ 
 
             This method displays the list of keyboard shortcuts to be used with the keypad.
