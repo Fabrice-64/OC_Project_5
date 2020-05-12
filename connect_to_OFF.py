@@ -92,7 +92,7 @@ class ConnectToOFF:
             result = new_value.replace("'", "\'")
         elif "-" in value:
             new_value = value
-            result = new_value.replace("-"," ")
+            result = new_value.replace("-", " ")
         else:
             result = value
         return result
@@ -131,7 +131,7 @@ class ConnectToOFF:
             categories = self.check_special_characters(
                 product.get('categories'))
             if brand != "NaN" and name != "NaN" and stores != "NaN" \
-                and nutrition_grade in ["a", "b", "c", "d", "e"] and categories != "NaN":
+                    and nutrition_grade in ["a", "b", "c", "d", "e"] and categories != "NaN":
                 nb_imported_items += 1
                 self.list_items.append(
                     (brand, name, code, nutrition_grade, stores, categories))
@@ -187,7 +187,8 @@ class ConnectToOFF:
 
 if __name__ == "__main__":
     connection = ConnectToOFF()
-    nb_items, nb_rejected, results = connection.import_products_list('Fromages')
+    nb_items, nb_rejected, results = connection.import_products_list(
+        'Fromages')
     print(nb_items, nb_rejected)
     for res in results:
         print(res)

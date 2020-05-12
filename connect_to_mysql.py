@@ -34,70 +34,75 @@ from sqlalchemy.orm import sessionmaker, aliased
 import connect_to_OFF as cof
 Base = declarative_base()
 
+
 class Category(Base):
     __tablename__ = 'category'
     __table_args__ = (Index('idx_category', 'name'),)
 
-    id_category = Column(Integer(), primary_key = True, autoincrement = True,
-            nullable = False)
-    name = Column(String(600), nullable = False)
+    id_category = Column(Integer(), primary_key=True, autoincrement=True,
+                         nullable=False)
+    name = Column(String(600), nullable=False)
+
 
 class Product (Base):
     __tablename__ = 'product'
 
-    code = Column(String(13), nullable = False, primary_key = True)
-    brand = Column(String(200), nullable = False)
-    name = Column(String(600), nullable = False)
-    nutrition_grade = Column(String(1), nullable = False)
+    code = Column(String(13), nullable=False, primary_key=True)
+    brand = Column(String(200), nullable=False)
+    name = Column(String(600), nullable=False)
+    nutrition_grade = Column(String(1), nullable=False)
 
 
 class Store (Base):
     __tablename__ = 'store'
     __table_args__ = (Index('idx_store', 'name'),)
 
-    id_store = Column(Integer(), nullable = False, primary_key = True, 
-        autoincrement = True)
-    name = Column(String(600), nullable = False)
-       
+    id_store = Column(Integer(), nullable=False, primary_key=True,
+                      autoincrement=True)
+    name = Column(String(600), nullable=False)
+
 
 class CategoryProduct (Base):
     __tablename__ = 'category_product'
 
-    id_cat_prod = Column(Integer(), primary_key = True, autoincrement = True,
-        nullable = False)
-    idcategory = Column(Integer(), 
-        ForeignKey('category.id_category', name = 'FK_id_category'), 
-        nullable = False)
-    code = Column(String(13), 
-        ForeignKey('product.code', name = 'FK_product_category', 
-        ondelete = 'CASCADE', onupdate = 'CASCADE'),
-        nullable = False, )
+    id_cat_prod = Column(Integer(), primary_key=True, autoincrement=True,
+                         nullable=False)
+    idcategory = Column(Integer(),
+                        ForeignKey('category.id_category',
+                                   name='FK_id_category'),
+                        nullable=False)
+    code = Column(String(13),
+                  ForeignKey('product.code', name='FK_product_category',
+                             ondelete='CASCADE', onupdate='CASCADE'),
+                  nullable=False, )
 
-    
+
 class StoreProduct (Base):
     __tablename__ = 'store_product'
 
-    id_store_product = Column(Integer(), primary_key = True, autoincrement = True,
-        nullable = False)
-    product_code = Column(String(13), 
-        ForeignKey('product.code', name = 'FK_product_store',
-        onupdate = 'CASCADE', ondelete = 'CASCADE'), nullable = False)
-    store_id = Column(Integer(), 
-        ForeignKey('store.id_store', name = 'FK_store_id', onupdate = 'CASCADE',
-            ondelete = 'CASCADE'), nullable = False)
+    id_store_product = Column(Integer(), primary_key=True, autoincrement=True,
+                              nullable=False)
+    product_code = Column(String(13),
+                          ForeignKey('product.code', name='FK_product_store',
+                                     onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
+    store_id = Column(Integer(),
+                      ForeignKey('store.id_store', name='FK_store_id', onupdate='CASCADE',
+                                 ondelete='CASCADE'), nullable=False)
+
 
 class ProductComparrison (Base):
     __tablename__ = 'product_comparrison'
 
-    id_prod_comp = Column(Integer(), primary_key = True, autoincrement = True,
-        nullable = False)
-    code_best_prod = Column(String(13), 
-        ForeignKey('product.code', name = 'FK_code_product_best',
-        onupdate = 'CASCADE', ondelete = 'CASCADE'),nullable = False)
-    code_ref_prod = Column(String(13), 
-        ForeignKey('product.code', name = 'FK_code_product_ref',
-        onupdate = 'CASCADE', ondelete = 'CASCADE'), nullable = False)
-    date_best = Column(DateTime(), nullable = False)
+    id_prod_comp = Column(Integer(), primary_key=True, autoincrement=True,
+                          nullable=False)
+    code_best_prod = Column(String(13),
+                            ForeignKey('product.code', name='FK_code_product_best',
+                                       onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
+    code_ref_prod = Column(String(13),
+                           ForeignKey('product.code', name='FK_code_product_ref',
+                                      onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
+    date_best = Column(DateTime(), nullable=False)
+
 
 class TopCategory:
 
@@ -105,9 +110,10 @@ class TopCategory:
         self.name = category.name
         self.number_items = number_items
 
+
 class SelectedProduct:
 
-    def __init__(self, selected_product, stores = 0):
+    def __init__(self, selected_product, stores=0):
         self.name = selected_product.name
         self.brand = selected_product.brand
         self.nutrition_grade = selected_product.nutrition_grade
@@ -115,9 +121,11 @@ class SelectedProduct:
         if stores != 0:
             self.stores = [store.name for store in stores]
 
+
 class SelectedStore:
-    def __init__(self,name):
+    def __init__(self, name):
         self.name = name
+
 
 class ORMConnection:
     """
@@ -183,9 +191,8 @@ class ORMConnection:
         with open("db_parameters.txt") as file:
             connection_parameters = file.read()
         self.engine = create_engine(connection_parameters,
-        echo = False)
+                                    echo=False)
         self.engine.connect()
-
 
     def create_database(self):
         """
@@ -206,7 +213,7 @@ class ORMConnection:
         with open("db_parameters.txt") as file:
             connection_parameters = file.read()
         self.engine = create_engine(connection_parameters,
-        echo = False)
+                                    echo=False)
         # Activate the Database to subsequently create the tables
         connection = self.engine.connect()
         connection.execute("COMMIT")
@@ -216,9 +223,9 @@ class ORMConnection:
         # Add the name of the database to the parameters file for further use
         connection_parameters = connection_parameters + config.DB_NAME
         with open("db_parameters.txt", "w") as file:
-            file.write(connection_parameters) 
+            file.write(connection_parameters)
         # Add the tables to the new database
-        self.engine = create_engine(connection_parameters, echo = False)
+        self.engine = create_engine(connection_parameters, echo=False)
         self.engine.connect()
         Base.metadata.create_all(self.engine)
 
@@ -241,7 +248,7 @@ class ORMConnection:
             """
         obj_category = []
         for category in categories:
-            category = Category(name = category)
+            category = Category(name=category)
             obj_category.append(category)
         self.upload_many(obj_category)
 
@@ -264,7 +271,7 @@ class ORMConnection:
             """
         obj_store = []
         for store in stores:
-            store = Store(name = store)
+            store = Store(name=store)
             obj_store.append(store)
         self.upload_many(obj_store)
 
@@ -272,7 +279,7 @@ class ORMConnection:
         selected_categories = self.session.query(Category).\
             order_by(Category.id_category)[:30]
         return selected_categories
-    
+
     def upload_products(self, products):
         obj_product = []
         obj_stores_product = []
@@ -280,20 +287,20 @@ class ORMConnection:
         # Create a list including product characteristics for table product
         for item in products:
             if self.check_duplicate(item[2]) is False:
-                product = Product(brand = item[0],
-                    name = item[1],
-                    code = item[2],
-                    nutrition_grade = item[3])
+                product = Product(brand=item[0],
+                                  name=item[1],
+                                  code=item[2],
+                                  nutrition_grade=item[3])
                 obj_product.append(product)
-                    # Get for each product the list of stores it is sold in
+                # Get for each product the list of stores it is sold in
                 store_list = item[4].split(",")
                 # Bind each store name with its id
                 for store in store_list:
                     store_id = self.get_store_id(store)
                     # Instantiate product_code and store_id  for join table
                     for store in store_id:
-                        store_product = StoreProduct(product_code = product.code, 
-                            store_id = store[0])
+                        store_product = StoreProduct(product_code=product.code,
+                                                     store_id=store[0])
                         # Add the instance to the list of all duets  store - product
                         obj_stores_product.append(store_product)
                 # Get for each product the list of categories it belongs to
@@ -303,8 +310,8 @@ class ORMConnection:
                     category_id = self.get_category_id(category)
                     # Instantiate category id and product code for join table.
                     for category in category_id:
-                        category_product = CategoryProduct(idcategory = category[0], 
-                            code = product.code)
+                        category_product = CategoryProduct(idcategory=category[0],
+                                                           code=product.code)
                         obj_category_product.append(category_product)
         # Upload first in the table product and then in join tables.
         self.upload_many(obj_product)
@@ -313,8 +320,8 @@ class ORMConnection:
 
     def get_categories(self):
         list_top_categories = []
-        query = self.session.query \
-            (Category, func.count(CategoryProduct.idcategory))
+        query = self.session.query(
+            Category, func.count(CategoryProduct.idcategory))
         result = query.join(CategoryProduct).group_by(CategoryProduct.idcategory).\
             order_by(desc(func.count(CategoryProduct.idcategory)))[:20]
         # Instantiate each result of the query
@@ -322,23 +329,24 @@ class ORMConnection:
             top_category = TopCategory(category[0], category[1])
             list_top_categories.append(top_category)
         return list_top_categories
-    
+
     def refer_products(self, item_search):
         # Select a list of N products matching the requirement set by the user
         list_refer_products = []
         product_category = item_search[0]
         product_name = self.query_settings(item_search[1])
         brand_name = self.query_settings(item_search[2])
-        query = self.session.query(Product.name, Product.brand, Product.nutrition_grade, Product.code)
+        query = self.session.query(
+            Product.name, Product.brand, Product.nutrition_grade, Product.code)
         query = query.join(CategoryProduct).join(Category)
-        result = query.filter(and_(Category.name == product_category, \
-            Product.name.ilike(product_name), Product.brand.ilike(brand_name)))[:10]
+        result = query.filter(and_(Category.name == product_category,
+                                   Product.name.ilike(product_name), Product.brand.ilike(brand_name)))[:10]
 
         for product in result:
             refer_product = SelectedProduct(product)
             list_refer_products.append(refer_product)
         return list_refer_products
-        
+
     def top_products(self, item_search):
         list_top_products = []
         c_p = aliased(CategoryProduct)
@@ -348,17 +356,18 @@ class ORMConnection:
         query = self.session.query(p)
         query = query.join(c_p, c_p.code == p.code)
         query = query.join(c, c.id_category == c_p.idcategory)
-        query = query.filter(and_(c.name == item_search[0], p.name.ilike(product_name)))
-        query = query.filter(p.nutrition_grade < \
-            self.session.query(p.nutrition_grade).\
-            filter(p.code == item_search[2]))[:10]
+        query = query.filter(
+            and_(c.name == item_search[0], p.name.ilike(product_name)))
+        query = query.filter(p.nutrition_grade <
+                             self.session.query(p.nutrition_grade).
+                             filter(p.code == item_search[2]))[:10]
 
         for product in query:
             stores = self.find_stores(product.code)
             product = SelectedProduct(product, stores)
             list_top_products.append(product)
         return list_top_products
-        
+
     def find_stores(self, product_code):
         stores_list = []
 
@@ -371,8 +380,8 @@ class ORMConnection:
         return stores_list
 
     def record_comparred_products(self, comparrison):
-        compared_prod = ProductComparrison(code_best_prod = comparrison[0],
-            date_best = comparrison[1], code_ref_prod = comparrison[2])
+        compared_prod = ProductComparrison(code_best_prod=comparrison[0],
+                                           date_best=comparrison[1], code_ref_prod=comparrison[2])
         self.add_one_item(compared_prod)
 
     def get_compared_products(self):
@@ -398,15 +407,15 @@ class ORMConnection:
         for nb_rows in result:
             nb_rows = nb_rows[0]
         return nb_rows
-    
+
     def best_date(self, date):
         self.date = "{: %d %B %y %H:%M}".format(date)
         return self.date
 
     def open_session(self):
-        Session = sessionmaker(bind = self.engine)
+        Session = sessionmaker(bind=self.engine)
         self.session = Session()
-    
+
     def upload_many(self, many_items):
         self.session.bulk_save_objects(many_items)
         self.session.commit()
@@ -419,19 +428,19 @@ class ORMConnection:
         self.session.commit()
 
     def get_category_id(self, category):
-        category_id = self.session.query(Category.id_category).filter(Category.name.ilike(category))
+        category_id = self.session.query(Category.id_category).filter(
+            Category.name.ilike(category))
         return category_id
-    
+
     def get_store_id(self, store):
-        store_id = self.session.query(Store.id_store).filter(Store.name.ilike(store))
+        store_id = self.session.query(
+            Store.id_store).filter(Store.name.ilike(store))
         return store_id
 
-        
     def check_duplicate(self, code):
         duplicate = self.session.query(self.session.query(Product).
-                    filter_by(code = code).exists()).scalar()
+                                       filter_by(code=code).exists()).scalar()
         return duplicate
-        
 
     def query_settings(self, answer):
         """
@@ -463,8 +472,6 @@ if __name__ == "__main__":
     requete = ORMConnection()
     requete.open_session()
     item_search = ["Desserts", "Chocolat", "3270160587551"]
-    result= requete.get_compared_products()
+    result = requete.get_compared_products()
     for res in result:
         print(res)
-    
-   

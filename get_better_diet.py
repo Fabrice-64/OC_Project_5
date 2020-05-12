@@ -131,7 +131,8 @@ class UserDialog:
             """
         # Check whether a local DB has already been created. If not, starts a process.
         has_to_create_db = False
-        while check_DB := True:
+        while check_DB:
+            = True:
             try:
                 self.queries = sql.ORMConnection()
                 break
@@ -163,7 +164,7 @@ class UserDialog:
             # Configure the data and upload stores into the local DB
             self.queries.upload_stores(OFF_stores)
             self.interface.right_display_info(
-                cfg.C_DB_INFO_STORES_FETCHED)           
+                cfg.C_DB_INFO_STORES_FETCHED)
 
         self.interface.title_bar(cfg.TITLE_2)
         # Display a drop down menu to navigate in the application
@@ -173,7 +174,7 @@ class UserDialog:
             cfg.S_A_INFO_LOC_DISPLAY_RESULTS)
         answer = self.interface.set_up_drop_down(
             cfg.S_A_OPERATE_ON_DB, cfg.SELECT_ANSWER)
-        #Here start the work on the DB to find, select and record a product
+        # Here start the work on the DB to find, select and record a product
         y = 0
         running_main = True
         while running_main:
@@ -189,9 +190,9 @@ class UserDialog:
                 rank_counter = 0
                 for category in top_categories:
                     rank_counter += 1
-                    self.interface.display_result\
-                        (cfg.RANK_NAME_QTY.format(rank_counter, category.name,\
-                        category.number_items))
+                    self.interface.display_result(
+                        cfg.RANK_NAME_QTY.format(rank_counter, category.name,
+                                                 category.number_items))
                     rank_categories[rank_counter] = category.name
 
                 self.interface.display_guide(cfg.USER_GUIDE)
@@ -217,14 +218,15 @@ class UserDialog:
                         while running_category_choice:
                             if answer_rank.isdigit() and int(answer_rank) \
                                     in rank_categories.keys():
-                                answer_rank= int(answer_rank)
-                                answer_category = rank_categories.get(answer_rank)
+                                answer_rank = int(answer_rank)
+                                answer_category = rank_categories.get(
+                                    answer_rank)
                                 running_category_choice = False
                             else:
                                 self.interface.right_display_info(
                                     cfg.WARNING_MESSAGE_0, "warning")
                                 answer_rank = ""
-                                answer_rank= self.interface.display_textpad(
+                                answer_rank = self.interface.display_textpad(
                                     y, 1, 3)
                                 answer_rank = self.ascii_to_string(
                                     answer_rank)
@@ -236,8 +238,10 @@ class UserDialog:
                         # Launch the query in the local DB.
                         brand_name, y = self.interface.display_string_textpad(
                             y, 1, 25, cfg.ITEM_BRAND)
-                        item_search = [answer_category, answer_name, brand_name]
-                        refer_products = self.queries.refer_products(item_search)
+                        item_search = [answer_category,
+                                       answer_name, brand_name]
+                        refer_products = self.queries.refer_products(
+                            item_search)
                         # If the criterion are too specific, avoid a null outcome.
                         if len(refer_products) == 0:
                             running_data_not_null = True
@@ -255,9 +259,9 @@ class UserDialog:
                 for product in refer_products:
                     rank_counter += 1
                     self.interface.display_result(
-                            cfg.PRODUCT_RANK_NAME.format(rank_counter, product.name))
+                        cfg.PRODUCT_RANK_NAME.format(rank_counter, product.name))
                     self.interface.display_result(
-                            cfg.PRODUCT_BRAND_NUTR_GR.format(product.brand, product.nutrition_grade))
+                        cfg.PRODUCT_BRAND_NUTR_GR.format(product.brand, product.nutrition_grade))
                     self.interface.display_result(cfg.EMPTY_LINE)
                     # Create key_value of rank and product for further check
                     rank_item_dict[rank_counter] = product.code
@@ -294,7 +298,8 @@ class UserDialog:
                         # Set up search criterion
                         selected_prod = answer_category, keywords_item, code_ref_prod
                         selected_prod = tuple(selected_prod)
-                        list_top_products = self.queries.top_products(selected_prod)
+                        list_top_products = self.queries.top_products(
+                            selected_prod)
                         if len(list_top_products) == 0:
                             self.interface.right_display_info(
                                 cfg.WARNING_MESSAGE_1, "warning")
@@ -313,7 +318,7 @@ class UserDialog:
                         cfg.PRODUCT_RANK_NAME.format(rank_counter, item.name))
                     self.interface.display_result(
                         cfg.PRODUCT_BRAND_NUTR_GR.format(
-                        item.brand, item.nutrition_grade))
+                            item.brand, item.nutrition_grade))
                     self.interface.display_result(
                         cfg.DISPLAY_STORES.format(", ".join(item.stores)))
                     top_products_dict[rank_counter] = item.code
@@ -353,7 +358,8 @@ class UserDialog:
                             else:
                                 # Call the hyperlink to open the product file in the browser
                                 rank_item = int(rank_item)
-                                code_best_prod = top_products_dict.get(rank_item)
+                                code_best_prod = top_products_dict.get(
+                                    rank_item)
                                 self.OFF.open_product_file_OFF(code_best_prod)
                             running_detailed_product = False
 
@@ -382,7 +388,8 @@ class UserDialog:
                                     '%Y-%m-%d %H:%M:%S')
                                 compared_prods = code_best_prod, record_date_time,\
                                     code_ref_prod
-                                self.queries.record_comparred_products(compared_prods)
+                                self.queries.record_comparred_products(
+                                    compared_prods)
                                 self.interface.right_display_info(
                                     cfg.S_A_PROCESSING_RECORD)
                                 running_record_item = False
@@ -397,7 +404,7 @@ class UserDialog:
                 self.interface.clear_window()
                 last_compared_products = self.queries.get_compared_products()
                 best_products_dict = dict()
-                rank_counter = 0 
+                rank_counter = 0
                 for product in last_compared_products:
                     rank_counter += 1
                     self.interface.display_result(
@@ -439,7 +446,8 @@ class UserDialog:
                                 else:
                                     # Calls the hyperlink to open the product file in the browser.
                                     rank_item = int(rank_item)
-                                    code_product = best_products_dict.get(rank_item)
+                                    code_product = best_products_dict.get(
+                                        rank_item)
                                     self.OFF.open_product_file_OFF(
                                         code_product)
                                     running_use_browser = False
@@ -552,21 +560,23 @@ class UserDialog:
         # Ask for the connection parameters. Default value in config.py
         self.interface.left_display_string(y, cfg.C_DB_INITIAL_INFO)
         user, y = self.interface.display_string_textpad(1, 1, 15,
-                                                                    cfg.C_DB_USER)
+                                                        cfg.C_DB_USER)
         user = self.ascii_to_string(user)
         if user != '':
             cfg.DB_USER = user
-        
+
         password, y = self.interface.display_string_textpad(y, 1, 20,
-                                                                        cfg.C_DB_PASSWORD)
+                                                            cfg.C_DB_PASSWORD)
         password = self.ascii_to_string(password)
         if password != '':
             cfg.DB_PASSWORD = password
-        
-        connection_string = cfg.DB_CONNEXION_STRING.format(cfg.DB_USER, cfg.DB_PASSWORD, "")
+
+        connection_string = cfg.DB_CONNEXION_STRING.format(
+            cfg.DB_USER, cfg.DB_PASSWORD, "")
         # Connection parameters are saved in a separate file to be reused.
         with open("db_parameters.txt", "w") as file:
             file.write(connection_string)
+
 
 def main(user):
     """
