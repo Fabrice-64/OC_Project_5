@@ -65,14 +65,13 @@ S_A_COMPARE_FOOD_ITEMS = "Please Enter the Food Item you wish to compare with:\n
 S_A_ADD_KEYWORDS = "Please enter one or two keywords in order to have a larger choice:\n"
 
 RANK_NAME_QTY = "{}:  {} ({} items)\n"
+
 PRODUCT_RANK_NAME = "{}:  {}\n"
 PRODUCT_BRAND_NUTR_GR = "Brand: {}, Nutrition grade: {}\n"
 DISPLAY_STORES = "Stores: {}\n"
+INITIAL_PRODUCT = "Initial product was: {}\n"
+COMPARRISON_DATE = "Comparrison was on: {}\n"
 EMPTY_LINE = "\n"
-
-S_A_DISPLAY_INITIAL_PRODUCT = "Initial product was: {}\n"
-S_A_COMPARRISON_DATE = "Comparrison was on: {: %d %B %y %H:%M}.\n"
-S_A_SINGLE_RETURN = "\n"
 
 # These are the dialog strings dealing with the DB consultation.
 S_A_ASK_CHECK_DETAILED_RESULT = "Do you want to check the result on the Web (Y/N)?\n"

@@ -51,19 +51,19 @@ class Interface:
         display_message(): display a message on the main window, at the center of the screen. \
             Is used for welcome message and for goodbye.
 
-        left_window_display_string(): display an instruction on the left screen.
+        left_display_string(): display an instruction on the left screen.
 
-        left_window_display_string_textpad(): display an invitation to use the keypad \
+        display_string_textpad(): display an invitation to use the keypad \
             and just below the keypad itself. 
-        It is composed of two other methods:  left_window_display_string() and display_textpad.
+        It is composed of two other methods: left_display_string() and display_textpad.
 
         clear_window(): reinitialize the sub-windows.
 
-        display_file_right_window(): display larger files for to be scrolled down.
+        display_file(): display larger files for to be scrolled down.
 
-        right_window_display_result():  display the results of the queries sent to the DB.
+        display_result():  display the results of the queries sent to the DB.
 
-        right_window_display_info(): display one line long pieces of info at the bottom of the right window.
+        right_display_info(): display one line long pieces of info at the bottom of the right window.
 
         highlight_selection():  highlight the selected itemwhen using a drop-down list.
 
@@ -249,7 +249,7 @@ class Interface:
             y: incremented vertical coordinate.
 
             """
-        self.left_window_display_string(y, message)
+        self.left_display_string(y, message)
         answer = self.display_textpad(y+2, nb_lines, length_field)
         y = y + 2 + nb_lines + 1
         return answer, y
@@ -494,7 +494,7 @@ class Interface:
 
             """
         self.clear_window()
-        self.left_window_display_string(0, config.QUIT_MESSAGE)
+        self.left_display_string(0, config.QUIT_MESSAGE)
         time.sleep(1)
         self.screen.clear()
         self.screen.keypad(False)

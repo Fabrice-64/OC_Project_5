@@ -23,7 +23,7 @@ import time
 import pickle
 from sqlalchemy import create_engine
 import mysql.connector
-
+from datetime import datetime
 import config
 import config_queries as cq
 
@@ -115,8 +115,9 @@ class SelectedProduct:
         if stores != 0:
             self.stores = [store.name for store in stores]
     
-    def best_date(self, date = 0):
+    def best_date(self, date):
         self.date = "{: %d %B %y %H:%M}".format(date)
+        return self.date
 
 class SelectedStore:
     def __init__(self,name):
@@ -378,7 +379,7 @@ class ORMConnection:
             date_best = comparrison[1], code_ref_prod = comparrison[2])
         self.add_one_item(compared_prod)
 
-    def retrieve_compared_products(self):
+    def get_compared_products(self):
         list_compared_products = []
         best_p = aliased(Product)
         ref_p = aliased(Product)
@@ -387,13 +388,14 @@ class ORMConnection:
         query = query.join(best_p, best_p.code == p_c.code_best_prod)
         query = query.join(ref_p, ref_p.code == p_c.code_ref_prod)
         result = query.order_by(desc(p_c.date_best))
-        for tuple_items in result:
-            stores = self.find_stores(tuple_items[0].code)
-            for product in tuple_items:
-                print
-            #best_product = SelectedProduct(product[0], stores)
-            #list_compared_products.append(best_product)
-        return result
+        for item in result:
+            stores = self.find_stores(item[0].code)
+            best_product = SelectedProduct(item[0], stores)
+            date = best_product.best_date(item[1])
+            ref_product = SelectedProduct(item[2])
+            compared_product = best_product, date, ref_product
+            list_compared_products.append(compared_product)
+        return list_compared_products
 
     def total_items(self):
         result = self.session.query(func.count(Product.code))
@@ -461,7 +463,8 @@ if __name__ == "__main__":
     requete = ORMConnection()
     requete.open_session()
     item_search = ["Desserts", "Chocolat", "3270160587551"]
-    result= requete.top_products(item_search)
-    print(result)
+    result= requete.get_compared_products()
+    for res in result:
+        print(res)
     
    

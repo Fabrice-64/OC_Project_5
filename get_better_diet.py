@@ -395,25 +395,23 @@ class UserDialog:
             # Step where the user looks into the best products he has recorded.
             elif answer == cfg.S_A_OPERATE_ON_DB[1]:
                 self.interface.clear_window()
-                last_recorded_products = self.queries.retrieve_compared_products()
+                last_compared_products = self.queries.get_compared_products()
                 best_products_dict = dict()
                 rank_counter = 0 
-                for item in last_recorded_products:
+                for product in last_compared_products:
                     rank_counter += 1
                     self.interface.display_result(
-                        cfg.PRODUCT_RANK_NAME.format(rank_counter, item.item_features[0]))
+                        cfg.PRODUCT_RANK_NAME.format(rank_counter, product[0].name))
                     self.interface.display_result(
-                        cfg.S_A_DISPLAY_BRAND_NUTRISCORE.format(item.item_features[1],\
-                            item.item_features[3]))
+                        cfg.PRODUCT_BRAND_NUTR_GR.format(product[0].brand, product[0].nutrition_grade))
                     self.interface.display_result(
-                        cfg.S_A_DISPLAY_STORES.format(item.item_features[4]))
+                        cfg.DISPLAY_STORES.format(", ".join(product[0].stores)))
                     self.interface.display_result(
-                        cfg.S_A_DISPLAY_INITIAL_PRODUCT.format(item.item_features[6]))
+                        cfg.INITIAL_PRODUCT.format(product[2].name))
                     self.interface.display_result(
-                        cfg.S_A_COMPARRISON_DATE.format(item.item_features[5]))
-                    self.interface.display_result(
-                        cfg.S_A_SINGLE_RETURN)
-                    best_products_dict[rank_counter] = item.code
+                        cfg.COMPARRISON_DATE.format(product[1]))
+                    self.interface.display_result(cfg.EMPTY_LINE)
+                    best_products_dict[rank_counter] = product[0].code
                 # The user can see a product in detail.
                 running_recorded_products = True
                 while running_recorded_products:
