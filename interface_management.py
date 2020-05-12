@@ -389,7 +389,7 @@ class Interface:
             Manage the cursor movements within a drop-down list.
             It interacts closely with the method highlight_selection() of the same class.
 
-            Arguments:
+        Arguments:
 
             drop_down_list (list): set in the config.py module
 
