@@ -114,10 +114,6 @@ class SelectedProduct:
         self.code = selected_product.code
         if stores != 0:
             self.stores = [store.name for store in stores]
-    
-    def best_date(self, date):
-        self.date = "{: %d %B %y %H:%M}".format(date)
-        return self.date
 
 class SelectedStore:
     def __init__(self,name):
@@ -387,11 +383,11 @@ class ORMConnection:
         query = self.session.query(best_p, p_c.date_best, ref_p)
         query = query.join(best_p, best_p.code == p_c.code_best_prod)
         query = query.join(ref_p, ref_p.code == p_c.code_ref_prod)
-        result = query.order_by(desc(p_c.date_best))
+        result = query.order_by(desc(p_c.date_best))[:5]
         for item in result:
             stores = self.find_stores(item[0].code)
             best_product = SelectedProduct(item[0], stores)
-            date = best_product.best_date(item[1])
+            date = self.best_date(item[1])
             ref_product = SelectedProduct(item[2])
             compared_product = best_product, date, ref_product
             list_compared_products.append(compared_product)
@@ -402,6 +398,10 @@ class ORMConnection:
         for nb_rows in result:
             nb_rows = nb_rows[0]
         return nb_rows
+    
+    def best_date(self, date):
+        self.date = "{: %d %B %y %H:%M}".format(date)
+        return self.date
 
     def open_session(self):
         Session = sessionmaker(bind = self.engine)

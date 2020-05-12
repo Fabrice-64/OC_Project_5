@@ -424,11 +424,12 @@ class UserDialog:
                             y = 0
                             self.interface.left_display_string(
                                 y, cfg.S_A_INFO_LAST_RECORDS)
-                            check_item, y = self.interface.display_string_textpad(
+                            rank_item, y = self.interface.display_string_textpad(
                                 y+1, 1, 2, cfg.S_A_USE_BROWSER)
                             running_use_browser = True
                             while running_use_browser:
                                 rank_item = self.ascii_to_string(rank_item)
+                                rank_item = int(rank_item)
                                 if rank_item not in best_products_dict.keys():
                                     self.interface.right_display_info(
                                         cfg.WARNING_MESSAGE_0, "warning")
