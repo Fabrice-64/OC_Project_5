@@ -227,6 +227,10 @@ class Interface:
         self.inner_left_window.addstr(y, 0, string)
         self.inner_left_window.refresh()
 
+    def left_error_input(self):
+        self.right_display_info(config.WARNING_MESSAGE_0, "warning")
+        return ""
+        
     def display_string_textpad(self, y, nb_lines, length_field, message):
         """
 

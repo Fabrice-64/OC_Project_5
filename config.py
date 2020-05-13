@@ -70,13 +70,13 @@ PRODUCT_RANK_NAME = "{}:  {}\n"
 PRODUCT_BRAND_NUTR_GR = "Brand: {}, Nutrition grade: {}\n"
 DISPLAY_STORES = "Stores: {}\n"
 INITIAL_PRODUCT = "Initial product was: {}\n"
-COMPARRISON_DATE = "Comparrison was on: {}\n"
+COMPARRISON_DATE = "Comparrison was on: {}\n \n"
 EMPTY_LINE = "\n"
 
 # These are the dialog strings dealing with the DB consultation.
 CHECK_DETAILED_RESULT = "Do you want to check the result on the Web (Y/N)?\n"
 USE_BROWSER = "Please select the item you want to check on the official website:\n"
-RECORD_SELECTED_ITEM = "Do you want to record this research for further use (Y/N)\n?"
+RECORD_SELECTED_ITEM = "This result will be automatically recorded. \n"
 
 # These are the dialog strings to download and upload an excerpt of Open Food Facts DB
 ADD_CATEGORY = "You ought to select a category to import to your local DB.\n"
@@ -84,7 +84,6 @@ NAME_IMPORTED_CATEGORY = "You will import : "
 
 # These are the dialog strings displayed when retrieving recorded previous searches
 INFO_LAST_RECORDS = "Here are your last records\n"
-USE_BROWSER = "Please select the item you want to check on the official website:\n"
 CHECK_AGAIN_ITEMS_Y_N = "Do you want to select another food item (Y/N?\n"
 
 

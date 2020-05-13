@@ -358,7 +358,7 @@ class ORMConnection:
         query = query.join(c, c.id_category == c_p.idcategory)
         query = query.filter(
             and_(c.name == item_search[0], p.name.ilike(product_name)))
-        query = query.filter(p.nutrition_grade <
+        query = query.filter(p.nutrition_grade <=
                              self.session.query(p.nutrition_grade).
                              filter(p.code == item_search[2]))[:10]
 
