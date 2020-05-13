@@ -73,7 +73,7 @@ INITIAL_PRODUCT = "Initial product was: {}\n"
 COMPARRISON_DATE = "Comparrison was on: {}\n \n"
 EMPTY_LINE = "\n"
 
-# These are the dialog strings dealing with the DB consultation.
+# These are the dialog strings dealing with the DB consultation on the web.
 CHECK_DETAILED_RESULT = "Do you want to check the result on the Web (Y/N)?\n"
 USE_BROWSER = "Please select the item you want to check on the official website:\n"
 RECORD_SELECTED_ITEM = "This result will be automatically recorded. \n"
@@ -84,7 +84,7 @@ NAME_IMPORTED_CATEGORY = "You will import : "
 
 # These are the dialog strings displayed when retrieving recorded previous searches
 INFO_LAST_RECORDS = "Here are your last records\n"
-CHECK_AGAIN_ITEMS_Y_N = "Do you want to select another food item (Y/N?\n"
+CHECK_AGAIN_ITEMS_Y_N = "Do you want to select another food item (Y/N)?\n"
 
 
 # These are the keyboard information lines to deal with the textpad
