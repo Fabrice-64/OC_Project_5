@@ -22,8 +22,7 @@ import json
 import webbrowser
 
 import requests
-
-import config_open_food_facts as coff
+from AppModel.open_food_facts import config_open_food_facts as coff
 
 
 class ConnectToOFF:
@@ -183,12 +182,3 @@ class ConnectToOFF:
             """
         product_location = str(coff.OFF_PRODUCT_ADDRESS + code_product)
         webbrowser.open(product_location, new=1)
-
-
-if __name__ == "__main__":
-    connection = ConnectToOFF()
-    nb_items, nb_rejected, results = connection.import_products_list(
-        'Fromages')
-    print(nb_items, nb_rejected)
-    for res in results:
-        print(res)

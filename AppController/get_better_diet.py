@@ -24,12 +24,19 @@
 import time
 from datetime import datetime
 
-import config as cfg
-import config_open_food_facts as coff
-import config_queries as cq
-import connect_to_mysql as sql
-import connect_to_OFF as OFF
-import interface_management as im
+from AppView.interface_management import Interface
+from AppModel.open_food_facts.connect_to_OFF import ConnectToOFF
+from AppController import config as cfg
+from AppModel.local_DB import connect_to_mysql
+from AppModel.open_food_facts import config_open_food_facts as coff
+from AppModel.open_food_facts import connect_to_OFF as OFF
+from AppModel.local_DB import connect_to_mysql as sql
+
+#import config as cfg
+#import config_open_food_facts as coff
+#import connect_to_mysql as sql
+#import connect_to_OFF as OFF
+#import interface_management as im
 
 
 class UserDialog:
@@ -64,8 +71,8 @@ class UserDialog:
         """
 
     def __init__(self):
-        self.interface = im.Interface()
-        self.OFF = OFF.ConnectToOFF()
+        self.interface = Interface()
+        self.OFF = ConnectToOFF()
 
     def step_terms_and_conditions(self, file):
         """
@@ -133,7 +140,7 @@ class UserDialog:
         check_DB = True
         while check_DB:
             try:
-                self.queries = sql.ORMConnection()
+                self.queries = connect_to_mysql.ORMConnection()
                 break
             except Exception:
                 self.interface.clear_window("right")
@@ -538,8 +545,3 @@ def main(user):
         quit = user.step_select_action()
         if quit == "Quit":
             user.interface.quit_display()
-
-
-if __name__ == "__main__":
-    user = UserDialog()
-    main(user)

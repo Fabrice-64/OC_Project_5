@@ -27,7 +27,7 @@ TITLE_0 = "Initial Window"
 # The following lines deals with the successive comments, questions, window titles to be used at each step of the program
 # These are the dialog strings related to the step dealing with the Terms and Conditions
 TITLE_1 = "Open Food Facts Terms and Conditions"
-T_C_FILE = "Documentation/texte_T&C.txt"
+T_C_FILE = "Read_Documentation/texte_T&C.txt"
 T_C_LINE_1 = "Please first scroll down the Terms and Conditions!\n"
 T_C_LINE_2 = "You can press any key...\n"
 ACCEPT_T_C = "Do you accept the Terms and Conditions?\n"
@@ -84,7 +84,7 @@ NAME_IMPORTED_CATEGORY = "You will import : "
 
 # These are the dialog strings displayed when retrieving recorded previous searches
 INFO_LAST_RECORDS = "Here are your last records\n"
-CHECK_AGAIN_ITEMS_Y_N = "Do you want to select another food item (Y/N)?\n"
+CHECK_AGAIN_ITEMS_Y_N = "Do you want to select a food item (Y/N)?\n"
 
 
 # These are the keyboard information lines to deal with the textpad

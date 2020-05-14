@@ -20,18 +20,13 @@
     """
 import datetime
 import time
-import pickle
-from sqlalchemy import create_engine
 import mysql.connector
 from datetime import datetime
-import config
-import config_queries as cq
 
 from sqlalchemy import Table, Column, Integer, DateTime, String, Index, \
-    ForeignKeyConstraint, ForeignKey, select, and_, func, asc, desc
+    ForeignKeyConstraint, ForeignKey, select, and_, func, asc, desc, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, aliased
-import connect_to_OFF as cof
 Base = declarative_base()
 
 
@@ -188,7 +183,7 @@ class ORMConnection:
             NIL.
 
             """
-        with open("db_parameters.txt") as file:
+        with open("AppModel/local_DB/db_parameters.txt") as file:
             connection_parameters = file.read()
         self.engine = create_engine(connection_parameters,
                                     echo=False)
@@ -463,15 +458,3 @@ class ORMConnection:
         item_features = " ".join(temporary_list)
         return item_features
 
-
-if __name__ == "__main__":
-    # Used to test the interaction with the local DB
-    #connection = cof.ConnectToOFF()
-    #nb_items, nb_rejected, results = connection.import_products_list('Fromages')
-
-    requete = ORMConnection()
-    requete.open_session()
-    item_search = ["Desserts", "Chocolat", "3270160587551"]
-    result = requete.get_compared_products()
-    for res in result:
-        print(res)

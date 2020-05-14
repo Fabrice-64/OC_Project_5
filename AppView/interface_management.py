@@ -25,7 +25,7 @@ import time
 import webbrowser
 from curses import textpad
 
-import config
+from AppController import config as cfg
 
 
 class Interface:
@@ -228,7 +228,7 @@ class Interface:
         self.inner_left_window.refresh()
 
     def left_error_input(self):
-        self.right_display_info(config.WARNING_MESSAGE_0, "warning")
+        self.right_display_info(cfg.WARNING_MESSAGE_0, "warning")
         return ""
         
     def display_string_textpad(self, y, nb_lines, length_field, message):
@@ -498,7 +498,7 @@ class Interface:
 
             """
         self.clear_window()
-        self.left_display_string(0, config.QUIT_MESSAGE)
+        self.left_display_string(0, cfg.QUIT_MESSAGE)
         time.sleep(1)
         self.screen.clear()
         self.screen.keypad(False)
