@@ -1,0 +1,17 @@
+setup.py
+AppController/__init__.py
+AppController/config.py
+AppController/get_better_diet.py
+AppModel/__init__.py
+AppModel/local_DB/__init__.py
+AppModel/local_DB/connect_to_mysql.py
+AppModel/local_DB/db_parameters.py
+AppModel/open_food_facts/__init__.py
+AppModel/open_food_facts/config_open_food_facts.py
+AppModel/open_food_facts/connect_to_OFF.py
+AppView/__init__.py
+AppView/interface_management.py
+get_better_diet.egg-info/PKG-INFO
+get_better_diet.egg-info/SOURCES.txt
+get_better_diet.egg-info/dependency_links.txt
+get_better_diet.egg-info/top_level.txt

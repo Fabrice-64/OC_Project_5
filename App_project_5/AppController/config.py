@@ -27,7 +27,7 @@ TITLE_0 = "Initial Window"
 # The following lines deals with the successive comments, questions, window titles to be used at each step of the program
 # These are the dialog strings related to the step dealing with the Terms and Conditions
 TITLE_1 = "Open Food Facts Terms and Conditions"
-T_C_FILE = "Read_Documentation/texte_T&C.txt"
+T_C_FILE = "texte_T&C.txt"
 T_C_LINE_1 = "Please first scroll down the Terms and Conditions!\n"
 T_C_LINE_2 = "You can press any key...\n"
 ACCEPT_T_C = "Do you accept the Terms and Conditions?\n"
@@ -39,8 +39,8 @@ DB_CREATE_LOCAL_DB = "A new DB will be created\n"
 DB_CATEGORIES_FETCHED = "The names of the french categories have been uploaded\n"
 DB_STORES_FETCHED = "The names of the stores have been uploaded\n"
 DB_INITIAL_INFO = "Please follow the instructions to create a new DB\n"
-DB_USER = "Please enter the user if you have defined one ('root' by default)\n"
-DB_PASSWORD = "Please enter the password to your DB (None by default)\n"
+DB_USER_INVITE = "Please enter the user if you have defined one ('root' by default)\n"
+DB_PASSWORD_INVITE = "Please enter the password to your DB (None by default)\n"
 
 # These are the dialog strings related to the step dealing with the actions to be conducted
 TITLE_2 = "Working with the Databases"
@@ -50,6 +50,7 @@ OPERATE_ON_DB = ["Look for a substitution food item",
                      "Get to the previous searches", "Upload a new category",
                      "Quit"]
 CAT_RANK_NAME = "{} : {}\n"
+EMPTY_DB = "DON'T FORGET TO FIRST LOAD SOME ITEMS IN YOUR LOCAL DB !"
 ROWS_LOCAL_DB = 'Your local database currently counts : {} food items'
 
 PROCESSING_RECORD = "Your selection is being recorded."

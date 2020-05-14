@@ -27,6 +27,11 @@ from sqlalchemy import Table, Column, Integer, DateTime, String, Index, \
     ForeignKeyConstraint, ForeignKey, select, and_, func, asc, desc, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, aliased
+
+
+import AppView
+import AppController.config as cfg
+
 Base = declarative_base()
 
 
@@ -121,6 +126,9 @@ class SelectedStore:
     def __init__(self, name):
         self.name = name
 
+class Date:
+    def __init__(self, date):
+        self.date = "{: %d %B %y %H:%M}".format(date)
 
 class ORMConnection:
     """
@@ -169,25 +177,12 @@ class ORMConnection:
         """
 
     def __init__(self):
-        """
-
-            Initialize the connexion with the local DB with parameters stored
-            in a separate file.
-
-            Arguments:
-
-            NIL.
-
-            Returns:
-
-            NIL.
-
-            """
-        with open("AppModel/local_DB/db_parameters.txt") as file:
+        with open("AppModel/local_DB/db_parameters.py") as file:
             connection_parameters = file.read()
         self.engine = create_engine(connection_parameters,
                                     echo=False)
         self.engine.connect()
+
 
     def create_database(self):
         """
@@ -205,23 +200,23 @@ class ORMConnection:
 
             """
         # Create a new and empty database
-        with open("db_parameters.txt") as file:
+        with open("AppModel/local_DB/db_parameters.py") as file:
             connection_parameters = file.read()
         self.engine = create_engine(connection_parameters,
                                     echo=False)
         # Activate the Database to subsequently create the tables
         connection = self.engine.connect()
         connection.execute("COMMIT")
-        connection.execute("CREATE DATABASE get_better_diet \
-                            CHARACTER SET utf8mb4")
+        connection.execute("CREATE DATABASE get_better_diet CHARACTER SET utf8mb4")
         connection.close()
         # Add the name of the database to the parameters file for further use
-        connection_parameters = connection_parameters + config.DB_NAME
-        with open("db_parameters.txt", "w") as file:
+        connection_parameters = connection_parameters + cfg.DB_NAME
+        with open("AppModel/local_DB/db_parameters.py", "w") as file:
             file.write(connection_parameters)
         # Add the tables to the new database
         self.engine = create_engine(connection_parameters, echo=False)
         self.engine.connect()
+
         Base.metadata.create_all(self.engine)
 
     def upload_categories(self, categories):
@@ -391,7 +386,7 @@ class ORMConnection:
         for item in result:
             stores = self.find_stores(item[0].code)
             best_product = SelectedProduct(item[0], stores)
-            date = self.best_date(item[1])
+            date = Date(item[1])
             ref_product = SelectedProduct(item[2])
             compared_product = best_product, date, ref_product
             list_compared_products.append(compared_product)
@@ -402,10 +397,6 @@ class ORMConnection:
         for nb_rows in result:
             nb_rows = nb_rows[0]
         return nb_rows
-
-    def best_date(self, date):
-        self.date = "{: %d %B %y %H:%M}".format(date)
-        return self.date
 
     def open_session(self):
         Session = sessionmaker(bind=self.engine)
@@ -457,4 +448,4 @@ class ORMConnection:
         temporary_list = ["%"+word+"%" for word in temporary_list]
         item_features = " ".join(temporary_list)
         return item_features
-
+    

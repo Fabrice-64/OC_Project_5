@@ -27,16 +27,10 @@ from datetime import datetime
 from AppView.interface_management import Interface
 from AppModel.open_food_facts.connect_to_OFF import ConnectToOFF
 from AppController import config as cfg
-from AppModel.local_DB import connect_to_mysql
 from AppModel.open_food_facts import config_open_food_facts as coff
 from AppModel.open_food_facts import connect_to_OFF as OFF
 from AppModel.local_DB import connect_to_mysql as sql
 
-#import config as cfg
-#import config_open_food_facts as coff
-#import connect_to_mysql as sql
-#import connect_to_OFF as OFF
-#import interface_management as im
 
 
 class UserDialog:
@@ -136,38 +130,35 @@ class UserDialog:
 
             """
         # Check whether a local DB has already been created. If not, starts a process.
-        has_to_create_db = False
-        check_DB = True
-        while check_DB:
+        create_DB = False
+        while True:
             try:
-                self.queries = connect_to_mysql.ORMConnection()
+                self.queries = sql.ORMConnection()
                 break
             except Exception:
                 self.interface.clear_window("right")
-                self.interface.right_display_info(
-                    cfg.WARNING_MESSAGE_4, "warning")
+                self.interface.right_display_info(cfg.WARNING_MESSAGE_4, "warning")
                 self.create_cnx_parameters()
-                has_to_create_db = True
-                check_DB = False
-
-        if has_to_create_db == True:
-            print("Database should be created now")
-            time.sleep(2)
-            self.queries.create_database()
-            self.interface.right_display_info(cfg.DB_CREATE_LOCAL_DB)
-            # Open the connection to the local DB
-            self.queries = sql.ORMConnection()
-            self.queries.open_session()
-            # Import categories from Open Food Facts
-            OFF_categories = self.OFF.import_static_data(coff.URL_STATIC_CAT)
-            # Configure the data and upload categories into the local DB
-            self.queries.upload_categories(OFF_categories)
-            self.interface.right_display_info(cfg.DB_CATEGORIES_FETCHED)
-            # Import stores from Open Food Facts
-            OFF_stores = self.OFF.import_static_data(coff.URL_STATIC_STORES)
-            # Configure the data and upload stores into the local DB
-            self.queries.upload_stores(OFF_stores)
-            self.interface.right_display_info(cfg.DB_STORES_FETCHED)
+                create_DB = True
+            if create_DB:
+                self.queries = sql.ORMConnection()
+                self.queries.create_database()
+                self.interface.right_display_info(cfg.DB_CREATE_LOCAL_DB)
+                self.queries = sql.ORMConnection()
+                # Open the connection to the local DB
+                self.queries.open_session()
+                # Import categories from Open Food Facts
+                OFF_categories = self.OFF.import_static_data(coff.URL_STATIC_CAT)
+                # Configure the data and upload categories into the local DB
+                self.queries.upload_categories(OFF_categories)
+                self.interface.right_display_info(cfg.DB_CATEGORIES_FETCHED)
+                # Import stores from Open Food Facts
+                OFF_stores = self.OFF.import_static_data(coff.URL_STATIC_STORES)
+                # Configure the data and upload stores into the local DB
+                self.queries.upload_stores(OFF_stores)
+                self.interface.right_display_info(cfg.DB_STORES_FETCHED)
+                self.interface.right_display_info(cfg.EMPTY_DB, "warning")
+                break
 
         self.interface.title_bar(cfg.TITLE_2)
         # Display a drop down menu to navigate in the application
@@ -362,7 +353,7 @@ class UserDialog:
                     self.interface.display_result(
                         cfg.INITIAL_PRODUCT.format(product[2].name))
                     self.interface.display_result(
-                        cfg.COMPARRISON_DATE.format(product[1]))
+                        cfg.COMPARRISON_DATE.format(product[1].date))
                     self.interface.display_result(cfg.EMPTY_LINE)
                     best_products_dict[rank_counter] = product[0].code
                 # The user can see a product in detail.
@@ -491,19 +482,19 @@ class UserDialog:
         # Ask for the connection parameters. Default value in config.py
         self.interface.left_display_string(y, cfg.DB_INITIAL_INFO)
         user, y = self.interface.display_string_textpad(1, 1, 15,
-                                                        cfg.DB_USER)
+                                                        cfg.DB_USER_INVITE)
         user = self.ascii_to_string(user)
         if user != '':
             cfg.DB_USER = user
         password, y = self.interface.display_string_textpad(y, 1, 20,
-                                                            cfg.DB_PASSWORD)
+                                                            cfg.DB_PASSWORD_INVITE)
         password = self.ascii_to_string(password)
         if password != '':
             cfg.DB_PASSWORD = password
         connection_string = cfg.DB_CONNEXION_STRING.format(
             cfg.DB_USER, cfg.DB_PASSWORD, "")
         # Connection parameters are saved in a separate file to be reused.
-        with open("db_parameters.txt", "w") as file:
+        with open("AppModel/local_DB/db_parameters.py", "w") as file:
             file.write(connection_string)
 
     def open_product_browser(self, answer, dictionary):
