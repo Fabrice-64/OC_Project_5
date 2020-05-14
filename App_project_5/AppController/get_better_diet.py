@@ -32,20 +32,19 @@ from AppModel.open_food_facts import connect_to_OFF as OFF
 from AppModel.local_DB import connect_to_mysql as sql
 
 
-
 class UserDialog:
     """
 
         Is the cornerstone of the application.
 
         It is a composite class, with following components:
-        im.Interface(): manage the interface.
+        im.Interface: manage the interface.
 
-        sql.MySQLQueries(): manage the queries to the local DB. In order to check\
+        sql.ORMConnection: manage the queries to the local DB. In order to check\
             whether there already exists a DB, this class is instanciated\
             in the step_select_action() method.
 
-        OFF.ConnectToOFF(): manage the download of data from Open Food Facts.
+        OFF.ConnectToOFF: manage the download of data from Open Food Facts.
 
         Methods:
 
@@ -55,8 +54,11 @@ class UserDialog:
 
         select_action(): main loop through which the whole program runs.
 
-        create_cnx_parameters(): create connection parameters for a further use
-        of a local DB.
+        create_cnx_parameters(): used exclusively for the first use, when the local
+        DB has not been created yet.
+
+        open_product_browser(): sends the order to open a product page
+        from Open Food Facts website.
 
         Instance variables:
 
@@ -65,6 +67,19 @@ class UserDialog:
         """
 
     def __init__(self):
+        """
+            Integrates the classes Interface and ConnectToOFF as components.
+
+            Arguments:
+
+            self.interface: manage the relation with the display (View).
+            self.OFF: used either to download data from OFF, or to access a product page.
+
+            Returns:
+
+            NIL
+
+            """
         self.interface = Interface()
         self.OFF = ConnectToOFF()
 
@@ -103,11 +118,11 @@ class UserDialog:
 
             Arguments:
 
-            ascii_string: normal outcome from a textpad input.
+            ascii_string: ascii is the normal outcome from a textpad input in Curses
 
             Returns:
 
-            converted_string: string in usual Python format.
+            converted_string: string.
 
             """
         conversion_list = [d for d in str(ascii_string)]
@@ -122,7 +137,8 @@ class UserDialog:
 
             Arguments:
 
-            NIL
+            self.queries: instanciate the class sql.ORMConnection iot manage the
+            relation with the model.
 
             Returns:
 
@@ -133,14 +149,18 @@ class UserDialog:
         create_DB = False
         while True:
             try:
+                # Check whether a connection with an existing local DB is established.
                 self.queries = sql.ORMConnection()
                 break
             except Exception:
+                # Creation of a connexion, iot prepare the DB creation
                 self.interface.clear_window("right")
-                self.interface.right_display_info(cfg.WARNING_MESSAGE_4, "warning")
+                self.interface.right_display_info(
+                    cfg.WARNING_MESSAGE_4, "warning")
                 self.create_cnx_parameters()
                 create_DB = True
             if create_DB:
+            # Creation of the DB through a method hosted in the model module
                 self.queries = sql.ORMConnection()
                 self.queries.create_database()
                 self.interface.right_display_info(cfg.DB_CREATE_LOCAL_DB)
@@ -148,15 +168,18 @@ class UserDialog:
                 # Open the connection to the local DB
                 self.queries.open_session()
                 # Import categories from Open Food Facts
-                OFF_categories = self.OFF.import_static_data(coff.URL_STATIC_CAT)
+                OFF_categories = self.OFF.import_static_data(
+                    coff.URL_STATIC_CAT)
                 # Configure the data and upload categories into the local DB
                 self.queries.upload_categories(OFF_categories)
                 self.interface.right_display_info(cfg.DB_CATEGORIES_FETCHED)
                 # Import stores from Open Food Facts
-                OFF_stores = self.OFF.import_static_data(coff.URL_STATIC_STORES)
+                OFF_stores = self.OFF.import_static_data(
+                    coff.URL_STATIC_STORES)
                 # Configure the data and upload stores into the local DB
                 self.queries.upload_stores(OFF_stores)
                 self.interface.right_display_info(cfg.DB_STORES_FETCHED)
+                # Informs the user that the DB is empty. 
                 self.interface.right_display_info(cfg.EMPTY_DB, "warning")
                 break
 
@@ -170,13 +193,13 @@ class UserDialog:
         # Here start the work on the DB to find, select and record a product
         y = 0
         while True:
-            # Open a session with the ORM iot work with the DB
+            # Open a session with the ORM iot work with the DB.
             self.queries.open_session()
             # Look for a product !!
             if answer == cfg.OPERATE_ON_DB[0]:
                 self.interface.title_bar(cfg.TITLE_3)
                 self.interface.clear_window()
-                # list of categories previously recorded is displayed on the right window
+                # list of categories previously recorded is displayed on the right window.
                 top_categories = self.queries.get_categories()
                 rank_categories = dict()
                 rank_counter = 0
@@ -187,7 +210,7 @@ class UserDialog:
                                                  category.number_items))
                     rank_categories[rank_counter] = category.name
                 self.interface.display_guide(cfg.USER_GUIDE)
-                # This loop is intended to avoid that a too precise request leads to an empty selection.
+                # This loop avoids that a too narrow request leads to an empty selection.
                 while True:
                     while True:
                         try:
@@ -201,7 +224,7 @@ class UserDialog:
                             answer = self.interface.display_textpad(y, 1, 3)
                             answer = self.ascii_to_string(answer)
                             # The category is the only field which is compulsary.
-                            answer= int(answer)
+                            answer = int(answer)
                             if answer in rank_categories.keys():
                                 answer_category = rank_categories.get(answer)
                                 break
@@ -218,13 +241,14 @@ class UserDialog:
                     # Launch the query in the local DB.
                     brand_name, y = self.interface.display_string_textpad(
                         y, 1, 25, cfg.ITEM_BRAND)
-                    item_search = [answer_category,answer_name, brand_name]
+                    item_search = [answer_category, answer_name, brand_name]
                     refer_products = self.queries.refer_products(item_search)
                     # If the criterion are too specific, avoid a null outcome.
                     if len(refer_products) > 0:
                         break
                     else:
-                        self.interface.right_display_info(cfg.WARNING_MESSAGE_2, "warning")
+                        self.interface.right_display_info(
+                            cfg.WARNING_MESSAGE_2, "warning")
 
                 # Display a selection of products.
                 rank_item_dict = dict()
@@ -236,8 +260,8 @@ class UserDialog:
                     self.interface.display_result(
                         cfg.PRODUCT_RANK_NAME.format(rank_counter, product.name))
                     self.interface.display_result(
-                        cfg.PRODUCT_BRAND_NUTR_GR.format(product.brand, \
-                            product.nutrition_grade))
+                        cfg.PRODUCT_BRAND_NUTR_GR.format(product.brand,
+                                                         product.nutrition_grade))
                     self.interface.display_result(cfg.EMPTY_LINE)
                     # Create key_value of rank and product for further check
                     rank_item_dict[rank_counter] = product.code
@@ -246,6 +270,7 @@ class UserDialog:
                 while True:
                     while True:
                         try:
+                            # Check whether the answer is both an int & in the dict.
                             answer, y = self.interface.display_string_textpad(
                                 y, 1, 3, cfg.COMPARE_FOOD_ITEMS)
                             answer = self.ascii_to_string(answer)
@@ -267,12 +292,14 @@ class UserDialog:
                         # Create tuple with characteristics of reference product
                         selected_prod = answer_category, keywords_item, code_ref_prod
                         selected_prod = tuple(selected_prod)
-                        list_top_products = self.queries.top_products(selected_prod)
+                        list_top_products = self.queries.top_products(
+                            selected_prod)
+                        # Make sure that the user's choice isn't too restrictive
                         if len(list_top_products) > 0:
                             break
                         else:
                             self.interface.right_display_info(
-                                                cfg.WARNING_MESSAGE_1, "warning")
+                                cfg.WARNING_MESSAGE_1, "warning")
                             y -= 4
                     break
 
@@ -285,9 +312,8 @@ class UserDialog:
                     rank_counter += 1
                     self.interface.display_result(
                         cfg.PRODUCT_RANK_NAME.format(rank_counter, item.name))
-                    self.interface.display_result(
-                        cfg.PRODUCT_BRAND_NUTR_GR.format(
-                            item.brand, item.nutrition_grade))
+                    self.interface.display_result(cfg.PRODUCT_BRAND_NUTR_GR.format(
+                        item.brand, item.nutrition_grade))
                     self.interface.display_result(
                         cfg.DISPLAY_STORES.format(", ".join(item.stores)))
                     top_products_dict[rank_counter] = item.code
@@ -295,20 +321,24 @@ class UserDialog:
                 while True:
                     y = 0
                     # The user is offered to view the item in a browser and to record it.
-                    self.interface.left_display_string(y, cfg.CHECK_DETAILED_RESULT)
+                    self.interface.left_display_string(
+                        y, cfg.CHECK_DETAILED_RESULT)
                     answer, y = self.interface.display_string_textpad(
                         y+1, 1, 2, cfg.SELECT_Y_N)
                     answer = self.ascii_to_string(answer).upper()
                     if answer == "Y":
                         while True:
                             try:
+                                # Check whether the answer is both an int & in the dict.
                                 answer, y = self.interface.display_string_textpad(
                                     y, 1, 2, cfg.USE_BROWSER)
                                 answer = self.ascii_to_string(answer)
                                 answer = int(answer)
                                 if answer in top_products_dict.keys():
-                                    code_best_prod = top_products_dict.get(answer)
-                                    self.OFF.open_product_file_OFF(code_best_prod)
+                                    code_best_prod = top_products_dict.get(
+                                        answer)
+                                    self.OFF.open_product_file_OFF(
+                                        code_best_prod)
                                     break
                                 else:
                                     answer = self.interface.left_error_input()
@@ -316,38 +346,42 @@ class UserDialog:
                             except Exception:
                                 answer = self.interface.left_error_input()
                                 y -= 4
-                        # Record automatically both selected and ref. products.
-                        self.interface.right_display_info(cfg.RECORD_SELECTED_ITEM)
+                        self.interface.right_display_info(
+                            cfg.RECORD_SELECTED_ITEM)
                         record_date_time = datetime.now()
                         record_date_time = record_date_time.strftime(
-                                    '%Y-%m-%d %H:%M:%S')
+                            '%Y-%m-%d %H:%M:%S')
                         compared_prods = code_best_prod, record_date_time,\
                             code_ref_prod
+                        # Record automatically both selected and ref. products.
                         self.queries.record_comparred_products(compared_prods)
-                        self.interface.right_display_info(cfg.PROCESSING_RECORD)
+                        self.interface.right_display_info(
+                            cfg.PROCESSING_RECORD)
                         break
                     elif answer == "N":
                         break
                     else:
                         answer = self.interface.left_error_input()
                         y -= 4
-                # Used to quit this loop
+                # Used to quit this loop an return to the main menu
                 self.interface.clear_window()
                 answer = self.interface.set_up_drop_down(
                     cfg.OPERATE_ON_DB, cfg.SELECT_ANSWER)
-                    
+
             # Step where the user looks into the best products he has recorded.
             elif answer == cfg.OPERATE_ON_DB[1]:
                 self.interface.clear_window()
                 last_compared_products = self.queries.get_compared_products()
                 best_products_dict = dict()
                 rank_counter = 0
+                # Display an ordered list of comparred products.
                 for product in last_compared_products:
                     rank_counter += 1
                     self.interface.display_result(
                         cfg.PRODUCT_RANK_NAME.format(rank_counter, product[0].name))
                     self.interface.display_result(
-                        cfg.PRODUCT_BRAND_NUTR_GR.format(product[0].brand, product[0].nutrition_grade))
+                        cfg.PRODUCT_BRAND_NUTR_GR.format(product[0].brand, \
+                            product[0].nutrition_grade))
                     self.interface.display_result(
                         cfg.DISPLAY_STORES.format(", ".join(product[0].stores)))
                     self.interface.display_result(
@@ -358,13 +392,13 @@ class UserDialog:
                     best_products_dict[rank_counter] = product[0].code
                 # The user can see a product in detail.
                 if len(best_products_dict) > 0:
-                    # User to confirm he wants to see the item in the browser
+                    # User to confirm he wants to see the item in the browser.
                     while True:
                         answer = ""
                         while answer not in ["Y", "N"]:
-                            y = 0     
+                            y = 0
                             answer, y = self.interface.display_string_textpad(
-                                    y, 1, 2, cfg.CHECK_AGAIN_ITEMS_Y_N)
+                                y, 1, 2, cfg.CHECK_AGAIN_ITEMS_Y_N)
                             answer = self.ascii_to_string(answer).upper()
                             if answer not in ["Y", "N"]:
                                 answer = self.interface.left_error_input()
@@ -372,29 +406,31 @@ class UserDialog:
                         if answer == "N":
                             break
                         try:
+                            # Check whether the input meets the requirements.
                             answer, y = self.interface.display_string_textpad(
-                                    y+1, 1, 2, cfg.USE_BROWSER)
+                                y+1, 1, 2, cfg.USE_BROWSER)
                             answer = self.ascii_to_string(answer)
                             answer = int(answer)
                             if answer in best_products_dict.keys():
-                                code_product = best_products_dict.get(answer)            
+                                code_product = best_products_dict.get(answer)
                                 # Calls the hyperlink to open the product in the browser.
                                 self.OFF.open_product_file_OFF(code_product)
                             else:
                                 answer = self.interface.left_error_input()
                                 self.interface.clear_window('left')
-                                y=0
+                                y = 0
                         except Exception:
                             answer = self.interface.left_error_input()
                             self.interface.clear_window('left')
-                            y=0
+                            y = 0
                 else:
-                    self.interface.right_display_info(cfg.WARNING_MESSAGE_3, "warning")
-
+                    self.interface.right_display_info(
+                        cfg.WARNING_MESSAGE_3, "warning")
+                # Return to the main menu, end of this loop.
                 self.interface.clear_window()
                 answer = self.interface.set_up_drop_down(
                     cfg.OPERATE_ON_DB, cfg.SELECT_ANSWER)
-               
+
             # This is to import products from one of the most popular categories.
             elif answer == cfg.OPERATE_ON_DB[2]:
                 y = 0
@@ -414,6 +450,7 @@ class UserDialog:
                 while True:
                     y = 0
                     try:
+                        # Check that the user's input meets the requirements.
                         answer, y = self.interface.display_string_textpad(
                             y, 1, 3, cfg.ADD_CATEGORY)
                         answer = self.ascii_to_string(answer)
@@ -422,11 +459,12 @@ class UserDialog:
                             selected_category = categories_dict.get(answer)
                             display_chosen_category = cfg.NAME_IMPORTED_CATEGORY + \
                                 selected_category
-                            self.interface.right_display_info(display_chosen_category)
+                            self.interface.right_display_info(
+                                display_chosen_category)
                             break
                         else:
                             self.interface.right_display_info(
-                            cfg.WARNING_MESSAGE_0, "warning")
+                                cfg.WARNING_MESSAGE_0, "warning")
                             answer = ""
                             y = y-4
                     except Exception:
@@ -498,17 +536,31 @@ class UserDialog:
             file.write(connection_string)
 
     def open_product_browser(self, answer, dictionary):
+        """
+            Opens the browser and access the Open Food Facts website to display
+            a the detailed data on a product.
+
+            Arguments:
+
+            NIL
+
+            Returns:
+
+            NIL
+            """
         try:
+            # Check that the input meets the requirements.
             answer = self.ascii_to_string(answer)
             answer = int(answer)
             if answer in dictionary.keys():
-                code_product = dictionary.get(answer)            
+                code_product = dictionary.get(answer)
                 # Calls the hyperlink to open the product in the browser.
                 self.OFF.open_product_file_OFF(code_product)
         except Exception:
             self.interface.right_display_info(cfg.WARNING_MESSAGE_0, "warning")
             answer = ""
         return answer
+
 
 def main(user):
     """
