@@ -1,12 +1,32 @@
 """
 
     This module interacts with the local DB, which is a mySQL DB.
+    It is based on SQLAlchemy ORM.
+    For the relation with the controller, dedicated classes are available.
 
     Classes:
+
+    Base: parent class for all the classes to be converted into tables
 
     MySQLQueries: manage the querying methods under a same umbrella.
 
     Product: create an instance for each product imported from the local DB.
+
+    Store:
+
+    CategoryProduct:
+
+    StoreProduct:
+
+    ProductComparrison:
+
+    TopCategory:
+
+    SelectedProduct:
+
+    SelectedStore:
+
+    Date:
 
     Exceptions:
 
@@ -18,8 +38,6 @@
         in order to broaden the search.
 
     """
-import datetime
-import time
 import mysql.connector
 from datetime import datetime
 
@@ -36,6 +54,21 @@ Base = declarative_base()
 
 
 class Category(Base):
+    """
+
+        Inherits from Base, in order to connect with the local DB.
+        It manages the categories uploaded from Open Food Facts.
+        Can be looked at as a parent table towards CategoryProduct.
+
+        Methods:
+
+        NIL
+
+        Arguments:
+        id_category: id determined by the local DB. Is the primary key.
+        name: self explanatory.
+
+        """
     __tablename__ = 'category'
     __table_args__ = (Index('idx_category', 'name'),)
 
@@ -45,6 +78,30 @@ class Category(Base):
 
 
 class Product (Base):
+    """
+
+        Inherits from Base, in order to connect with the local DB.
+        It manages the Products uploaded from Open Food Facts.
+        To be looked at as a parent table towards StoreProduct, CategoryProduct
+        and ProductComparrison.
+
+        Methods:
+
+        NIL
+
+        Arguments:
+
+        code: used in Open Food Facts as the unique identifier for products.
+        Therefore, used in this DB as the id and primary key for this table.
+
+        brand: self explanatory.
+
+        name: self explanatory.
+
+        nutrition_grade: is a letter and currently based on the French so called
+        "Nutriscore", which is a letter between "a" and "e".
+
+        """
     __tablename__ = 'product'
 
     code = Column(String(13), nullable=False, primary_key=True)
@@ -54,6 +111,24 @@ class Product (Base):
 
 
 class Store (Base):
+    """
+
+        Inherits from Base, in order to connect with the local DB.
+        It manages the stores uploaded from Open Food Facts.
+        Can be looked at as a parent table towards StoreProduct.
+
+        Methods:
+
+        NIL
+
+        Arguments:
+
+        id_store: id determined by the local DB. Is the primary key.
+
+        name: self explanatory.
+
+        An index is defined for more efficiency when looking for a store.
+        """
     __tablename__ = 'store'
     __table_args__ = (Index('idx_store', 'name'),)
 
@@ -63,14 +138,32 @@ class Store (Base):
 
 
 class CategoryProduct (Base):
+    """
+
+        Inherits from Base, in order to connect with the local DB.
+        As a join table, is a child of Category and Product tables.
+        Each product may have several entries, as they are often listed in many
+        categories.
+
+        Methods:
+
+        NIL
+
+        Arguments:
+
+        id_cat_prod: id determined by the local DB. Is the primary key.
+
+        idcategory: take over the id of each category to join with table category.
+
+        code: take over the product code in order to join with table product.
+        """
     __tablename__ = 'category_product'
 
     id_cat_prod = Column(Integer(), primary_key=True, autoincrement=True,
                          nullable=False)
     idcategory = Column(Integer(),
                         ForeignKey('category.id_category',
-                                   name='FK_id_category'),
-                        nullable=False)
+                                   name='FK_id_category'), nullable=False)
     code = Column(String(13),
                   ForeignKey('product.code', name='FK_product_category',
                              ondelete='CASCADE', onupdate='CASCADE'),
@@ -78,6 +171,25 @@ class CategoryProduct (Base):
 
 
 class StoreProduct (Base):
+    """
+
+        Inherits from Base, in order to connect with the local DB.
+        As a join table, is a child of Store and Product tables.
+        Each product is sold in different stores, therefore this join table.
+        categories.
+
+        Methods:
+
+        NIL
+
+        Arguments:
+
+        id_store_product: id determined by the local DB. Is the primary key.
+
+        product_code: take over the id of each product to join with table product.
+
+        store_id: take over the store id in order to join with table store.
+        """
     __tablename__ = 'store_product'
 
     id_store_product = Column(Integer(), primary_key=True, autoincrement=True,
@@ -91,6 +203,28 @@ class StoreProduct (Base):
 
 
 class ProductComparrison (Base):
+    """
+        Inherits from Base, in order to connect with the local DB.
+        As a join table, is a child of product table. 
+        To be noticed: this table refers twice to product table: once as for 
+        the best_product, the other for the reference product, named ref_prod.
+
+        Methods:
+
+        NIL
+
+        Arguments:
+
+        id_prod_comp: id determined by the local DB. Is the primary key.
+
+        code_best_prod: take over the id of each product to join with table product.
+
+        code_ref_prod: take over the product code in order to join with table product.
+
+        date_best: date and time where the best product has been selectd.
+
+        """
+
     __tablename__ = 'product_comparrison'
 
     id_prod_comp = Column(Integer(), primary_key=True, autoincrement=True,
@@ -126,9 +260,11 @@ class SelectedStore:
     def __init__(self, name):
         self.name = name
 
+
 class Date:
     def __init__(self, date):
         self.date = "{: %d %B %y %H:%M}".format(date)
+
 
 class ORMConnection:
     """
@@ -169,10 +305,7 @@ class ORMConnection:
 
         Instance variables:
 
-        self.cnx: establish the connection to the local mySQL DB.
-
-        self.cursor(tuple): contain the data gathered in the local DB.
-
+        self.engine: establish the connection to the local mySQL DB.
 
         """
 
@@ -182,7 +315,6 @@ class ORMConnection:
         self.engine = create_engine(connection_parameters,
                                     echo=False)
         self.engine.connect()
-
 
     def create_database(self):
         """
@@ -207,7 +339,8 @@ class ORMConnection:
         # Activate the Database to subsequently create the tables
         connection = self.engine.connect()
         connection.execute("COMMIT")
-        connection.execute("CREATE DATABASE get_better_diet CHARACTER SET utf8mb4")
+        connection.execute(
+            "CREATE DATABASE get_better_diet CHARACTER SET utf8mb4")
         connection.close()
         # Add the name of the database to the parameters file for further use
         connection_parameters = connection_parameters + cfg.DB_NAME
@@ -448,4 +581,3 @@ class ORMConnection:
         temporary_list = ["%"+word+"%" for word in temporary_list]
         item_features = " ".join(temporary_list)
         return item_features
-    
