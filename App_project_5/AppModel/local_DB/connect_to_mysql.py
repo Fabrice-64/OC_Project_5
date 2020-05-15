@@ -8,23 +8,34 @@
 
     Base: parent class for all the classes to be converted into tables
 
-    MySQLQueries: manage the querying methods under a same umbrella.
+    ORMConnection: manage the querying methods under a same umbrella.
 
-    Product: create an instance for each product imported from the local DB.
+    Category: inherits from Base, in order to connect with the local DB.
+    It manages the categories uploaded from Open Food Facts.
+    Can be looked at as a parent table towards CategoryProduct.
 
-    Store:
+    Product: Inherits from Base, in order to connect with the local DB.
+    It manages the Products uploaded from Open Food Facts.
+    To be looked at as a parent table towards StoreProduct, CategoryProduct
+    and ProductComparrison.
 
-    CategoryProduct:
+    Store: Inherits from Base, in order to connect with the local DB.
+    It manages the stores uploaded from Open Food Facts.
+    Can be looked at as a parent table towards StoreProduct.
+
+    CategoryProduct:  Inherits from Base, in order to connect with the local DB.
+    As a join table, is a child of Category and Product tables.Each product may 
+    have several entries, as they are often listed in many categories.
 
     StoreProduct:
 
     ProductComparrison:
 
-    TopCategory:
+    CategoryController:
 
-    SelectedProduct:
+    ProductController:
 
-    SelectedStore:
+    StoreController:
 
     Date:
 
@@ -238,14 +249,52 @@ class ProductComparrison (Base):
     date_best = Column(DateTime(), nullable=False)
 
 
-class TopCategory:
+class CategoryController:
+    """
+
+        Manage the connection with the Controller for the categories. 
+        Each and every category to be
+        displayed is instantiated through this very class.
+
+        Methods:
+
+        NIL
+
+        Arguments:
+
+        name: category name.
+
+        number_items: total of product items attached to this category.
+        """
 
     def __init__(self, category, number_items):
         self.name = category.name
         self.number_items = number_items
 
 
-class SelectedProduct:
+class ProductController:
+    """
+    
+        Manage the connection with the Controller for the products. 
+        Each and every product to be displayed is instantiated through this very class.
+
+        Methods:
+
+        NIL
+
+        Arguments:
+
+        name: product name.
+
+        brand : product brand.
+
+        nutrition_grade: french nutriscore.
+
+        code: product id.
+
+        stores: default value 0, in order to intantiate the stores in a list as 
+        they are fetched as a tuple.
+        """
 
     def __init__(self, selected_product, stores=0):
         self.name = selected_product.name
@@ -256,12 +305,39 @@ class SelectedProduct:
             self.stores = [store.name for store in stores]
 
 
-class SelectedStore:
+class StoreController:
+    """
+        Manage the connection with the Controller. Each and every store to be
+        displayed is instantiated through this very class.
+
+        Methods:
+
+        NIL
+
+        Arguments:
+
+        name: store name. Currently, each field may contain several stores.
+
+        """
     def __init__(self, name):
         self.name = name
 
 
 class Date:
+     """
+        Manage the connection with the Controller. Each and every date to be
+        displayed is converted in a more readable format and instantiated 
+        through this very class.
+
+        Methods:
+
+        NIL
+
+        Arguments:
+
+        date: self explanatory.
+
+        """
     def __init__(self, date):
         self.date = "{: %d %B %y %H:%M}".format(date)
 
@@ -449,7 +525,7 @@ class ORMConnection:
             order_by(desc(func.count(CategoryProduct.idcategory)))[:20]
         # Instantiate each result of the query
         for category in result:
-            top_category = TopCategory(category[0], category[1])
+            top_category = CategoryController(category[0], category[1])
             list_top_categories.append(top_category)
         return list_top_categories
 
@@ -466,7 +542,7 @@ class ORMConnection:
                                    Product.name.ilike(product_name), Product.brand.ilike(brand_name)))[:10]
 
         for product in result:
-            refer_product = SelectedProduct(product)
+            refer_product = ProductController(product)
             list_refer_products.append(refer_product)
         return list_refer_products
 
@@ -487,7 +563,7 @@ class ORMConnection:
 
         for product in query:
             stores = self.find_stores(product.code)
-            product = SelectedProduct(product, stores)
+            product = ProductController(product, stores)
             list_top_products.append(product)
         return list_top_products
 
@@ -498,7 +574,7 @@ class ORMConnection:
         query = query.join(StoreProduct)
         result = query.filter(StoreProduct.product_code == product_code)
         for store in result:
-            store = SelectedStore(store[0])
+            store = StoreController(store[0])
             stores_list.append(store)
         return stores_list
 
@@ -518,9 +594,9 @@ class ORMConnection:
         result = query.order_by(desc(p_c.date_best))[:5]
         for item in result:
             stores = self.find_stores(item[0].code)
-            best_product = SelectedProduct(item[0], stores)
+            best_product = ProductController(item[0], stores)
             date = Date(item[1])
-            ref_product = SelectedProduct(item[2])
+            ref_product = ProductController(item[2])
             compared_product = best_product, date, ref_product
             list_compared_products.append(compared_product)
         return list_compared_products
