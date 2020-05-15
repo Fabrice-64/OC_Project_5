@@ -459,7 +459,7 @@ class ORMConnection:
 
             """
         # Create a new and empty database
-        with open("AppModel/local_DB/db_parameters.py") as file:
+        with open(DB_PARAMETERS) as file:
             connection_parameters = file.read()
         self.engine = create_engine(connection_parameters,
                                     echo=False)
@@ -471,7 +471,7 @@ class ORMConnection:
         connection.close()
         # Add the name of the database to the parameters file for further use
         connection_parameters = connection_parameters + cfg.DB_NAME
-        with open("AppModel/local_DB/db_parameters.py", "w") as file:
+        with open(DB_PARAMETERS, "w") as file:
             file.write(connection_parameters)
         # Add the tables to the new database
         self.engine = create_engine(connection_parameters, echo=False)
