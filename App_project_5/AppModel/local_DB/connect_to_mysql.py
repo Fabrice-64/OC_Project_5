@@ -27,17 +27,27 @@
     As a join table, is a child of Category and Product tables.Each product may 
     have several entries, as they are often listed in many categories.
 
-    StoreProduct:
+    StoreProduct:  Inherits from Base, in order to connect with the local DB.
+    As a join table, is a child of Store and Product tables. Each product is sold 
+    in different stores, therefore this join table.
 
-    ProductComparrison:
+    ProductComparrison:  Inherits from Base, in order to connect with the local DB.
+    As a join table, is a child of product table. 
+    To be noticed: this table refers twice to product table: once as for 
+    the best_product, the other for the reference product, named ref_prod.
 
-    CategoryController:
+    CategoryController: Manage the connection with the Controller for the categories. 
+    Each and every category to be displayed is instantiated through this very class.
 
-    ProductController:
+    ProductController: Manage the connection with the Controller for the products. 
+    Each and every product to be displayed is instantiated through this very class.
 
-    StoreController:
+    StoreController: Manage the connection with the Controller. 
+    Each and every store to be displayed is instantiated through this very class.
 
-    Date:
+    Date: Manage the connection with the Controller. Each and every date to be
+    displayed is converted in a more readable format and instantiated 
+    through this very class.
 
     Exceptions:
 
@@ -60,6 +70,8 @@ from sqlalchemy.orm import sessionmaker, aliased
 
 import AppView
 import AppController.config as cfg
+
+DB_PARAMETERS = "AppModel/local_DB/db_parameters.py"
 
 Base = declarative_base()
 
@@ -187,7 +199,6 @@ class StoreProduct (Base):
         Inherits from Base, in order to connect with the local DB.
         As a join table, is a child of Store and Product tables.
         Each product is sold in different stores, therefore this join table.
-        categories.
 
         Methods:
 
@@ -274,7 +285,7 @@ class CategoryController:
 
 class ProductController:
     """
-    
+
         Manage the connection with the Controller for the products. 
         Each and every product to be displayed is instantiated through this very class.
 
@@ -319,12 +330,13 @@ class StoreController:
         name: store name. Currently, each field may contain several stores.
 
         """
+
     def __init__(self, name):
         self.name = name
 
 
 class Date:
-     """
+    """
         Manage the connection with the Controller. Each and every date to be
         displayed is converted in a more readable format and instantiated 
         through this very class.
@@ -338,6 +350,7 @@ class Date:
         date: self explanatory.
 
         """
+
     def __init__(self, date):
         self.date = "{: %d %B %y %H:%M}".format(date)
 
@@ -351,42 +364,71 @@ class ORMConnection:
 
         Methods:
 
-        get_categories(): get the names of the categories from which the user can
-        afterwards load the data from OFF.
+        __init__: At the instantiation of the class, create and check the connection 
+        parameters, if the DB is not found, an exception is raised and the DB
+        is automatically created.
 
-        get_product(): get a selection of product from the local DB, iaw the criterion
-        filled by the user.
+        creat_database: create a local DB to operate the application. Activated 
+        solely at the first use.
 
-        get_best_product(): get a filtered list of products as close as possible
-        to a selected product.
+        upload_categories: when creating a new DB, uploads the categories 
+        downloaded from OFF to start working with the DB.
 
-        retrieve_recorded_products(): get the list of best products recorded in
-        the local DB.
+        upload_stores: hen creating a new DB, uploads the stores dowloaded
+        from OFF in order to start working with the DB.
 
-        get_numbers_on_DB(): fetch some figures related to the local DB, like
-        the number of rows, etc.
+        display_categories: get a bunch of the most popular categories in the local DB.
 
-        upload_product(): upload a single product into the local DB,
-        e.g. a selected best product.
+        upload_products: upload a list of products from Open Food Facts 
+        into the local DB. Duplicates are rejected, Stores and Categories 
+        to which they are related are prepared for the join tables,
+        children of product.
 
-        update_best_product_date(): updates the best product record with the date.
+        get_categories: fetch the most popular categories from the local DB.
 
-        upload_dataset(): upload to the local DB a bunch of rows downloaded from OFF.
+        refer_products: Get a list of products selected iaw with a series 
+        of criterion set by the user during the initial search.
 
-        close_connection(): close the connection to mySQL iot to avoid free access.
+        top_products: Fetch a selection of products matching the requirements input by the 
+        user, based on a reference product (used as a consequence of the
+        choice done in the refer_products method)
 
-        upload_categories(): upload a list of categories from Open Food Facts
+        find_stores: Get the stores where a specific product is sold. 
 
-        create_database(): create a local DB for the first use of the App
+        close_connection: close the connection to mySQL via the ORM,
+        iot to avoid free access.
+
+        record_comparred_products: 
+
+        query_settings: Prepare the search criterion before looking 
+        into the local DB, as "like" for the beginning and the end of each word 
+        in a string.
+
+        re
 
         Instance variables:
 
-        self.engine: establish the connection to the local mySQL DB.
+        engine: establish the connection to the local mySQL DB. It uses the DB
+        connection parameters set by default or intentionnally by the user.
 
         """
 
     def __init__(self):
-        with open("AppModel/local_DB/db_parameters.py") as file:
+        """
+            At the instantiation of the class, create and check the connection 
+            parameters, if the DB is not found, an exception is raised and the DB
+            is automatically created.
+
+            Arguments:
+            
+            NIL
+
+            Returns:
+
+            NIL
+
+            """
+        with open(DB_PARAMETERS) as file:
             connection_parameters = file.read()
         self.engine = create_engine(connection_parameters,
                                     echo=False)
@@ -431,14 +473,13 @@ class ORMConnection:
     def upload_categories(self, categories):
         """
 
-            When creating a new DB, uploads a list of categories to start working
-            with the DB.
+            When creating a new DB, uploads the categories downloaded from OFF
+            to start working with the DB.
 
             Arguments:
 
-            query: self explanatory
-
-            categories: list of categories downloaded from Open Food Facts.
+            categories: is a tuple containing all the categories for a product.
+            list of categories downloaded from Open Food Facts.
 
             Returns:
 
@@ -454,18 +495,16 @@ class ORMConnection:
     def upload_stores(self, stores):
         """
 
-            When creating a new DB, uploads a list of stores to start working
-            with the DB.
+            When creating a new DB, uploads a list of stores from OFF 
+            to convert them into a list in order to start working with the DB.
 
             Arguments:
 
-            query: self explanatory
-
-            categories: list of french stores downloaded from Open Food Facts.
+            stores: is a tuple containing all the stores downloaded from OFF. 
 
             Returns:
 
-            List of stores
+            NIL
 
             """
         obj_store = []
@@ -475,11 +514,37 @@ class ORMConnection:
         self.upload_many(obj_store)
 
     def display_categories(self):
+        """
+            Get a bunch of the most popular categories in the local DB.
+
+            Arguments:
+
+            NIL
+
+            Returns:
+
+            selected_categories: for each category, a tuple with its name.
+
+            """
         selected_categories = self.session.query(Category).\
             order_by(Category.id_category)[:30]
         return selected_categories
 
     def upload_products(self, products):
+        """
+            Upload a list of products from Open Food Facts into the local DB.
+            Duplicates are rejected, Stores and Categories to which they are
+            related are prepared for the join tables, children of product.
+
+            Arguments:
+
+            products: contains all the features needed for each product, including
+            attached stores and categories.
+
+            Return:
+
+            NIL
+            """
         obj_product = []
         obj_stores_product = []
         obj_category_product = []
@@ -518,6 +583,20 @@ class ORMConnection:
         self.upload_many(obj_category_product)
 
     def get_categories(self):
+        """
+
+            Fetch the most popular categories from the local DB.
+
+            Arguments:
+
+            NIL
+            
+            Returns:
+
+            List of selected categories, indexed by popularity.
+
+        """
+
         list_top_categories = []
         query = self.session.query(
             Category, func.count(CategoryProduct.idcategory))
@@ -530,6 +609,20 @@ class ORMConnection:
         return list_top_categories
 
     def refer_products(self, item_search):
+        """
+
+            Get a list of products selected iaw with a series of criterion set 
+            by the user during the initial search.
+
+            Arguments:
+
+            item_search: tuple containing the criterion set by the user, currently
+            the category, name (like) and brand (like).
+
+            Returns:
+
+            list_refer_products: list of objects encompassing the product features.
+        """
         # Select a list of N products matching the requirement set by the user
         list_refer_products = []
         product_category = item_search[0]
@@ -539,14 +632,30 @@ class ORMConnection:
             Product.name, Product.brand, Product.nutrition_grade, Product.code)
         query = query.join(CategoryProduct).join(Category)
         result = query.filter(and_(Category.name == product_category,
-                                   Product.name.ilike(product_name), Product.brand.ilike(brand_name)))[:10]
-
+                                   Product.name.ilike(product_name), 
+                                   Product.brand.ilike(brand_name)))[:10]
+        # Instanciate the fetched products.
         for product in result:
             refer_product = ProductController(product)
             list_refer_products.append(refer_product)
         return list_refer_products
 
     def top_products(self, item_search):
+        """
+            Fetch a selection of products matching the requirements input by the 
+            user, based on a reference product (used as a consequence of the
+            choice done in the refer_products method)
+
+            Arguments:
+            item_search: as a tuple, includes the selection criterion, like the
+            category, product name and the nutrition grade of the reference
+            product.
+
+            Returns:
+            list_top_products : a list of ten products matching the requirements.
+            It fetches all the fields of a product (name, brand, nutriscore
+            and code as well).
+            """
         list_top_products = []
         c_p = aliased(CategoryProduct)
         c = aliased(Category)
@@ -568,6 +677,20 @@ class ORMConnection:
         return list_top_products
 
     def find_stores(self, product_code):
+        """
+
+            Get the stores where a specific product is sold. 
+
+            Arguments:
+            
+            product_code : the product code is the link between the Product and 
+            the store via the join table StoreProduct.
+
+            Returns:
+
+            stores_list: list of stores to be displayed for each product.
+
+            """
         stores_list = []
 
         query = self.session.query(Store.name)
@@ -579,6 +702,9 @@ class ORMConnection:
         return stores_list
 
     def record_comparred_products(self, comparrison):
+        """
+
+            """
         compared_prod = ProductComparrison(code_best_prod=comparrison[0],
                                            date_best=comparrison[1], code_ref_prod=comparrison[2])
         self.add_one_item(compared_prod)
@@ -640,7 +766,8 @@ class ORMConnection:
     def query_settings(self, answer):
         """
 
-            Prepare the search criterion before looking into the local DB.
+            Prepare the search criterion before looking into the local DB, as like
+            for the beginning and the end of each word in a string.
 
             Arguments:
 
