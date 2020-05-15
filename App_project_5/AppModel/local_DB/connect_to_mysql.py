@@ -389,22 +389,31 @@ class ORMConnection:
         refer_products: Get a list of products selected iaw with a series 
         of criterion set by the user during the initial search.
 
-        top_products: Fetch a selection of products matching the requirements input by the 
-        user, based on a reference product (used as a consequence of the
+        top_products: Fetch a selection of products matching the requirements 
+        input by the user, based on a reference product (used as a consequence of the
         choice done in the refer_products method)
 
         find_stores: Get the stores where a specific product is sold. 
 
+        record_comparred_products: 
+
         close_connection: close the connection to mySQL via the ORM,
         iot to avoid free access.
-
-        record_comparred_products: 
 
         query_settings: Prepare the search criterion before looking 
         into the local DB, as "like" for the beginning and the end of each word 
         in a string.
 
-        re
+        record_comparred_products: Record in the local DB the result of 
+        a product comparrison, that is both products, a reference one 
+        and the best one,including the date of the comparrison.
+
+        get_comparred_products: Get out of the join table ProductComparrison 
+        the last records of comparrisons. It joins twice with the table Product, 
+        once to get the best product, one to get the reference one.
+        It fetches as well the stores in which the best product is for sale.
+
+
 
         Instance variables:
 
@@ -703,13 +712,38 @@ class ORMConnection:
 
     def record_comparred_products(self, comparrison):
         """
+            Record the result of a product comparrison, that is both products,
+            a reference one and the best one, including the date of the comparrison.
 
+            Arguments:
+
+            comparrison: contains the both product codes, date and time of the 
+            selection.
+
+            Returns:
+
+            NIL
             """
         compared_prod = ProductComparrison(code_best_prod=comparrison[0],
                                            date_best=comparrison[1], code_ref_prod=comparrison[2])
         self.add_one_item(compared_prod)
 
     def get_compared_products(self):
+        """
+            Get out of the join table ProductComparrison the last records of
+            comparrisons. It joins twice with the table Product, once to get the best product, 
+            one to get the reference one. It fetches as well the stores in which
+            the best product is for sale.
+
+            Arguments:
+
+            NIL
+
+            Returns:
+
+            List of the best products. Each item is a tuple.
+
+            """
         list_compared_products = []
         best_p = aliased(Product)
         ref_p = aliased(Product)
@@ -728,6 +762,8 @@ class ORMConnection:
         return list_compared_products
 
     def total_items(self):
+        """
+            """
         result = self.session.query(func.count(Product.code))
         for nb_rows in result:
             nb_rows = nb_rows[0]
