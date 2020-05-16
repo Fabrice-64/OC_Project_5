@@ -20,9 +20,7 @@
 
     """
 import curses
-import os
 import time
-import webbrowser
 from curses import textpad
 
 from AppController import config as cfg
@@ -40,64 +38,61 @@ class Interface:
 
         Methods:
 
-        __init__(): initialize the graphic interface to make it usable by the subsequent methods.
+        __init__: initialize the graphic interface to make it usable 
+        by the subsequent methods.
 
-        title_bar(): display a title in the bar at the top of the main window. \
-            This title is updated in accordance with the step of the program.
+        title_bar: display a title in the bar at the top of the main window.
+        This title is updated in accordance with the step of the program.
 
-        split_screen(): split the screen in two separate windows. 
+        split_screen: split the screen in two separate windows. 
         In fact each window include a sub-window in which the text is displayed. 
 
-        display_message(): display a message on the main window, at the center of the screen. \
-            Is used for welcome message and for goodbye.
+        display_message: display a message on the main window, 
+        at the center of the screen. Is used for welcome message and for goodbye.
 
-        left_display_string(): display an instruction on the left screen.
+        left_display_string: display an instruction on the left screen.
 
-        display_string_textpad(): display an invitation to use the keypad \
-            and just below the keypad itself. 
-        It is composed of two other methods: left_display_string() and display_textpad.
+        left_error_input: Display an error message as the user input was 
+        non conform and reset the data.
 
-        clear_window(): reinitialize the sub-windows.
+        display_string_textpad: display an invitation to use the keypad and 
+        just below the keypad itself.
+        It can call two other methods: left_display_string and display_textpad.
 
-        display_file(): display larger files for to be scrolled down.
+        clear_window: reinitialize the sub-windows.
 
-        display_result():  display the results of the queries sent to the DB.
+        display_file: display larger files for to be scrolled down.
 
-        right_display_info(): display one line long pieces of info at the bottom of the right window.
+        display_result:  display the results of the queries sent to the DB.
 
-        highlight_selection():  highlight the selected itemwhen using a drop-down list.
+        right_display_info: display one line long pieces of info 
+        at the bottom of the right window.
 
-        set_up_drop_down(): operate the key UP and DOWN iot iterate in the menu displayed.
+        highlight_selection:  highlight the selected item when 
+        using a drop-down list.
 
-        display_users_guide_textpad(): display a short users guide at the bottom of left page
+        set_up_drop_down: operate the key UP and DOWN iot iterate 
+        in the displayed menu.
 
-        display_textpad(): display a textpad used to capture the user's various inputs.
+        display_guide: display a short users guide at the bottom of left page
 
-        quit_display(): desactivate in a clean way all the features activated by the use of curses.
+        display_textpad: display a textpad used to capture the user's various inputs.
+
+        quit_display: desactivate in a clean way all the features activated by the use of curses.
 
         Attributes:
 
-        Most attributes are used to set coordinates useful for displaying the content.
+       screen: initializes a screen (compulsory when using Curses)
 
-        title: display a title in the bar set at the top of the main window
+       Be aware that Curses returns always the y first and then the x!
 
-        y_center and x_center: represent the centre of the main screen. Used later on to display text, ect.
-
-        half_win_height & half_win_width: set the size of each half window \
-            as the main window is split in 2.
-
-        left_window & inner_left_window: cover, from a user's perspective, \
-            the left half of the main window
-
-        right_window and inner_right_window: cover, from a user's perspective, \
-            the right half of the main window
-
-        message: display a message on the screen centre at the beginning of the execution
-
-        screen_x_center: calculate the center of the main screen for a well centered intro message.
-
-        x_center_half_l_window & y_center_half_l_window: represent y \
-            & x of the center of the left half window
+        y_center: the coordinate y in the middle of the terminal screen.
+        
+        x_center: the coordinate x in the middle of the terminal screen.
+        
+        height: the number of lines of the current terminal
+        
+        width: the number of columns of the current terminal
 
         """
 
@@ -215,7 +210,8 @@ class Interface:
 
             Arguments:
 
-            y: vertical coordinate, which 0 is the upper left corner of the inner left window.
+            y: vertical coordinate, which 0 is the upper left corner 
+            of the inner left window.
 
             string: set in config.py. By default includes \n.
 
@@ -228,21 +224,37 @@ class Interface:
         self.inner_left_window.refresh()
 
     def left_error_input(self):
+        """
+            Display an error message if the user input was non conform and 
+            reset the data.
+
+            Argument:
+
+            NIL
+
+            Return:
+
+            "" to reinitialize the input.
+
+            """
         self.right_display_info(cfg.WARNING_MESSAGE_0, "warning")
         return ""
         
     def display_string_textpad(self, y, nb_lines, length_field, message):
         """
 
-            Display a string followed, at the line below by a textpad aimed at catching a user's input.
+            Display a string followed, at the line below by a textpad 
+            aimed at catching a user's input.
 
             Arguments:
 
-            y: vertical coordinate, which 0 is the upper left corner of the inner left window.
+            y: vertical coordinate, which 0 is the upper left corner of 
+            the inner left window.
 
             nb_lines : number of lines of the keypad
 
-            length_field: maximum number of characters allowed +1, due to curses specifications
+            length_field: maximum number of characters allowed +1, 
+            due to curses specifications
 
             message: string from config.py explaining what is expected from the user.
 
@@ -265,8 +277,8 @@ class Interface:
 
             Arguments:
 
-            window: by default, both half screens are cleared, if required, \
-                only the left or the right can be affected.
+            window: by default, both half screens are cleared, if required,
+            only the left or the right can be affected.
 
             Returns:
             
