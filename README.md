@@ -18,14 +18,15 @@ to understand the various functionalities.
 [LINK](https://github.com/Fabrice-64/OC_Project_5/wiki)
 
 ## What do you need to run the App Get a better Diet?
+* The folder named App_project_5
 * The last version of Python
 * MySQL 8
-* The folder named App_project_5
 * A requirements.txt file has been set up, for the user to import the required
 modules.
 * Requests
 * SQLALchemy
 * MySQL-connector
+* The file requirements.txt
 
 ## How to launch the App
 * Set the Terminal on the folder App_project_5
