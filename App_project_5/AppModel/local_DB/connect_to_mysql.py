@@ -413,7 +413,34 @@ class ORMConnection:
         once to get the best product, one to get the reference one.
         It fetches as well the stores in which the best product is for sale.
 
+        total_items: Gets the total number of food items from a product
+        and convert it from a tuple into a variable for further processing.
 
+        upload_many: Upload a mass of rows to the local DB in one pass.
+
+        add_one_item: Add one row at a time to the local DB.
+
+        get_category_id: Get the category id number based on the category name. 
+        This id number is the primary key of the category table.
+        Used to populate the join tables.
+
+        get_store_id: Get the store id number based on the store name. 
+        This id number is the primary key of the store table.
+        Used to populate the join tables.
+
+        check_duplicate: Check before insertion whether the product is already
+        in the local DB. 
+        Avoid an Exception : Integrity Error when uploading a dataset.
+
+        open_session:  Opens a session, iot to connect with the local DB. 
+        Uses the engine instantiated at the beginning.
+
+        close_session: Used to close the session with the local DB 
+        when the user quits.
+
+        query_settings: Prepare the search criterion before looking 
+        into the local DB, adding '%' for the beginning and the end of 
+        each word in a string.
 
         Instance variables:
 
@@ -763,38 +790,139 @@ class ORMConnection:
 
     def total_items(self):
         """
+            Gets the total number of food items from a product and convert it 
+            from a tuple into a variable for further processing.
+
+            Arguments:
+
+            NIL
+
+            Returns:
+
+            nb_rows: variable, ie the result of the query.
             """
         result = self.session.query(func.count(Product.code))
         for nb_rows in result:
             nb_rows = nb_rows[0]
         return nb_rows
 
-    def open_session(self):
-        Session = sessionmaker(bind=self.engine)
-        self.session = Session()
-
     def upload_many(self, many_items):
+        """
+            Upload a mass of rows to the local DB in one pass.
+
+            Arguments:
+
+            many_items: list of tuples representing the rows to be uploaded.
+
+            Returns:
+
+            NIL
+
+            """
         self.session.bulk_save_objects(many_items)
         self.session.commit()
 
-    def close_session(self):
-        self.session.close()
-
     def add_one_item(self, one_item):
+        """
+            Add one row at a time to the local DB.
+
+            Arguments:
+
+            one_item: a row, presented as a tuple.
+
+            Returns:
+
+            NIL
+            """
         self.session.add(one_item)
         self.session.commit()
 
+    def open_session(self):
+        """
+            Opens a session, iot to connect with the local DB. Uses the engine
+            instantiated at the beginning.
+
+            Arguments:
+
+            NIL
+
+            Returns:
+
+            NIL
+
+            """
+        Session = sessionmaker(bind=self.engine)
+        self.session = Session()
+
+    def close_session(self):
+        """
+
+            Used to close the session with the local DB when the user quits.
+
+            Arguments:
+
+            NIL
+
+            Returns:
+            
+            NIL
+        """
+        self.session.close()
+
     def get_category_id(self, category):
+        """
+
+            Get the category id number based on the category name. This id number
+            is the primary key of the category table.
+            Used to populate the join tables.
+
+            Arguments:
+
+            category: name of the category for which the id number is needed.
+
+            Returns:
+
+            category_id: the id of the category for which the id is required.
+        """
         category_id = self.session.query(Category.id_category).filter(
             Category.name.ilike(category))
         return category_id
 
     def get_store_id(self, store):
+        """
+
+            Get the store id number based on the store name. This id number
+            is the primary key of the store table.
+            Used to populate the join tables.
+
+            Arguments:
+
+            store: name of the store for which the id number is needed.
+
+            Returns:
+
+            store_id: the id of the category for which the id is required.
+
+            """
         store_id = self.session.query(
             Store.id_store).filter(Store.name.ilike(store))
         return store_id
 
     def check_duplicate(self, code):
+        """
+
+            Check before insertion whether the product is already in the local DB.
+            Avoid an Exception : Integrity Error when uploading a dataset.
+
+            Arguments:
+
+            code: code number of the product to be checked.
+
+            Returns:
+
+            NIL.
+
+            """
         duplicate = self.session.query(self.session.query(Product).
                                        filter_by(code=code).exists()).scalar()
         return duplicate
