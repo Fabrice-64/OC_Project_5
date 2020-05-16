@@ -318,44 +318,34 @@ class UserDialog:
                     last_compared_products)
                 # The user can see a product in detail.
                 if len(best_products_dict) > 0:
+                    self.interface.display_guide(cfg.USER_GUIDE)
                     # User to confirm he wants to see the item in the browser.
+                    no_further_check = False
                     while True:
-                        answer = ""
-                        while answer not in ["Y", "N"]:
-                            y = 0
-                            answer, y = self.interface.display_string_textpad(
+                        y = 0
+                        answer, y = self.interface.display_string_textpad(
                                 y, 1, 2, cfg.CHECK_AGAIN_ITEMS_Y_N)
-                            answer = self.ascii_to_string(answer).upper()
-                            if answer not in ["Y", "N"]:
-                                answer = self.interface.left_error_input()
-                                y = 0
-                        if answer == "N":
+                        answer = self.ascii_to_string(answer).upper()
+                        if answer == "Y":
+                            # Display the product in the default browser
+                            code_product, y = self.check_valid_answer(y, 1, 3,
+                                cfg.USE_BROWSER, best_products_dict)
+                            self.OFF.open_product_file_OFF(code_product)
+                        elif answer == "N":
+                            no_further_check = True
                             break
-                        try:
-                            # Check whether the input meets the requirements.
-                            answer, y = self.interface.display_string_textpad(
-                                y+1, 1, 2, cfg.USE_BROWSER)
-                            answer = self.ascii_to_string(answer)
-                            answer = int(answer)
-                            if answer in best_products_dict.keys():
-                                code_product = best_products_dict.get(answer)
-                                # Calls the hyperlink to open the product in the browser.
-                                self.OFF.open_product_file_OFF(code_product)
-                            else:
-                                answer = self.interface.left_error_input()
-                                self.interface.clear_window('left')
-                                y = 0
-                        except Exception:
+                        else:
                             answer = self.interface.left_error_input()
-                            self.interface.clear_window('left')
-                            y = 0
+                            y -= 4
                 else:
+                    # Inform the user that he has no best product yet
                     self.interface.right_display_info(
                         cfg.WARNING_MESSAGE_3, "warning")
                 # Return to the main menu, end of this loop.
-                self.interface.clear_window()
-                answer = self.interface.set_up_drop_down(
-                    cfg.OPERATE_ON_DB, cfg.SELECT_ANSWER)
+                if no_further_check:
+                    self.interface.clear_window()
+                    answer = self.interface.set_up_drop_down(
+                        cfg.OPERATE_ON_DB, cfg.SELECT_ANSWER)
 
             # This is to import products from one of the most popular categories.
             elif answer == cfg.OPERATE_ON_DB[2]:
@@ -380,7 +370,8 @@ class UserDialog:
                                                             selected_category
                 self.interface.right_display_info(display_chosen_category)
                 # This methods fetches a range of data from Open Food Facts.
-                nb_imported, left_apart, list_items = self.OFF.import_products_list(selected_category)
+                nb_imported, left_apart, list_items = \
+                    self.OFF.import_products_list(selected_category)
                 # Here some pieces of info related to the downloaded data are given for info.
                 self.interface.right_display_info(
                     coff.NUMBER_REJECTED_ITEMS.format(left_apart))
