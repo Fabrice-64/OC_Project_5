@@ -60,6 +60,9 @@ class UserDialog:
         open_product_browser(): sends the order to open a product page
         from Open Food Facts website.
 
+        display_compared_products: Display the last recorded products, 
+        best and reference.
+
         Instance variables:
 
         NIL
@@ -372,24 +375,8 @@ class UserDialog:
             elif answer == cfg.OPERATE_ON_DB[1]:
                 self.interface.clear_window()
                 last_compared_products = self.queries.get_compared_products()
-                best_products_dict = dict()
-                rank_counter = 0
-                # Display an ordered list of comparred products.
-                for product in last_compared_products:
-                    rank_counter += 1
-                    self.interface.display_result(
-                        cfg.PRODUCT_RANK_NAME.format(rank_counter, product[0].name))
-                    self.interface.display_result(
-                        cfg.PRODUCT_BRAND_NUTR_GR.format(product[0].brand, \
-                            product[0].nutrition_grade))
-                    self.interface.display_result(
-                        cfg.DISPLAY_STORES.format(", ".join(product[0].stores)))
-                    self.interface.display_result(
-                        cfg.INITIAL_PRODUCT.format(product[2].name))
-                    self.interface.display_result(
-                        cfg.COMPARRISON_DATE.format(product[1].date))
-                    self.interface.display_result(cfg.EMPTY_LINE)
-                    best_products_dict[rank_counter] = product[0].code
+                # Display the last compared product, reference and best.
+                best_products_dict = self.display_compared_products(last_compared_products)
                 # The user can see a product in detail.
                 if len(best_products_dict) > 0:
                     # User to confirm he wants to see the item in the browser.
@@ -561,6 +548,38 @@ class UserDialog:
             answer = ""
         return answer
 
+    def display_compared_products(self, last_compared_products):
+        """
+
+            Display the last recorded products, best and reference.
+
+            Arguments:
+
+            last_compared_products: list of tuples containing the last recorded
+            comparrisons.
+
+            Returns: a dictionnary containing the code of each best product as 
+            a value and a key being the index displayed on the screen.
+            """
+        best_products_dict = dict()
+        rank_counter = 0
+        # Display an ordered list of comparred products.
+        for product in last_compared_products:
+            rank_counter += 1
+            self.interface.display_result(
+                cfg.PRODUCT_RANK_NAME.format(rank_counter, product[0].name))
+            self.interface.display_result(
+                cfg.PRODUCT_BRAND_NUTR_GR.format(product[0].brand, 
+                product[0].nutrition_grade))
+            self.interface.display_result(
+                cfg.DISPLAY_STORES.format(", ".join(product[0].stores)))
+            self.interface.display_result(
+                cfg.INITIAL_PRODUCT.format(product[2].name))
+            self.interface.display_result(
+                cfg.COMPARRISON_DATE.format(product[1].date))
+            self.interface.display_result(cfg.EMPTY_LINE)
+            best_products_dict[rank_counter] = product[0].code
+        return best_products_dict
 
 def main(user):
     """
