@@ -32,20 +32,20 @@ class ConnectToOFF:
 
         Methods:
 
-        check_special_characters(): remove the quotation marks of any type to prepare \
-            the data for the upload to mysql DB.
+        check_special_characters: remove the quotation marks of any type to prepare \
+        the data for the upload to mysql DB.
 
-        import_products_list():  downloads a list of items from OFF.
+        import_products_list:  downloads a list of items from OFF.
 
-        import_static_data():   import data which are not subject to change, like categories, etc.
+        import_static_data: import data which are not subject to change, 
+        like categories, etc.
 
-        open_product_file_OFF(): opens from OFF, in a web browser the file of a specific product.
+        open_product_file_OFF: opens from OFF, in a web browser the file 
+        of a specific product.
 
         Instance variables:
 
-        self.list_items (list): encompasses all the items downloaded from OFF.
-
-        self.OFF_category_list (list): contains the names of the categories imported as static data.
+        list_items: encompasses all the items downloaded from OFF.
 
         """
 
@@ -107,11 +107,11 @@ class ConnectToOFF:
 
             Returns:
 
-            nb_imported_items: out of a selected range, number of food items considered \
-                as valid for import.
+            nb_imported_items: out of a selected range, number of food items considered
+            as valid for import.
 
-            items_left_apart: out of the initial range, number of food items discarded \
-                because of poor quality of the data.
+            items_left_apart: out of the initial range, number of food items discarded
+            because of poor quality of the data.
 
             """
         desired_category = {'tag_0': category}
@@ -141,9 +141,9 @@ class ConnectToOFF:
     def import_static_data(self, import_type):
         """
 
-            This method import categories, which are static data and therefore doesn't \
-                include the parameters needed in an API.
-            On Open Food Facts DB, the categories are sorted out by number of entries. \
+            This method import categories, which are static data and 
+            therefore doesn't include the parameters needed in an API.
+            On Open Food Facts DB, the categories are sorted out by number of entries.
 
             Arguments:
 
@@ -151,7 +151,7 @@ class ConnectToOFF:
 
             Returns:
 
-            self.OFF_list : list of categories or products selected for later upload. 
+            OFF_list : list of categories or products selected for later upload. 
 
             """
         self.OFF_list = []
