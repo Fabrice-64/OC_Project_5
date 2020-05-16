@@ -66,9 +66,10 @@ class UserDialog:
         display_top_products: Display a list of the products matching 
         the best with the user's request.
 
-        Instance variables:
+        display_top_categories: Display the most popular categories in the local DB.
 
-        NIL
+        check_valid_answer:Check whether the number given by the user 
+        belongs to the keys of a dictionary. If not, the loop runs.
 
         """
 
@@ -207,41 +208,16 @@ class UserDialog:
                 self.interface.clear_window()
                 # list of categories previously recorded is displayed on the right window.
                 top_categories = self.queries.get_categories()
-                rank_categories = dict()
-                rank_counter = 0
-                for category in top_categories:
-                    rank_counter += 1
-                    self.interface.display_result(
-                        cfg.RANK_NAME_QTY.format(rank_counter, category.name,
-                                                 category.number_items))
-                    rank_categories[rank_counter] = category.name
+                rank_categories_dict = self.display_top_categories(top_categories)
                 self.interface.display_guide(cfg.USER_GUIDE)
                 # This loop avoids that a too narrow request leads to an empty selection.
                 while True:
-                    while True:
-                        try:
-                            y = 0
-                            self.interface.left_display_string(
-                                y, cfg.KEYPAD_INSTRUCTION_1)
-                            self.interface.left_display_string(
-                                y+1, cfg.SELECT_CATEGORY)
-                            y = y + 3
-                            # Characterize the food item the user is looking for.
-                            answer = self.interface.display_textpad(y, 1, 3)
-                            answer = self.ascii_to_string(answer)
-                            # The category is the only field which is compulsary.
-                            answer = int(answer)
-                            if answer in rank_categories.keys():
-                                answer_category = rank_categories.get(answer)
-                                break
-                            else:
-                                answer = self.interface.left_error_input()
-                                y = 0
-                        except Exception:
-                            answer = self.interface.left_error_input()
-                            y = 0
+                    y = 0
+                    self.interface.left_display_string(y, cfg.KEYPAD_INSTRUCTION_1)
+                    y += 1
+                    answer_category, y = self.check_valid_answer(y, 1, 3,
+                        cfg.SELECT_CATEGORY, rank_categories_dict )
                     # Input the parameters to search for a food item.
-                    y += 3
                     answer_name, y = self.interface.display_string_textpad(
                         y, 1, 25, cfg.ITEM_NAME)
                     # Launch the query in the local DB.
@@ -274,22 +250,8 @@ class UserDialog:
 
                 # Requests the user to select a food item to be compared with.
                 while True:
-                    while True:
-                        try:
-                            # Check whether the answer is both an int & in the dict.
-                            answer, y = self.interface.display_string_textpad(
-                                y, 1, 3, cfg.COMPARE_FOOD_ITEMS)
-                            answer = self.ascii_to_string(answer)
-                            answer = int(answer)
-                            if answer in rank_item_dict.keys():
-                                code_ref_prod = rank_item_dict.get(answer)
-                                break
-                            else:
-                                answer = self.interface.left_error_input()
-                                y -= 4
-                        except Exception:
-                            answer = self.interface.left_error_input()
-                            y -= 4
+                    code_ref_prod, y = self.check_valid_answer(y, 1, 3,
+                        cfg.COMPARE_FOOD_ITEMS,  rank_item_dict)
                     # If the keywords are too restrictive new ones are demanded.
                     while True:
                         # The user is requested to enter keywords iot broaden the search
@@ -323,25 +285,8 @@ class UserDialog:
                         y+1, 1, 2, cfg.SELECT_Y_N)
                     answer = self.ascii_to_string(answer).upper()
                     if answer == "Y":
-                        while True:
-                            try:
-                                # Check whether the answer is both an int & in the dict.
-                                answer, y = self.interface.display_string_textpad(
-                                    y, 1, 2, cfg.USE_BROWSER)
-                                answer = self.ascii_to_string(answer)
-                                answer = int(answer)
-                                if answer in top_products_dict.keys():
-                                    code_best_prod = top_products_dict.get(
-                                        answer)
-                                    self.OFF.open_product_file_OFF(
-                                        code_best_prod)
-                                    break
-                                else:
-                                    answer = self.interface.left_error_input()
-                                    y -= 4
-                            except Exception:
-                                answer = self.interface.left_error_input()
-                                y -= 4
+                        code_best_prod, y = self.check_valid_answer(y, 1, 3,
+                                            cfg.USE_BROWSER, top_products_dict)
                         self.interface.right_display_info(
                             cfg.RECORD_SELECTED_ITEM)
                         record_date_time = datetime.now()
@@ -428,40 +373,19 @@ class UserDialog:
 
                 self.interface.display_guide(cfg.USER_GUIDE)
                 # The user is requested to designate a category to be uploaded.
-                while True:
-                    y = 0
-                    try:
-                        # Check that the user's input meets the requirements.
-                        answer, y = self.interface.display_string_textpad(
-                            y, 1, 3, cfg.ADD_CATEGORY)
-                        answer = self.ascii_to_string(answer)
-                        answer = int(answer)
-                        if answer in categories_dict.keys():
-                            selected_category = categories_dict.get(answer)
-                            display_chosen_category = cfg.NAME_IMPORTED_CATEGORY + \
-                                selected_category
-                            self.interface.right_display_info(
-                                display_chosen_category)
-                            break
-                        else:
-                            self.interface.right_display_info(
-                                cfg.WARNING_MESSAGE_0, "warning")
-                            answer = ""
-                            y = y-4
-                    except Exception:
-                        self.interface.right_display_info(
-                            cfg.WARNING_MESSAGE_0, "warning")
-                        answer = ""
-                        y = y-4
-
+                y = 0
+                selected_category, y = self.check_valid_answer( y, 1, 3,
+                                    cfg.ADD_CATEGORY, categories_dict)
+                display_chosen_category = cfg.NAME_IMPORTED_CATEGORY + \
+                                                            selected_category
+                self.interface.right_display_info(display_chosen_category)
                 # This methods fetches a range of data from Open Food Facts.
-                (nb_imported_items, items_left_apart,
-                    list_items) = self.OFF.import_products_list(selected_category)
+                nb_imported, left_apart, list_items = self.OFF.import_products_list(selected_category)
                 # Here some pieces of info related to the downloaded data are given for info.
                 self.interface.right_display_info(
-                    coff.NUMBER_REJECTED_ITEMS.format(items_left_apart))
+                    coff.NUMBER_REJECTED_ITEMS.format(left_apart))
                 self.interface.right_display_info(
-                    coff.NUMBER_DOWNLOADED_ITEMS.format(nb_imported_items))
+                    coff.NUMBER_DOWNLOADED_ITEMS.format(nb_imported))
 
                 self.interface.right_display_info(cfg.BE_PATIENT)
                 # This is where the excerpt of OFF is uploaded in the local DB.
@@ -605,6 +529,75 @@ class UserDialog:
             top_products_dict[rank_counter] = product.code
         return top_products_dict
 
+    def display_top_categories(self, top_categories):
+        """
+            Display the most popular categories in the local DB.
+
+            Arguments: 
+
+            top_categories: list of tuples containing the most popular categories
+            of the local DB.
+
+            Returns: 
+            
+            rank_categories_dict: dict with the category name as a value and the 
+            category index used on the display. The latter being used as a key for
+            further use of the dictionary.
+
+            """
+        rank_categories_dict = dict()
+        rank_counter = 0
+        for category in top_categories:
+            rank_counter += 1
+            self.interface.display_result(
+                cfg.RANK_NAME_QTY.format(rank_counter, category.name,
+                                                 category.number_items))
+            rank_categories_dict[rank_counter] = category.name
+        return rank_categories_dict
+
+    def check_valid_answer(self, y, height, length, instruction, items_dict):
+        """
+            Check whether the number given by the user belongs to the keys of
+            a dictionary. If not, the loop runs.
+
+            Arguments:
+            
+            y: y of the instruction line
+
+            height: height of the textpad
+
+            length: length of the texpad
+
+            instruction: inform the user to fill the textpad with the number
+            corresponding to his choice
+
+            items_dict: dictionary in which the values to selec are to be found.
+            The keys of this dictionary are the index displayed on the screen.
+
+            Returns:
+
+            item: the value of the dictionary
+
+            y: incremented cursor on the screen.
+
+            """
+        while True:
+            try:   
+                # Characterize the food item the user is looking for.
+                answer, y = self.interface.display_string_textpad(y, height, 
+                                                length, instruction)
+                answer = self.ascii_to_string(answer)
+                answer = int(answer)
+                if answer in items_dict.keys():
+                    item = items_dict.get(answer)
+                    break
+                else:       
+                    answer = self.interface.left_error_input()
+                    y -= (3 + height)
+            except Exception:
+                answer = self.interface.left_error_input()
+                y -= (3 + height)
+        return item, y
 
 def main(user):
     """

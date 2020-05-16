@@ -92,6 +92,9 @@ class ConnectToOFF:
         elif "-" in value:
             new_value = value
             result = new_value.replace("-", " ")
+        elif "'" in value:
+            new_value = value
+            result = new_value.replace("\xc3\xa9", "é'")
         else:
             result = value
         return result
@@ -127,16 +130,15 @@ class ConnectToOFF:
             code = product.get('code')
             nutrition_grade = product.get('nutrition_grade_fr')
             stores = self.check_special_characters(product.get('stores'))
-            categories = self.check_special_characters(
-                product.get('categories'))
+            categories = self.check_special_characters(product.get('categories'))
             if brand != "NaN" and name != "NaN" and stores != "NaN" \
-                    and nutrition_grade in ["a", "b", "c", "d", "e"] and categories != "NaN":
+                and nutrition_grade in ["a", "b", "c", "d", "e"] and categories != "NaN":
                 nb_imported_items += 1
                 self.list_items.append(
                     (brand, name, code, nutrition_grade, stores, categories))
             else:
                 items_left_apart += 1
-        return (nb_imported_items, items_left_apart, self.list_items)
+        return nb_imported_items, items_left_apart, self.list_items
 
     def import_static_data(self, import_type):
         """
@@ -182,3 +184,14 @@ class ConnectToOFF:
             """
         product_location = str(coff.OFF_PRODUCT_ADDRESS + code_product)
         webbrowser.open(product_location, new=1)
+
+
+if __name__ == "__main__":
+    test = ConnectToOFF()
+    print("OK")
+    out, ok, items = test.import_products_list('Snacks')
+    
+    print(out)
+    print(ok)
+    for item in items:
+        print(item)
