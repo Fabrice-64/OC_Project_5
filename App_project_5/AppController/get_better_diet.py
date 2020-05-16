@@ -75,6 +75,8 @@ class UserDialog:
         and uploading of two lists from Open Food Facts: the stores and the 
         categories.
 
+        record_current_DTG(self): Record the current date time and format it for the DB.
+
         """
 
     def __init__(self):
@@ -186,6 +188,7 @@ class UserDialog:
         while True:
             # Open a session with the ORM iot work with the DB.
             self.queries.open_session()
+
             # Look for a product !!
             if answer == cfg.OPERATE_ON_DB[0]:
                 self.interface.title_bar(cfg.TITLE_3)
@@ -233,7 +236,7 @@ class UserDialog:
                 # Requests the user to select a food item to be compared with.
                 while True:
                     code_ref_prod, y = self.check_valid_answer(y, 1, 3,
-                        cfg.COMPARE_FOOD_ITEMS,  rank_item_dict)
+                        cfg.COMPARE_FOOD_ITEMS, rank_item_dict)
                     # If the keywords are too restrictive new ones are demanded.
                     while True:
                         # The user is requested to enter keywords iot broaden the search
@@ -270,11 +273,8 @@ class UserDialog:
                                             cfg.USE_BROWSER, top_products_dict)
                         self.interface.right_display_info(
                             cfg.RECORD_SELECTED_ITEM)
-                        record_date_time = datetime.now()
-                        record_date_time = record_date_time.strftime(
-                            '%Y-%m-%d %H:%M:%S')
-                        compared_prods = code_best_prod, record_date_time,\
-                            code_ref_prod
+                        date_time = self.record_current_DTG()
+                        compared_prods = code_best_prod, date_time, code_ref_prod
                         # Record automatically both selected and ref. products.
                         self.queries.record_comparred_products(compared_prods)
                         self.interface.right_display_info(
@@ -604,6 +604,25 @@ class UserDialog:
         self.interface.right_display_info(cfg.DB_STORES_FETCHED)
         # Informs the user that the DB is empty.
         self.interface.right_display_info(cfg.EMPTY_DB, "warning")
+
+    def record_current_DTG(self):
+        """
+
+            Record the current date time and format it for the DB.
+
+            Arguments:
+
+            NIL
+
+            Returns:
+
+            current_DTG: current date and time formatted for SQL DB
+
+            """
+        date_time = datetime.now()
+        date_time = date_time.strftime('%Y-%m-%d %H:%M:%S')
+        return current_DTG
+
 
 def main(user):
     """
