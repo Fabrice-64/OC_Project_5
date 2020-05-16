@@ -71,6 +71,10 @@ class UserDialog:
         check_valid_answer:Check whether the number given by the user 
         belongs to the keys of a dictionary. If not, the loop runs.
 
+        initialize_DB : Create and initialize a new DB, including the downloading 
+        and uploading of two lists from Open Food Facts: the stores and the 
+        categories.
+
         """
 
     def __init__(self):
@@ -167,29 +171,9 @@ class UserDialog:
                 self.create_cnx_parameters()
                 create_DB = True
             if create_DB:
-                # Creation of the DB through a method hosted in the model module
-                self.queries = sql.ORMConnection()
-                self.queries.create_database()
-                self.interface.right_display_info(cfg.DB_CREATE_LOCAL_DB)
-                self.queries = sql.ORMConnection()
-                # Open the connection to the local DB
-                self.queries.open_session()
-                # Import categories from Open Food Facts
-                OFF_categories = self.OFF.import_static_data(
-                    coff.URL_STATIC_CAT)
-                # Configure the data and upload categories into the local DB
-                self.queries.upload_categories(OFF_categories)
-                self.interface.right_display_info(cfg.DB_CATEGORIES_FETCHED)
-                # Import stores from Open Food Facts
-                OFF_stores = self.OFF.import_static_data(
-                    coff.URL_STATIC_STORES)
-                # Configure the data and upload stores into the local DB
-                self.queries.upload_stores(OFF_stores)
-                self.interface.right_display_info(cfg.DB_STORES_FETCHED)
-                # Informs the user that the DB is empty.
-                self.interface.right_display_info(cfg.EMPTY_DB, "warning")
+                # Creation of the DB through a method hosted in this module
+                self.initialize_DB()
                 break
-
         self.interface.title_bar(cfg.TITLE_2)
         # Display a drop down menu to navigate in the application
         self.interface.clear_window()
@@ -231,7 +215,6 @@ class UserDialog:
                     else:
                         self.interface.right_display_info(
                             cfg.WARNING_MESSAGE_2, "warning")
-
                 # Display a selection of products.
                 rank_item_dict = dict()
                 rank_counter = 0
@@ -247,7 +230,6 @@ class UserDialog:
                     self.interface.display_result(cfg.EMPTY_LINE)
                     # Create key_value of rank and product for further check
                     rank_item_dict[rank_counter] = product.code
-
                 # Requests the user to select a food item to be compared with.
                 while True:
                     code_ref_prod, y = self.check_valid_answer(y, 1, 3,
@@ -270,7 +252,6 @@ class UserDialog:
                                 cfg.WARNING_MESSAGE_1, "warning")
                             y -= 4
                     break
-
                 self.interface.clear_window()
                 self.interface.display_guide(cfg.USER_GUIDE)
                 # Display the products matching the best user's request.
@@ -377,7 +358,6 @@ class UserDialog:
                     coff.NUMBER_REJECTED_ITEMS.format(left_apart))
                 self.interface.right_display_info(
                     coff.NUMBER_DOWNLOADED_ITEMS.format(nb_imported))
-
                 self.interface.right_display_info(cfg.BE_PATIENT)
                 # This is where the excerpt of OFF is uploaded in the local DB.
                 self.queries.upload_products(list_items)
@@ -589,6 +569,41 @@ class UserDialog:
                 answer = self.interface.left_error_input()
                 y -= (3 + height)
         return item, y
+
+    def initialize_DB(self):
+        """
+
+            Create and initialize a new DB, including the downloading and 
+            uploading of two lists from Open Food Facts: the stores and the 
+            categories.
+
+            Arguments: 
+
+            NIL
+
+            Returns:
+
+            NIL
+
+            """
+        self.queries = sql.ORMConnection()
+        self.queries.create_database()
+        self.interface.right_display_info(cfg.DB_CREATE_LOCAL_DB)
+        self.queries = sql.ORMConnection()
+        # Open the connection to the local DB
+        self.queries.open_session()
+        # Import categories from Open Food Facts
+        OFF_categories = self.OFF.import_static_data(coff.URL_STATIC_CAT)
+        # Configure the data and upload categories into the local DB
+        self.queries.upload_categories(OFF_categories)
+        self.interface.right_display_info(cfg.DB_CATEGORIES_FETCHED)
+        # Import stores from Open Food Facts
+        OFF_stores = self.OFF.import_static_data(coff.URL_STATIC_STORES)
+        # Configure the data and upload stores into the local DB
+        self.queries.upload_stores(OFF_stores)
+        self.interface.right_display_info(cfg.DB_STORES_FETCHED)
+        # Informs the user that the DB is empty.
+        self.interface.right_display_info(cfg.EMPTY_DB, "warning")
 
 def main(user):
     """
