@@ -19,6 +19,7 @@ DB_USER = 'root'
 DB_PASSWORD = ''
 DB_NAME = '/get_better_diet'
 DB_CONNEXION_STRING = "mysql+mysqlconnector://{}:{}@localhost{}"
+DB_PARAMETERS = "AppModel/local_DB/db_parameters.py"
 
 # Message displayed when launching the programm. Used by the method display_message().
 WELCOME_MESSAGE = "WELCOME TO 'GET A BETTER DIET' APP \n"

@@ -71,8 +71,6 @@ from sqlalchemy.orm import sessionmaker, aliased
 import AppView
 import AppController.config as cfg
 
-DB_PARAMETERS = "AppModel/local_DB/db_parameters.py"
-
 Base = declarative_base()
 
 
@@ -156,7 +154,7 @@ class Store (Base):
     __table_args__ = (Index('idx_store', 'name'),)
 
     id_store = Column(Integer(), nullable=False, primary_key=True,
-                      autoincrement=True)
+                    autoincrement=True)
     name = Column(String(600), nullable=False)
 
 
@@ -190,7 +188,7 @@ class CategoryProduct (Base):
     code = Column(String(13),
                   ForeignKey('product.code', name='FK_product_category',
                              ondelete='CASCADE', onupdate='CASCADE'),
-                  nullable=False, )
+                            nullable=False, )
 
 
 class StoreProduct (Base):
@@ -218,10 +216,12 @@ class StoreProduct (Base):
                               nullable=False)
     product_code = Column(String(13),
                           ForeignKey('product.code', name='FK_product_store',
-                                     onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
+                                     onupdate='CASCADE', ondelete='CASCADE'), 
+                                     nullable=False)
     store_id = Column(Integer(),
-                      ForeignKey('store.id_store', name='FK_store_id', onupdate='CASCADE',
-                                 ondelete='CASCADE'), nullable=False)
+                      ForeignKey('store.id_store', name='FK_store_id', 
+                                onupdate='CASCADE',
+                                ondelete='CASCADE'), nullable=False)
 
 
 class ProductComparrison (Base):
@@ -253,10 +253,12 @@ class ProductComparrison (Base):
                           nullable=False)
     code_best_prod = Column(String(13),
                             ForeignKey('product.code', name='FK_code_product_best',
-                                       onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
+                                       onupdate='CASCADE', ondelete='CASCADE'), 
+                                       nullable=False)
     code_ref_prod = Column(String(13),
                            ForeignKey('product.code', name='FK_code_product_ref',
-                                      onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
+                                      onupdate='CASCADE', ondelete='CASCADE'), 
+                                      nullable=False)
     date_best = Column(DateTime(), nullable=False)
 
 
@@ -464,7 +466,7 @@ class ORMConnection:
             NIL
 
             """
-        with open(DB_PARAMETERS) as file:
+        with open(cfg.DB_PARAMETERS) as file:
             connection_parameters = file.read()
         self.engine = create_engine(connection_parameters,
                                     echo=False)
@@ -486,7 +488,7 @@ class ORMConnection:
 
             """
         # Create a new and empty database
-        with open(DB_PARAMETERS) as file:
+        with open(cfg.DB_PARAMETERS) as file:
             connection_parameters = file.read()
         self.engine = create_engine(connection_parameters,
                                     echo=False)
@@ -498,7 +500,7 @@ class ORMConnection:
         connection.close()
         # Add the name of the database to the parameters file for further use
         connection_parameters = connection_parameters + cfg.DB_NAME
-        with open(DB_PARAMETERS, "w") as file:
+        with open(cfg.DB_PARAMETERS, "w") as file:
             file.write(connection_parameters)
         # Add the tables to the new database
         self.engine = create_engine(connection_parameters, echo=False)

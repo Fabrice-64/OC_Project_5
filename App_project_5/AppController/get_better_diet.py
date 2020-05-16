@@ -532,7 +532,7 @@ class UserDialog:
         connection_string = cfg.DB_CONNEXION_STRING.format(
             cfg.DB_USER, cfg.DB_PASSWORD, "")
         # Connection parameters are saved in a separate file to be reused.
-        with open("AppModel/local_DB/db_parameters.py", "w") as file:
+        with open(cfg.DB_PARAMETERS, "w") as file:
             file.write(connection_string)
 
     def open_product_browser(self, answer, dictionary):
