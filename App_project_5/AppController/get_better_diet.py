@@ -166,7 +166,7 @@ class UserDialog:
                 self.create_cnx_parameters()
                 create_DB = True
             if create_DB:
-            # Creation of the DB through a method hosted in the model module
+                # Creation of the DB through a method hosted in the model module
                 self.queries = sql.ORMConnection()
                 self.queries.create_database()
                 self.interface.right_display_info(cfg.DB_CREATE_LOCAL_DB)
@@ -185,7 +185,7 @@ class UserDialog:
                 # Configure the data and upload stores into the local DB
                 self.queries.upload_stores(OFF_stores)
                 self.interface.right_display_info(cfg.DB_STORES_FETCHED)
-                # Informs the user that the DB is empty. 
+                # Informs the user that the DB is empty.
                 self.interface.right_display_info(cfg.EMPTY_DB, "warning")
                 break
 
@@ -299,7 +299,7 @@ class UserDialog:
                         selected_prod = answer_category, keywords_item, code_ref_prod
                         selected_prod = tuple(selected_prod)
                         list_top_products = self.queries.top_products(
-                                                                    selected_prod)
+                            selected_prod)
                         # Make sure that the user's choice isn't too restrictive
                         if len(list_top_products) > 0:
                             break
@@ -312,7 +312,8 @@ class UserDialog:
                 self.interface.clear_window()
                 self.interface.display_guide(cfg.USER_GUIDE)
                 # Display the products matching the best user's request.
-                top_products_dict = self.display_top_products(list_top_products)
+                top_products_dict = self.display_top_products(
+                    list_top_products)
                 while True:
                     y = 0
                     # The user is offered to view the item in a browser and to record it.
@@ -368,7 +369,8 @@ class UserDialog:
                 self.interface.clear_window()
                 last_compared_products = self.queries.get_compared_products()
                 # Display the last compared product, reference and best.
-                best_products_dict = self.display_compared_products(last_compared_products)
+                best_products_dict = self.display_compared_products(
+                    last_compared_products)
                 # The user can see a product in detail.
                 if len(best_products_dict) > 0:
                     # User to confirm he wants to see the item in the browser.
@@ -561,8 +563,8 @@ class UserDialog:
             self.interface.display_result(
                 cfg.PRODUCT_RANK_NAME.format(rank_counter, product[0].name))
             self.interface.display_result(
-                cfg.PRODUCT_BRAND_NUTR_GR.format(product[0].brand, 
-                product[0].nutrition_grade))
+                cfg.PRODUCT_BRAND_NUTR_GR.format(product[0].brand,
+                                                 product[0].nutrition_grade))
             self.interface.display_result(
                 cfg.DISPLAY_STORES.format(", ".join(product[0].stores)))
             self.interface.display_result(
@@ -584,7 +586,7 @@ class UserDialog:
             the best with the request.
 
             Returns:
-        
+
             top_products_dict: dict with the product code as a value and the 
             product index used on the display. The latter being used as a key for
             further use of the dictionary.
@@ -595,13 +597,15 @@ class UserDialog:
         for product in list_top_products:
             rank_counter += 1
             self.interface.display_result(
-                    cfg.PRODUCT_RANK_NAME.format(rank_counter, product.name))
+                cfg.PRODUCT_RANK_NAME.format(rank_counter, product.name))
             self.interface.display_result(cfg.PRODUCT_BRAND_NUTR_GR.format(
-                    product.brand, product.nutrition_grade))
+                product.brand, product.nutrition_grade))
             self.interface.display_result(
-                    cfg.DISPLAY_STORES.format(", ".join(product.stores)))
+                cfg.DISPLAY_STORES.format(", ".join(product.stores)))
             top_products_dict[rank_counter] = product.code
         return top_products_dict
+
+
 def main(user):
     """
 
