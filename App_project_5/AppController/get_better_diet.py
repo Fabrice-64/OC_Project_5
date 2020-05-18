@@ -277,8 +277,7 @@ class UserDialog:
                         compared_prods = code_best_prod, date_time, code_ref_prod
                         # Record automatically both selected and ref. products.
                         self.queries.record_comparred_products(compared_prods)
-                        self.interface.right_display_info(
-                            cfg.PROCESSING_RECORD)
+                        self.interface.right_display_info(cfg.PROCESSING_RECORD)
                         break
                     elif answer == "N":
                         break

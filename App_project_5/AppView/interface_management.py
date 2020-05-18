@@ -8,7 +8,8 @@
 
     Class:
 
-    Interface : based on curses library it provides a rough but functional graphic interface
+    Interface : based on curses library it provides a rough \
+        but functional graphic interface
 
     Exceptions:
 
@@ -78,7 +79,8 @@ class Interface:
 
         display_textpad: display a textpad used to capture the user's various inputs.
 
-        quit_display: desactivate in a clean way all the features activated by the use of curses.
+        quit_display: desactivate in a clean way all the features activated \
+            by the use of curses.
 
         Attributes:
 
@@ -87,11 +89,11 @@ class Interface:
        Be aware that Curses returns always the y first and then the x!
 
         y_center: the coordinate y in the middle of the terminal screen.
-        
+
         x_center: the coordinate x in the middle of the terminal screen.
-        
+
         height: the number of lines of the current terminal
-        
+
         width: the number of columns of the current terminal
 
         """
@@ -99,7 +101,8 @@ class Interface:
     def __init__(self):
         """
 
-            The graphic screen is initialized from the very first step of the application.
+            The graphic screen is initialized from the very first step \
+                of the application.
 
             Arguments:
 
@@ -158,7 +161,7 @@ class Interface:
             NIL.
 
             Return:
-            
+
             NIL.
 
             """
@@ -189,7 +192,7 @@ class Interface:
             message: string defined in the module config.py.
 
             Return:
-            
+
             NIL.
 
             """
@@ -239,7 +242,7 @@ class Interface:
             """
         self.right_display_info(cfg.WARNING_MESSAGE_0, "warning")
         return ""
-        
+
     def display_string_textpad(self, y, nb_lines, length_field, message):
         """
 
@@ -281,7 +284,7 @@ class Interface:
             only the left or the right can be affected.
 
             Returns:
-            
+
             NIL
 
             """
@@ -445,7 +448,7 @@ class Interface:
             It doesn't return anything
 
             Arguments:
-                
+
             user_guide (list): is available in config.py
 
             Returns:
@@ -505,7 +508,7 @@ class Interface:
             NIL.
 
             Returns:
-            
+
             NIL.
 
             """

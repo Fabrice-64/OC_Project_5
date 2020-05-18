@@ -73,6 +73,9 @@ import AppController.config as cfg
 
 Base = declarative_base()
 
+CREATE_DB = "CREATE DATABASE get_better_diet CHARACTER SET utf8mb4"
+COMMIT = "COMMIT"
+
 
 class Category(Base):
     """
@@ -154,7 +157,7 @@ class Store (Base):
     __table_args__ = (Index('idx_store', 'name'),)
 
     id_store = Column(Integer(), nullable=False, primary_key=True,
-                    autoincrement=True)
+                      autoincrement=True)
     name = Column(String(600), nullable=False)
 
 
@@ -188,7 +191,7 @@ class CategoryProduct (Base):
     code = Column(String(13),
                   ForeignKey('product.code', name='FK_product_category',
                              ondelete='CASCADE', onupdate='CASCADE'),
-                            nullable=False, )
+                  nullable=False, )
 
 
 class StoreProduct (Base):
@@ -216,12 +219,12 @@ class StoreProduct (Base):
                               nullable=False)
     product_code = Column(String(13),
                           ForeignKey('product.code', name='FK_product_store',
-                                     onupdate='CASCADE', ondelete='CASCADE'), 
-                                     nullable=False)
+                                     onupdate='CASCADE', ondelete='CASCADE'),
+                          nullable=False)
     store_id = Column(Integer(),
-                      ForeignKey('store.id_store', name='FK_store_id', 
-                                onupdate='CASCADE',
-                                ondelete='CASCADE'), nullable=False)
+                      ForeignKey('store.id_store', name='FK_store_id',
+                                 onupdate='CASCADE',
+                                 ondelete='CASCADE'), nullable=False)
 
 
 class ProductComparrison (Base):
@@ -253,12 +256,12 @@ class ProductComparrison (Base):
                           nullable=False)
     code_best_prod = Column(String(13),
                             ForeignKey('product.code', name='FK_code_product_best',
-                                       onupdate='CASCADE', ondelete='CASCADE'), 
-                                       nullable=False)
+                                       onupdate='CASCADE', ondelete='CASCADE'),
+                            nullable=False)
     code_ref_prod = Column(String(13),
                            ForeignKey('product.code', name='FK_code_product_ref',
-                                      onupdate='CASCADE', ondelete='CASCADE'), 
-                                      nullable=False)
+                                      onupdate='CASCADE', ondelete='CASCADE'),
+                           nullable=False)
     date_best = Column(DateTime(), nullable=False)
 
 
@@ -458,7 +461,7 @@ class ORMConnection:
             is automatically created.
 
             Arguments:
-            
+
             NIL
 
             Returns:
@@ -494,9 +497,8 @@ class ORMConnection:
                                     echo=False)
         # Activate the Database to subsequently create the tables
         connection = self.engine.connect()
-        connection.execute("COMMIT")
-        connection.execute(
-            "CREATE DATABASE get_better_diet CHARACTER SET utf8mb4")
+        connection.execute(COMMIT)
+        connection.execute(CREATE_DB)
         connection.close()
         # Add the name of the database to the parameters file for further use
         connection_parameters = connection_parameters + cfg.DB_NAME
@@ -628,7 +630,7 @@ class ORMConnection:
             Arguments:
 
             NIL
-            
+
             Returns:
 
             List of selected categories, indexed by popularity.
@@ -670,7 +672,7 @@ class ORMConnection:
             Product.name, Product.brand, Product.nutrition_grade, Product.code)
         query = query.join(CategoryProduct).join(Category)
         result = query.filter(and_(Category.name == product_category,
-                                   Product.name.ilike(product_name), 
+                                   Product.name.ilike(product_name),
                                    Product.brand.ilike(brand_name)))[:10]
         # Instanciate the fetched products.
         for product in result:
@@ -720,7 +722,7 @@ class ORMConnection:
             Get the stores where a specific product is sold. 
 
             Arguments:
-            
+
             product_code : the product code is the link between the Product and 
             the store via the join table StoreProduct.
 
@@ -866,7 +868,7 @@ class ORMConnection:
             NIL
 
             Returns:
-            
+
             NIL
         """
         self.session.close()
