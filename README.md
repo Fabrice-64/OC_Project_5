@@ -26,7 +26,6 @@ modules.
 * Requests
 * SQLALchemy
 * MySQL-connector
-* The file requirements.txt
 
 ## How to launch the App
 * Set the Terminal on the folder App_project_5
