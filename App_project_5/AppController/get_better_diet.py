@@ -188,7 +188,6 @@ class UserDialog:
         while True:
             # Open a session with the ORM iot work with the DB.
             self.queries.open_session()
-
             # Look for a product !!
             if answer == cfg.OPERATE_ON_DB[0]:
                 self.interface.title_bar(cfg.TITLE_3)
@@ -271,6 +270,7 @@ class UserDialog:
                     if answer == "Y":
                         code_best_prod, y = self.check_valid_answer(y, 1, 3,
                                             cfg.USE_BROWSER, top_products_dict)
+                        self.OFF.open_product_file_OFF(code_best_prod)
                         self.interface.right_display_info(
                             cfg.RECORD_SELECTED_ITEM)
                         date_time = self.record_current_DTG()
