@@ -2,17 +2,19 @@
 
     Downloads the requested data from Open Food Facts DB using an API.
 
-    To be noticed: dowloaded data are filtered by downloading. If some fields deemed \
-        as absolutely necessary are not field, the row is discarded.
+    To be noticed: dowloaded data are filtered by downloading. \
+    If some fields deemed as absolutely necessary are not field, \
+    the row is discarded.
 
     Classes:
 
-    ConnectToOFF: manage the connection settings through the API an the data download.
+    ConnectToOFF: manage the connection settings through the API \
+    and the data download.
 
     Exceptions:
 
     NIL.
-        
+
     Functions:
 
     NIL.
@@ -110,11 +112,11 @@ class ConnectToOFF:
 
             Returns:
 
-            nb_imported_items: out of a selected range, number of food items considered
+            nb_imported_items: out of a selected range, number of food items\
             as valid for import.
 
-            items_left_apart: out of the initial range, number of food items discarded
-            because of poor quality of the data.
+            items_left_apart: out of initial range, numb of food items \
+            discarded because of poor quality of the data.
 
             """
         desired_category = {'tag_0': category}
@@ -132,7 +134,8 @@ class ConnectToOFF:
             stores = self.check_special_characters(product.get('stores'))
             categories = self.check_special_characters(product.get('categories'))
             if brand != "NaN" and name != "NaN" and stores != "NaN" \
-                and nutrition_grade in ["a", "b", "c", "d", "e"] and categories != "NaN":
+                and nutrition_grade in ["a", "b", "c", "d", "e"] \
+                    and categories != "NaN":
                 nb_imported_items += 1
                 self.list_items.append(
                     (brand, name, code, nutrition_grade, stores, categories))
@@ -143,9 +146,10 @@ class ConnectToOFF:
     def import_static_data(self, import_type):
         """
 
-            This method import categories, which are static data and 
+            This method import categories, which are static data and \
             therefore doesn't include the parameters needed in an API.
-            On Open Food Facts DB, the categories are sorted out by number of entries.
+            On Open Food Facts DB, the categories are sorted out \
+            by number of entries.
 
             Arguments:
 
@@ -153,7 +157,7 @@ class ConnectToOFF:
 
             Returns:
 
-            OFF_list : list of categories or products selected for later upload. 
+            OFF_list : list of categories/products selected for later upload.
 
             """
         self.OFF_list = []
@@ -162,7 +166,8 @@ class ConnectToOFF:
         for tag in data[coff.STATIC_TAG]:
             name = tag.get(coff.STATIC_FIELD_0)
             name = self.check_special_characters(name)
-            # Some inconsistant fields have been remarked. This is an ad hoc way to remove those rows.
+            # Some inconsistant fields have been remarked.
+            # This is an ad hoc way to remove those rows.
             if name not in self.OFF_list:
                 name = str(name)
                 self.OFF_list.append(name)
@@ -175,7 +180,8 @@ class ConnectToOFF:
 
             Arguments:
 
-            code_product: completes the address where to find this very food item.
+            code_product: completes the address where to find \
+            this very food item.
 
             Returns:
 

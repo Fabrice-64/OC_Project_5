@@ -1,9 +1,10 @@
 """
-    
+
     This module manages the graphical interface for the application.
 
     As the application is built in a View-Model-Controller logic, \
-        this module hosts all the necessary items to manage the View functionalities.
+    this module hosts all the necessary items \
+    to manage the View functionalities.
     This module is fed with orders coming the module named: get_better_diet.py.
 
     Class:
@@ -17,7 +18,7 @@
 
     Functions:
 
-    No function has been implemented. All methods belong to the Interface class.
+    No function implemented. All methods belong to the Interface class.
 
     """
 import curses
@@ -28,35 +29,39 @@ from AppController import config as cfg
 
 
 class Interface:
-    """ 
+    """
 
         Manages the graphical interface of this application.
 
         The integrated library curses is used throughout the class.
-        The main screen is split into two halves: 
-        -The left one (from the User perspective) is used for the interaction with him, 
-        -The right one displays the results of the queries or even a warning in some cases.
+        The main screen is split into two halves:
+        -The left one (from the User perspective) \
+        used for the interaction with it,\
+        -The right one displays the results of the queries \
+        or even a warning in some cases.
 
         Methods:
 
-        __init__: initialize the graphic interface to make it usable 
+        __init__: initialize the graphic interface to make it usable \
         by the subsequent methods.
 
         title_bar: display a title in the bar at the top of the main window.
         This title is updated in accordance with the step of the program.
 
-        split_screen: split the screen in two separate windows. 
-        In fact each window include a sub-window in which the text is displayed. 
+        split_screen: split the screen in two separate windows.\
+        In fact each window include a sub-window \
+        in which the text is displayed.\
 
-        display_message: display a message on the main window, 
-        at the center of the screen. Is used for welcome message and for goodbye.
+        display_message: display a message on the main window, \
+        at the center of the screen.\
+        Is used for welcome message and for goodbye.
 
         left_display_string: display an instruction on the left screen.
 
-        left_error_input: Display an error message as the user input was 
+        left_error_input: Display an error message as the user input was \
         non conform and reset the data.
 
-        display_string_textpad: display an invitation to use the keypad and 
+        display_string_textpad: display an invitation to use the keypad and \
         just below the keypad itself.
         It can call two other methods: left_display_string and display_textpad.
 
@@ -66,18 +71,18 @@ class Interface:
 
         display_result:  display the results of the queries sent to the DB.
 
-        right_display_info: display one line long pieces of info 
+        right_display_info: display one line long pieces of info \
         at the bottom of the right window.
 
-        __highlight_selection:  highlight the selected item when 
+        __highlight_selection:  highlight the selected item when \
         using a drop-down list.
 
-        set_up_drop_down: operate the key UP and DOWN iot iterate 
+        set_up_drop_down: operate the key UP and DOWN iot iterate \
         in the displayed menu.
 
         display_guide: display a short users guide at the bottom of left page
 
-        display_textpad: display a textpad used to capture the user's various inputs.
+        display_textpad: display a textpad to capture user's various inputs.
 
         quit_display: desactivate in a clean way all the features activated \
             by the use of curses.
@@ -131,10 +136,10 @@ class Interface:
     def title_bar(self, title):
         """ 
 
-            A new title bar is displayed for each and every step of the program. \
-                This method is called through the module get_better_diet.py
+            Display a new title bar for each and every step of the program. \
+            This method is called through the module get_better_diet.py
 
-            Argument : 
+            Argument :
 
             title :  adapt the window title to the step of the program.
 
@@ -154,7 +159,8 @@ class Interface:
     def split_screen(self):
         """
 
-            Split the screen in 2 halves to share between queries or requests and their outcome.
+            Split the screen in 2 halves to share between queries or requests \
+            and their outcome.
 
             Argument:
 
@@ -178,7 +184,9 @@ class Interface:
         self.right_window = curses.newwin(
             self.half_win_height, self.half_win_width-2, 1, self.x_center + 3)
         self.inner_right_window = self.right_window.subwin(
-            self.half_win_height - 2, self.half_win_width - 4, 2, self.x_center + 4)
+                                                    self.half_win_height - 2,
+                                                    self.half_win_width - 4, 2,
+                                                    self.x_center + 4)
         self.right_window.noutrefresh()
         self.screen.refresh()
 
@@ -213,7 +221,7 @@ class Interface:
 
             Arguments:
 
-            y: vertical coordinate, which 0 is the upper left corner 
+            y: vertical coordinate, which 0 is the upper left corner \
             of the inner left window.
 
             string: set in config.py. By default includes \n.
@@ -406,7 +414,8 @@ class Interface:
         """
 
             Manage the cursor movements within a drop-down list.
-            It interacts closely with the method __highlight_selection() of the same class.
+            It interacts closely with the method __highlight_selection \
+            of the same class.
 
         Arguments:
 
@@ -416,7 +425,8 @@ class Interface:
 
             Returns:
 
-            answer : the choice made by the user after having higlighted it + pressed retun.
+            answer : the choice made by the user after having higlighted it + \
+            pressed retun.
 
             """
         curses.curs_set(0)
@@ -428,9 +438,10 @@ class Interface:
             key = self.inner_left_window.getch()
             if key == curses.KEY_UP and active_row_idx > 0:
                 active_row_idx -= 1
-            elif key == curses.KEY_DOWN and active_row_idx < len(drop_down_list)-1:
+            elif key == curses.KEY_DOWN and \
+                    active_row_idx < len(drop_down_list)-1:
                 active_row_idx += 1
-            # [10,13] is needed due to compatibility issues with some keyboards.
+            # [10,13] is needed due to compatibility issues with some keyboards
             elif key == curses.KEY_ENTER or key in [10, 13]:
                 self.inner_left_window.clear()
                 answer = drop_down_list[active_row_idx]
@@ -442,9 +453,10 @@ class Interface:
         return answer
 
     def display_guide(self, user_guide):
-        """ 
+        """
 
-            This method displays the list of keyboard shortcuts to be used with the keypad.
+            This method displays the list of keyboard shortcuts to be used \
+            with the keypad.
             It doesn't return anything
 
             Arguments:
@@ -459,7 +471,7 @@ class Interface:
         y, x = self.inner_left_window.getmaxyx()
         y = y-1
         index = -1
-        # Lines are printed in a reverse order: from the last line of the window upwards.
+        # Lines are printed in a reverse order: from the last line upwards.
         for line in user_guide:
             line = user_guide[index]
             self.inner_left_window.addstr(y, 0, line)
@@ -474,11 +486,11 @@ class Interface:
 
             Arguments:
 
-            upper_left_y: vertical coordinate of the upper left corner of the keypad.
+            upper_left_y: vertical coordinate of keypad upper left corner.
 
             nb_lines: number of lines of the keypad
 
-            nb_cols: number of max of authorized characters + 1 because of curses.
+            nb_cols: number of max of authorized characters + 1 for Curses
 
             Returns:
 
@@ -501,7 +513,8 @@ class Interface:
     def quit_display(self):
         """
 
-            This method is used to properly quit the Curses module and reinitialize the shell.
+            This method is used to properly quit the Curses module \
+            and reinitialize the shell.
 
             Arguments:
 

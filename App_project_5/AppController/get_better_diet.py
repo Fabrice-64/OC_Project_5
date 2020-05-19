@@ -1,12 +1,12 @@
 """
-    
-    This module is the starting point for the application based on Open Food Facts Data \
-    and aims at finding a better nutrition grade.
 
-    It displays a welcome message and the Open Food Facts disclaimer. \
-    It then jumps onto the next module which leads the user to navigate between \
-    different options, from looking for a product to uploading a new category\
-    of food items from Open Food Facts.
+    This module is the starting point for the application based on Open Food \
+        Facts Data and aims at finding a better nutrition grade.
+
+    It displays a welcome message and the Open Food Facts disclaimer.\
+    It then jumps onto the next module which leads the user to navigate \
+    between different options, from looking for a product to uploading \
+    a new category of food items from Open Food Facts.
 
     Classes:
 
@@ -18,7 +18,7 @@
 
     Functions:
 
-    main(): launch the application and interrupts it when requested by the user.        
+    main: launch the application and interrupts it when requested.
 
     """
 import time
@@ -28,7 +28,6 @@ from AppView.interface_management import Interface
 from AppModel.open_food_facts.connect_to_OFF import ConnectToOFF
 from AppController import config as cfg
 from AppModel.open_food_facts import config_open_food_facts as coff
-from AppModel.open_food_facts import connect_to_OFF as OFF
 from AppModel.local_DB import connect_to_mysql as sql
 
 
@@ -40,39 +39,43 @@ class UserDialog:
         It is a composite class, with following components:
         im.Interface: manage the itf.
 
-        sql.ORMConnection: manage the queries to the local DB. In order to check\
-            whether there already exists a DB, this class is instanciated\
-            in the step_select_action() method.
+        sql.ORMConnection: manage the queries to the local DB.
+        In order to check whether there already exists a DB,\
+        this class is instanciated in the step_select_action() method.
 
         OFF.ConnectToOFF: manage the download of data from Open Food Facts.
 
         Methods:
 
-        step_terms_and_conditions(): require approval of the T & C to go on with the app.
+        step_terms_and_conditions(): require approval of the T & C \
+        to go on with the app.
 
-        __ascii_to_string(): convert the inputs from the textpad from ASCII into strings.
+        __ascii_to_string(): convert the inputs from the textpad from ASCII\
+            into strings.
 
         select_action(): main loop through which the whole program runs.
 
-        __create_cnx_parameters(): used exclusively for the first use, when the local
-        DB has not been created yet.
+        __create_cnx_parameters(): used exclusively for the first use,\
+        when the local DB has not been created yet.
 
-        __compared_products: Display the last recorded products, 
+        __compared_products: Display the last recorded products,\
         best and reference.
 
-        __top_products: Display a list of the products matching 
+        __top_products: Display a list of the products matching\
         the best with the user's request.
 
-        __display_top_categories: Display the most popular categories in the local DB.
+        __display_top_categories: Display the most popular categories\
+            in the local DB.
 
-        __check_valid_answer:Check whether the number given by the user 
+        __check_valid_answer:Check whether the number given by the user\
         belongs to the keys of a dictionary. If not, the loop runs.
 
-        __initialize_DB : Create and initialize a new DB, including the downloading 
-        and uploading of two lists from Open Food Facts: the stores and the 
-        categories.
+        __initialize_DB : Create and initialize a new DB, including \
+            the downloading and uploading of two lists from Open Food Facts: \
+                the stores and the categories.
 
-        __record_current_DTG(self): Record the current date time and format it for the DB.
+        __record_current_DTG(self): Record the current date time \
+            and format it for the DB.
 
         """
 
@@ -99,7 +102,8 @@ class UserDialog:
 
             Arguments:
 
-            file: text file containing the terms & conditions. Location in Documentation folder
+            file: text file containing the terms & conditions. \
+                Location in Documentation folder
 
             Returns:
 
@@ -124,11 +128,13 @@ class UserDialog:
 
     def __ascii_to_string(self, ascii_string):
         """
-            Convert the textpad returns in a usable format, as they are ASCII objects.
+            Convert the textpad returns in a usable format, as they are \
+                ASCII objects.
 
             Arguments:
 
-            ascii_string: ascii is the normal outcome from a textpad input in Curses
+            ascii_string: ascii is the normal outcome from a textpad \
+                input in Curses
 
             Returns:
 
@@ -155,11 +161,11 @@ class UserDialog:
             decision: used to give the main function the order to quit the app.
 
             """
-        # Check whether a local DB has already been created. If not, starts a process.
+        # Check whether a local DB has already been created.
         create_DB = False
         while True:
             try:
-                # Check whether a connection with an existing local DB is established.
+                # Check whether a connection with an existing local DB is OK.
                 self.queries = sql.ORMConnection()
                 break
             except Exception:
@@ -177,7 +183,8 @@ class UserDialog:
         self.itf.clear_window()
         self.itf.left_display_string(0, cfg.INFO_LINE_1)
         self.itf.display_result(cfg.INFO_DISPLAY_RESULTS)
-        answer = self.itf.set_up_drop_down(cfg.OPERATE_ON_DB, cfg.SELECT_ANSWER)
+        answer = self.itf.set_up_drop_down(cfg.OPERATE_ON_DB,
+                                           cfg.SELECT_ANSWER)
         # Here start the work on the DB to find, select and record a product
         y = 0
         while True:
@@ -187,17 +194,18 @@ class UserDialog:
             if answer == cfg.OPERATE_ON_DB[0]:
                 self.itf.title_bar(cfg.TITLE_3)
                 self.itf.clear_window()
-                # list of categories previously recorded is displayed on the right window.
+                # list of recorded categories is displayed on the right window.
                 top_categories = self.queries.get_categories()
-                rank_categories_dict = self.__display_top_categories(top_categories)
+                rank_categories_dict = \
+                    self.__display_top_categories(top_categories)
                 self.itf.display_guide(cfg.USER_GUIDE)
-                # This loop avoids that a too narrow request leads to an empty selection.
+                # Avoid that a too narrow request leads to an empty selection.
                 while True:
                     y = 0
                     self.itf.left_display_string(y, cfg.KEYPAD_INSTRUCTION_1)
                     y += 1
                     answer_category, y = self.__check_valid_answer(y, 1, 3,
-                        cfg.SELECT_CATEGORY, rank_categories_dict )
+                        cfg.SELECT_CATEGORY, rank_categories_dict)
                     # Input the parameters to search for a food item.
                     answer_name, y = self.itf.display_string_textpad(
                         y, 1, 25, cfg.ITEM_NAME)
@@ -210,7 +218,8 @@ class UserDialog:
                     if len(refer_products) > 0:
                         break
                     else:
-                        self.itf.right_display_info(cfg.WARNING_MESSAGE_2, "warning")
+                        self.itf.right_display_info(cfg.WARNING_MESSAGE_2,
+                                                    "warning")
                 # Display a selection of products.
                 rank_item_dict = dict()
                 rank_counter = 0
@@ -219,28 +228,30 @@ class UserDialog:
                 for product in refer_products:
                     rank_counter += 1
                     self.itf.display_result(
-                        cfg.PRODUCT_RANK_NAME.format(rank_counter, product.name))
+                        cfg.PRODUCT_RANK_NAME.format(rank_counter,
+                                                     product.name))
                     self.itf.display_result(
-                        cfg.PRODUCT_BRAND_NUTR_GR.format(product.brand,
-                                                         product.nutrition_grade))
+                        cfg.PRODUCT_BRAND_NUTR_GR.
+                        format(product.brand, product.nutrition_grade))
                     self.itf.display_result(cfg.EMPTY_LINE)
                     # Create key_value of rank and product for further check
                     rank_item_dict[rank_counter] = product.code
                 # Requests the user to select a food item to be compared with.
                 while True:
                     code_ref_prod, y = self.__check_valid_answer(y, 1, 3,
-                        cfg.COMPARE_FOOD_ITEMS, rank_item_dict)
-                    # If the keywords are too restrictive new ones are demanded.
+                                        cfg.COMPARE_FOOD_ITEMS, rank_item_dict)
+                    # New keywords are demanded if to restrictive.
                     while True:
-                        # The user is requested to enter keywords iot broaden the search
+                        # The user to enter keywords iot broaden the search
                         keywords_item, y = self.itf.display_string_textpad(
                             y, 1, 25, cfg.ADD_KEYWORDS)
-                        # Create tuple with characteristics of reference product
-                        selected_prod = answer_category, keywords_item, code_ref_prod
+                        # Create tuple with features of reference product
+                        selected_prod = answer_category, keywords_item, \
+                            code_ref_prod
                         selected_prod = tuple(selected_prod)
                         list_top_products = self.queries.top_products(
                             selected_prod)
-                        # Make sure that the user's choice isn't too restrictive
+                        # Make sure that user's choice isn't too restrictive
                         if len(list_top_products) > 0:
                             break
                         else:
@@ -255,7 +266,7 @@ class UserDialog:
                     list_top_products)
                 while True:
                     y = 0
-                    # The user is offered to view the item in a browser and to record it.
+                    # The user can view the item in a browser and to record it.
                     self.itf.left_display_string(
                         y, cfg.CHECK_DETAILED_RESULT)
                     answer, y = self.itf.display_string_textpad(
@@ -268,7 +279,8 @@ class UserDialog:
                         self.itf.right_display_info(
                             cfg.RECORD_SELECTED_ITEM)
                         date_time = self.__record_current_DTG()
-                        compared_prods = code_best_prod, date_time, code_ref_prod
+                        compared_prods = code_best_prod, date_time, \
+                            code_ref_prod
                         # Record automatically both selected and ref. products.
                         self.queries.record_comparred_products(compared_prods)
                         self.itf.right_display_info(cfg.PROCESSING_RECORD)
@@ -302,8 +314,10 @@ class UserDialog:
                         answer = self.__ascii_to_string(answer).upper()
                         if answer == "Y":
                             # Display the product in the default browser
-                            code_product, y = self.__check_valid_answer(y, 1, 3,
-                                cfg.USE_BROWSER, best_products_dict)
+                            code_product, y =\
+                                self.__check_valid_answer(y, 1,
+                                                          3, cfg.USE_BROWSER,
+                                                          best_products_dict)
                             self.OFF.open_product_file_OFF(code_product)
                         elif answer == "N":
                             no_further_check = True
@@ -321,11 +335,11 @@ class UserDialog:
                     answer = self.itf.set_up_drop_down(
                         cfg.OPERATE_ON_DB, cfg.SELECT_ANSWER)
 
-            # This is to import products from one of the most popular categories.
+            # Import products from one of the most popular categories.
             elif answer == cfg.OPERATE_ON_DB[2]:
                 y = 0
                 self.itf.clear_window()
-                # A short sample of OFF categories is imported and displayed in the right window.
+                # Import a short sample of OFF categories and displayed it.
                 categories = self.queries.display_categories()
                 categories_dict = dict()
                 rank_counter = 0
@@ -338,15 +352,16 @@ class UserDialog:
                 self.itf.display_guide(cfg.USER_GUIDE)
                 # The user is requested to designate a category to be uploaded.
                 y = 0
-                selected_category, y = self.__check_valid_answer( y, 1, 3,
-                                    cfg.ADD_CATEGORY, categories_dict)
+                selected_category, y = \
+                    self.__check_valid_answer(y, 1, 3, cfg.ADD_CATEGORY,
+                                              categories_dict)
                 display_chosen_category = cfg.NAME_IMPORTED_CATEGORY + \
-                                                            selected_category
+                    selected_category
                 self.itf.right_display_info(display_chosen_category)
                 # This methods fetches a range of data from Open Food Facts.
                 nb_imported, left_apart, list_items = \
                     self.OFF.import_products_list(selected_category)
-                # Here some pieces of info related to the downloaded data are given for info.
+                # Pieces of info from the downloaded data are given for info.
                 self.itf.right_display_info(
                     coff.NUMBER_REJECTED_ITEMS.format(left_apart))
                 self.itf.right_display_info(
@@ -362,7 +377,7 @@ class UserDialog:
                 answer = self.itf.set_up_drop_down(
                     cfg.OPERATE_ON_DB, cfg.SELECT_ANSWER)
 
-            # This last option is to close properly the program and reinitialize the shell.
+            # Close properly the program and reinitialize the shell.
             elif answer == cfg.OPERATE_ON_DB[3]:
                 self.itf.clear_window()
                 self.queries.close_session()
@@ -372,8 +387,8 @@ class UserDialog:
 
     def __create_cnx_parameters(self):
         """
-            This method is activated if no DB has been created. All the parameters\
-                are asked and the script for the creation is run
+            This method is activated if no DB has been created. \
+            All the parameters are asked and the script for the creation is run
 
             Arguments:
 
@@ -389,12 +404,12 @@ class UserDialog:
         # Ask for the connection parameters. Default value in config.py
         self.itf.left_display_string(y, cfg.DB_INITIAL_INFO)
         user, y = self.itf.display_string_textpad(1, 1, 15,
-                                                        cfg.DB_USER_INVITE)
+                                                  cfg.DB_USER_INVITE)
         user = self.__ascii_to_string(user)
         if user != '':
             cfg.DB_USER = user
         password, y = self.itf.display_string_textpad(y, 1, 20,
-                                                            cfg.DB_PASSWORD_INVITE)
+                                                      cfg.DB_PASSWORD_INVITE)
         password = self.__ascii_to_string(password)
         if password != '':
             cfg.DB_PASSWORD = password
@@ -410,7 +425,7 @@ class UserDialog:
             a dictionary. If not, the loop runs.
 
             Arguments:
-            
+
             y: y of the instruction line
 
             height: height of the textpad
@@ -420,7 +435,7 @@ class UserDialog:
             instruction: inform the user to fill the textpad with the number
             corresponding to his choice
 
-            items_dict: dictionary in which the values to selec are to be found.
+            items_dict: dictionary in which the values to select are located.
             The keys of this dictionary are the index displayed on the screen.
 
             Returns:
@@ -431,16 +446,17 @@ class UserDialog:
 
             """
         while True:
-            try:   
+            try:
                 # Characterize the food item the user is looking for.
-                answer, y = self.itf.display_string_textpad(y, height, 
-                                                length, instruction)
+                answer, y = self.itf.display_string_textpad(y, height,
+                                                            length,
+                                                            instruction)
                 answer = self.__ascii_to_string(answer)
                 answer = int(answer)
                 if answer in items_dict.keys():
                     item = items_dict.get(answer)
                     break
-                else:       
+                else:
                     answer = self.itf.left_error_input()
                     y -= (3 + height)
             except Exception:
@@ -451,11 +467,11 @@ class UserDialog:
     def __initialize_DB(self):
         """
 
-            Create and initialize a new DB, including the downloading and 
-            uploading of two lists from Open Food Facts: the stores and the 
+            Create and initialize a new DB, including the downloading and \
+            uploading of two lists from Open Food Facts: the stores and the\
             categories.
 
-            Arguments: 
+            Arguments:
 
             NIL
 
@@ -511,8 +527,8 @@ class UserDialog:
             last_compared_products: list of tuples containing the last recorded
             comparrisons.
 
-            Returns: a dictionnary containing the code of each best product as 
-            a value and a key being the index displayed on the screen.
+            Returns: a dictionnary containing the code of each best product as\
+             a value and a key being the index displayed on the screen.
             """
         best_products_dict = dict()
         rank_counter = 0

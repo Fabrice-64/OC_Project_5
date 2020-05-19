@@ -23,30 +23,33 @@
     It manages the stores uploaded from Open Food Facts.
     Can be looked at as a parent table towards StoreProduct.
 
-    CategoryProduct:  Inherits from Base, in order to connect with the local DB.
-    As a join table, is a child of Category and Product tables.Each product may 
-    have several entries, as they are often listed in many categories.
+    CategoryProduct: Inherits from Base, in order to connect with the local DB.
+    As a join table, is a child of Category and Product tables.
+    Each product may have several entries, as they are often listed \
+    in many categories.
 
     StoreProduct:  Inherits from Base, in order to connect with the local DB.
-    As a join table, is a child of Store and Product tables. Each product is sold 
-    in different stores, therefore this join table.
+    As a join table, is a child of Store and Product tables.
+    Each product is sold in different stores, therefore this join table.
 
-    ProductComparrison:  Inherits from Base, in order to connect with the local DB.
-    As a join table, is a child of product table. 
-    To be noticed: this table refers twice to product table: once as for 
+    ProductComparrison:  Inherits from Base, in order to connect\
+    with the local DB. As a join table, is a child of product table.
+    To be noticed: this table refers twice to product table: once as for\
     the best_product, the other for the reference product, named ref_prod.
 
-    CategoryController: Manage the connection with the Controller for the categories. 
-    Each and every category to be displayed is instantiated through this very class.
+    CategoryController: Manage the connection with the Controller \
+    for the categories.
+    Every category to be displayed is instantiated through this very class.
 
-    ProductController: Manage the connection with the Controller for the products. 
-    Each and every product to be displayed is instantiated through this very class.
+    ProductController: Manage the connection with the Controller \
+    for the products.
+    Every product to be displayed is instantiated through this very class.
 
-    StoreController: Manage the connection with the Controller. 
-    Each and every store to be displayed is instantiated through this very class.
+    StoreController: Manage the connection with the Controller.
+    Every store to be displayed is instantiated through this very class.
 
-    Date: Manage the connection with the Controller. Each and every date to be
-    displayed is converted in a more readable format and instantiated 
+    Date: Manage the connection with the Controller. Each and every date to be\
+    displayed is converted in a more readable format and instantiated.
     through this very class.
 
     Exceptions:
@@ -307,7 +310,7 @@ class ProductController:
 
         code: product id.
 
-        stores: default value 0, in order to intantiate the stores in a list as 
+        stores: default value 0, iot intantiate the stores in a list as\
         they are fetched as a tuple.
         """
 
@@ -341,8 +344,8 @@ class StoreController:
 
 class Date:
     """
-        Manage the connection with the Controller. Each and every date to be
-        displayed is converted in a more readable format and instantiated 
+        Manage the connection with the Controller. Each and every date to be \
+         displayed is converted in a more readable format and instantiated\
         through this very class.
 
         Methods:
@@ -368,49 +371,51 @@ class ORMConnection:
 
         Methods:
 
-        __init__: At the instantiation of the class, create and check the connection 
-        parameters, if the DB is not found, an exception is raised and the DB
-        is automatically created.
+        __init__: At the instantiation of the class,\
+        create and check the connection parameters, if the DB is not found, \
+        an exception is raised and the DB is automatically created.
 
-        creat_database: create a local DB to operate the application. Activated 
-        solely at the first use.
+        creat_database: create a local DB to operate the application.\
+        Activated solely at the first use.
 
-        upload_categories: when creating a new DB, uploads the categories 
+        upload_categories: when creating a new DB, uploads the categories\
         downloaded from OFF to start working with the DB.
 
         upload_stores: hen creating a new DB, uploads the stores dowloaded
         from OFF in order to start working with the DB.
 
-        display_categories: get a bunch of the most popular categories in the local DB.
+        display_categories: get a bunch of the most popular categories \
+        in the local DB.
 
-        upload_products: upload a list of products from Open Food Facts 
-        into the local DB. Duplicates are rejected, Stores and Categories 
+        upload_products: upload a list of products from Open Food Facts \
+        into the local DB. Duplicates are rejected, Stores and Categories \
         to which they are related are prepared for the join tables,
         children of product.
 
         get_categories: fetch the most popular categories from the local DB.
 
-        refer_products: Get a list of products selected iaw with a series 
+        refer_products: Get a list of products selected iaw with a series \
         of criterion set by the user during the initial search.
 
-        top_products: Fetch a selection of products matching the requirements 
-        input by the user, based on a reference product (used as a consequence of the
-        choice done in the refer_products method)
+        top_products: Fetch a selection of products matching the requirements \
+        introduced by the user, based on a reference product \
+        (used as a consequence of the choice done in the refer_products method)
 
-        __find_stores: Get the stores where a specific product is sold. 
+        __find_stores: Get the stores where a specific product is sold.
 
-        record_comparred_products: 
+        record_comparred_products:
 
         close_connection: close the connection to mySQL via the ORM,
         iot to avoid free access.
 
-        record_comparred_products: Record in the local DB the result of 
-        a product comparrison, that is both products, a reference one 
+        record_comparred_products: Record in the local DB the result of\
+        a product comparrison, that is both products, a reference one\
         and the best one,including the date of the comparrison.
 
-        get_comparred_products: Get out of the join table ProductComparrison 
-        the last records of comparrisons. It joins twice with the table Product, 
-        once to get the best product, one to get the reference one.
+        get_comparred_products: Get out of the join table ProductComparrison\
+        the last records of comparrisons.
+        It joins twice with the table Product, once to get the best product,
+        the other to get the reference one.
         It fetches as well the stores in which the best product is for sale.
 
         total_items: Gets the total number of food items from a product
@@ -420,27 +425,28 @@ class ORMConnection:
 
         __add_one_item: Add one row at a time to the local DB.
 
-        __get_category_id: Get the category id number based on the category name. 
+        __get_category_id: Get the category id number based \
+        on the category name.
         This id number is the primary key of the category table.
         Used to populate the join tables.
 
-        __get_store_id: Get the store id number based on the store name. 
+        __get_store_id: Get the store id number based on the store name.
         This id number is the primary key of the store table.
         Used to populate the join tables.
 
-        __check_duplicate: Check before insertion whether the product is already
-        in the local DB. 
+        __check_duplicate: Check before insertion whether\
+         the product is already in the local DB.
         Avoid an Exception : Integrity Error when uploading a dataset.
 
-        open_session:  Opens a session, iot to connect with the local DB. 
+        open_session:  Opens a session, iot to connect with the local DB.
         Uses the engine instantiated at the beginning.
 
-        close_session: Used to close the session with the local DB 
-        when the user quits.
+        close_session: Used to close the session with the local DB\
+         when the user quits.
 
-        __query_settings: Prepare the search criterion before looking 
-        into the local DB, adding '%' for the beginning and the end of 
-        each word in a string.
+        __query_settings: Prepare the search criterion before looking\
+         into the local DB, adding '%' for the beginning and the end \
+        of each word in a string.
 
         Instance variables:
 
@@ -451,9 +457,9 @@ class ORMConnection:
 
     def __init__(self):
         """
-            At the instantiation of the class, create and check the connection 
-            parameters, if the DB is not found, an exception is raised and the DB
-            is automatically created.
+            At the instantiation of the class, create and check the connection\
+             parameters, if the DB is not found, an exception is raised\
+             and the DB is automatically created.
 
             Arguments:
 
@@ -530,12 +536,12 @@ class ORMConnection:
     def upload_stores(self, stores):
         """
 
-            When creating a new DB, uploads a list of stores from OFF 
+            When creating a new DB, uploads a list of stores from OFF\
             to convert them into a list in order to start working with the DB.
 
             Arguments:
 
-            stores: is a tuple containing all the stores downloaded from OFF. 
+            stores: is a tuple containing all the stores downloaded from OFF.
 
             Returns:
 
@@ -573,8 +579,8 @@ class ORMConnection:
 
             Arguments:
 
-            products: contains all the features needed for each product, including
-            attached stores and categories.
+            products: contains all the features needed for each product,\
+            including attached stores and categories.
 
             Return:
 
@@ -600,7 +606,7 @@ class ORMConnection:
                     for store in store_id:
                         store_product = StoreProduct(product_code=product.code,
                                                      store_id=store[0])
-                        # Add the instance to the list of all duets  store - product
+                        # Add the instance to the list of duets store-product
                         obj_stores_product.append(store_product)
                 # Get for each product the list of categories it belongs to
                 category_list = item[5].split(",")
@@ -609,8 +615,9 @@ class ORMConnection:
                     category_id = self.__get_category_id(category)
                     # Instantiate category id and product code for join table.
                     for category in category_id:
-                        category_product = CategoryProduct(idcategory=category[0],
-                                                           code=product.code)
+                        category_product = CategoryProduct(
+                                                          idcategory=category[0],
+                                                          code=product.code)
                         obj_category_product.append(category_product)
         # Upload first in the table product and then in join tables.
         self.__upload_many(obj_product)
@@ -646,17 +653,17 @@ class ORMConnection:
     def refer_products(self, item_search):
         """
 
-            Get a list of products selected iaw with a series of criterion set 
-            by the user during the initial search.
+            Get a list of products selected iaw with a series of criterion set\
+             by the user during the initial search.
 
             Arguments:
 
-            item_search: tuple containing the criterion set by the user, currently
-            the category, name (like) and brand (like).
+            item_search: tuple containing the criterion set by the user, \
+            currently the category, name (like) and brand (like).
 
             Returns:
 
-            list_refer_products: list of objects encompassing the product features.
+            list_refer_products: list of objects encompassing their features.
         """
         # Select a list of N products matching the requirement set by the user
         list_refer_products = []
@@ -677,9 +684,10 @@ class ORMConnection:
 
     def top_products(self, item_search):
         """
-            Fetch a selection of products matching the requirements input by the 
-            user, based on a reference product (used as a consequence of the
-            choice done in the refer_products method)
+            Fetch a selection of products matching the requirements \
+            put in by the user, based on a reference product \
+            (used as a consequence of the choice done \
+            in the refer_products method)
 
             Arguments:
             item_search: as a tuple, includes the selection criterion, like the
@@ -687,7 +695,8 @@ class ORMConnection:
             product.
 
             Returns:
-            list_top_products : a list of ten products matching the requirements.
+            list_top_products : a list of ten products matching \
+            the requirements.
             It fetches all the fields of a product (name, brand, nutriscore
             and code as well).
             """
@@ -714,12 +723,12 @@ class ORMConnection:
     def __find_stores(self, product_code):
         """
 
-            Get the stores where a specific product is sold. 
+            Get the stores where a specific product is sold.
 
             Arguments:
 
-            product_code : the product code is the link between the Product and 
-            the store via the join table StoreProduct.
+            product_code : the product code is the link\
+            between the Product and the store via the join table StoreProduct.
 
             Returns:
 
@@ -739,26 +748,29 @@ class ORMConnection:
     def record_comparred_products(self, comparrison):
         """
             Record the result of a product comparrison, that is both products,
-            a reference one and the best one, including the date of the comparrison.
+            a reference one and the best one, including \
+            the date of the comparrison.
 
             Arguments:
 
-            comparrison: contains the both product codes, date and time of the 
-            selection.
+            comparrison: contains the both product codes, date and \
+            time of the selection.
 
             Returns:
 
             NIL
             """
         compared_prod = ProductComparrison(code_best_prod=comparrison[0],
-                                           date_best=comparrison[1], code_ref_prod=comparrison[2])
+                                           date_best=comparrison[1],
+                                           code_ref_prod=comparrison[2])
         self.__add_one_item(compared_prod)
 
     def get_compared_products(self):
         """
             Get out of the join table ProductComparrison the last records of
-            comparrisons. It joins twice with the table Product, once to get the best product, 
-            one to get the reference one. It fetches as well the stores in which
+            comparrisons. It joins twice with the table Product, \
+            once to get the best product, one to get the reference one. \
+            It fetches as well the stores in which
             the best product is for sale.
 
             Arguments:
@@ -789,7 +801,7 @@ class ORMConnection:
 
     def total_items(self):
         """
-            Gets the total number of food items from a product and convert it 
+            Gets the total number of food items from a product and convert it\
             from a tuple into a variable for further processing.
 
             Arguments:
@@ -871,8 +883,8 @@ class ORMConnection:
     def __get_category_id(self, category):
         """
 
-            Get the category id number based on the category name. This id number
-            is the primary key of the category table.
+            Get the category id number based on the category name.
+            This id number is the primary key of the category table.
             Used to populate the join tables.
 
             Arguments:
@@ -910,7 +922,7 @@ class ORMConnection:
     def __check_duplicate(self, code):
         """
 
-            Check before insertion whether the product is already in the local DB.
+            Check before insertion whether the product exists in the local DB.
             Avoid an Exception : Integrity Error when uploading a dataset.
 
             Arguments:
@@ -929,8 +941,8 @@ class ORMConnection:
     def __query_settings(self, answer):
         """
 
-            Prepare the search criterion before looking into the local DB, as like
-            for the beginning and the end of each word in a string.
+            Prepare the search criterion before looking into the local DB,\
+             as like for the beginning and the end of each word in a string.
 
             Arguments:
 
