@@ -55,8 +55,7 @@
 
     Functions:
 
-    query_settings(answer): insert a % before and after each word of selected fields \
-        in order to broaden the search.
+    NIL
 
     """
 import mysql.connector
@@ -398,16 +397,12 @@ class ORMConnection:
         input by the user, based on a reference product (used as a consequence of the
         choice done in the refer_products method)
 
-        find_stores: Get the stores where a specific product is sold. 
+        __find_stores: Get the stores where a specific product is sold. 
 
         record_comparred_products: 
 
         close_connection: close the connection to mySQL via the ORM,
         iot to avoid free access.
-
-        query_settings: Prepare the search criterion before looking 
-        into the local DB, as "like" for the beginning and the end of each word 
-        in a string.
 
         record_comparred_products: Record in the local DB the result of 
         a product comparrison, that is both products, a reference one 
@@ -421,19 +416,19 @@ class ORMConnection:
         total_items: Gets the total number of food items from a product
         and convert it from a tuple into a variable for further processing.
 
-        upload_many: Upload a mass of rows to the local DB in one pass.
+        __upload_many: Upload a mass of rows to the local DB in one pass.
 
-        add_one_item: Add one row at a time to the local DB.
+        __add_one_item: Add one row at a time to the local DB.
 
-        get_category_id: Get the category id number based on the category name. 
+        __get_category_id: Get the category id number based on the category name. 
         This id number is the primary key of the category table.
         Used to populate the join tables.
 
-        get_store_id: Get the store id number based on the store name. 
+        __get_store_id: Get the store id number based on the store name. 
         This id number is the primary key of the store table.
         Used to populate the join tables.
 
-        check_duplicate: Check before insertion whether the product is already
+        __check_duplicate: Check before insertion whether the product is already
         in the local DB. 
         Avoid an Exception : Integrity Error when uploading a dataset.
 
@@ -443,7 +438,7 @@ class ORMConnection:
         close_session: Used to close the session with the local DB 
         when the user quits.
 
-        query_settings: Prepare the search criterion before looking 
+        __query_settings: Prepare the search criterion before looking 
         into the local DB, adding '%' for the beginning and the end of 
         each word in a string.
 
@@ -471,9 +466,9 @@ class ORMConnection:
             """
         with open(cfg.DB_PARAMETERS) as file:
             connection_parameters = file.read()
-        self.engine = create_engine(connection_parameters,
+        self.__engine = create_engine(connection_parameters,
                                     echo=False)
-        self.engine.connect()
+        self.__engine.connect()
 
     def create_database(self):
         """
@@ -493,10 +488,10 @@ class ORMConnection:
         # Create a new and empty database
         with open(cfg.DB_PARAMETERS) as file:
             connection_parameters = file.read()
-        self.engine = create_engine(connection_parameters,
+        self.__engine = create_engine(connection_parameters,
                                     echo=False)
         # Activate the Database to subsequently create the tables
-        connection = self.engine.connect()
+        connection = self.__engine.connect()
         connection.execute(COMMIT)
         connection.execute(CREATE_DB)
         connection.close()
@@ -505,10 +500,10 @@ class ORMConnection:
         with open(cfg.DB_PARAMETERS, "w") as file:
             file.write(connection_parameters)
         # Add the tables to the new database
-        self.engine = create_engine(connection_parameters, echo=False)
-        self.engine.connect()
+        self.__engine = create_engine(connection_parameters, echo=False)
+        self.__engine.connect()
 
-        Base.metadata.create_all(self.engine)
+        Base.metadata.create_all(self.__engine)
 
     def upload_categories(self, categories):
         """
@@ -530,7 +525,7 @@ class ORMConnection:
         for category in categories:
             category = Category(name=category)
             obj_category.append(category)
-        self.upload_many(obj_category)
+        self.__upload_many(obj_category)
 
     def upload_stores(self, stores):
         """
@@ -551,7 +546,7 @@ class ORMConnection:
         for store in stores:
             store = Store(name=store)
             obj_store.append(store)
-        self.upload_many(obj_store)
+        self.__upload_many(obj_store)
 
     def display_categories(self):
         """
@@ -590,7 +585,7 @@ class ORMConnection:
         obj_category_product = []
         # Create a list including product characteristics for table product
         for item in products:
-            if self.check_duplicate(item[2]) is False:
+            if self.__check_duplicate(item[2]) is False:
                 product = Product(brand=item[0],
                                   name=item[1],
                                   code=item[2],
@@ -600,7 +595,7 @@ class ORMConnection:
                 store_list = item[4].split(",")
                 # Bind each store name with its id
                 for store in store_list:
-                    store_id = self.get_store_id(store)
+                    store_id = self.__get_store_id(store)
                     # Instantiate product_code and store_id  for join table
                     for store in store_id:
                         store_product = StoreProduct(product_code=product.code,
@@ -611,16 +606,16 @@ class ORMConnection:
                 category_list = item[5].split(",")
                 # Bind each category name of the product with its category_id
                 for category in category_list:
-                    category_id = self.get_category_id(category)
+                    category_id = self.__get_category_id(category)
                     # Instantiate category id and product code for join table.
                     for category in category_id:
                         category_product = CategoryProduct(idcategory=category[0],
                                                            code=product.code)
                         obj_category_product.append(category_product)
         # Upload first in the table product and then in join tables.
-        self.upload_many(obj_product)
-        self.upload_many(obj_stores_product)
-        self.upload_many(obj_category_product)
+        self.__upload_many(obj_product)
+        self.__upload_many(obj_stores_product)
+        self.__upload_many(obj_category_product)
 
     def get_categories(self):
         """
@@ -666,8 +661,8 @@ class ORMConnection:
         # Select a list of N products matching the requirement set by the user
         list_refer_products = []
         product_category = item_search[0]
-        product_name = self.query_settings(item_search[1])
-        brand_name = self.query_settings(item_search[2])
+        product_name = self.__query_settings(item_search[1])
+        brand_name = self.__query_settings(item_search[2])
         query = self.session.query(
             Product.name, Product.brand, Product.nutrition_grade, Product.code)
         query = query.join(CategoryProduct).join(Category)
@@ -700,7 +695,7 @@ class ORMConnection:
         c_p = aliased(CategoryProduct)
         c = aliased(Category)
         p = aliased(Product)
-        product_name = self.query_settings(item_search[1])
+        product_name = self.__query_settings(item_search[1])
         query = self.session.query(p)
         query = query.join(c_p, c_p.code == p.code)
         query = query.join(c, c.id_category == c_p.idcategory)
@@ -711,12 +706,12 @@ class ORMConnection:
                              filter(p.code == item_search[2]))[:10]
 
         for product in query:
-            stores = self.find_stores(product.code)
+            stores = self.__find_stores(product.code)
             product = ProductController(product, stores)
             list_top_products.append(product)
         return list_top_products
 
-    def find_stores(self, product_code):
+    def __find_stores(self, product_code):
         """
 
             Get the stores where a specific product is sold. 
@@ -757,7 +752,7 @@ class ORMConnection:
             """
         compared_prod = ProductComparrison(code_best_prod=comparrison[0],
                                            date_best=comparrison[1], code_ref_prod=comparrison[2])
-        self.add_one_item(compared_prod)
+        self.__add_one_item(compared_prod)
 
     def get_compared_products(self):
         """
@@ -784,7 +779,7 @@ class ORMConnection:
         query = query.join(ref_p, ref_p.code == p_c.code_ref_prod)
         result = query.order_by(desc(p_c.date_best))[:5]
         for item in result:
-            stores = self.find_stores(item[0].code)
+            stores = self.__find_stores(item[0].code)
             best_product = ProductController(item[0], stores)
             date = Date(item[1])
             ref_product = ProductController(item[2])
@@ -810,7 +805,7 @@ class ORMConnection:
             nb_rows = nb_rows[0]
         return nb_rows
 
-    def upload_many(self, many_items):
+    def __upload_many(self, many_items):
         """
             Upload a mass of rows to the local DB in one pass.
 
@@ -826,7 +821,7 @@ class ORMConnection:
         self.session.bulk_save_objects(many_items)
         self.session.commit()
 
-    def add_one_item(self, one_item):
+    def __add_one_item(self, one_item):
         """
             Add one row at a time to the local DB.
 
@@ -855,7 +850,7 @@ class ORMConnection:
             NIL
 
             """
-        Session = sessionmaker(bind=self.engine)
+        Session = sessionmaker(bind=self.__engine)
         self.session = Session()
 
     def close_session(self):
@@ -873,7 +868,7 @@ class ORMConnection:
         """
         self.session.close()
 
-    def get_category_id(self, category):
+    def __get_category_id(self, category):
         """
 
             Get the category id number based on the category name. This id number
@@ -892,7 +887,7 @@ class ORMConnection:
             Category.name.ilike(category))
         return category_id
 
-    def get_store_id(self, store):
+    def __get_store_id(self, store):
         """
 
             Get the store id number based on the store name. This id number
@@ -912,7 +907,7 @@ class ORMConnection:
             Store.id_store).filter(Store.name.ilike(store))
         return store_id
 
-    def check_duplicate(self, code):
+    def __check_duplicate(self, code):
         """
 
             Check before insertion whether the product is already in the local DB.
@@ -931,7 +926,7 @@ class ORMConnection:
                                        filter_by(code=code).exists()).scalar()
         return duplicate
 
-    def query_settings(self, answer):
+    def __query_settings(self, answer):
         """
 
             Prepare the search criterion before looking into the local DB, as like

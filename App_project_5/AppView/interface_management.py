@@ -69,7 +69,7 @@ class Interface:
         right_display_info: display one line long pieces of info 
         at the bottom of the right window.
 
-        highlight_selection:  highlight the selected item when 
+        __highlight_selection:  highlight the selected item when 
         using a drop-down list.
 
         set_up_drop_down: operate the key UP and DOWN iot iterate 
@@ -370,7 +370,7 @@ class Interface:
         self.inner_right_window.clrtoeol()
         self.inner_right_window.refresh()
 
-    def highlight_selection(self, active_row_idx, drop_down_list):
+    def __highlight_selection(self, active_row_idx, drop_down_list):
         """
 
             Highlight the selected row in a drop-down list.
@@ -406,7 +406,7 @@ class Interface:
         """
 
             Manage the cursor movements within a drop-down list.
-            It interacts closely with the method highlight_selection() of the same class.
+            It interacts closely with the method __highlight_selection() of the same class.
 
         Arguments:
 
@@ -422,7 +422,7 @@ class Interface:
         curses.curs_set(0)
         self.inner_left_window.keypad(True)
         active_row_idx = 0
-        self.highlight_selection(active_row_idx, drop_down_list)
+        self.__highlight_selection(active_row_idx, drop_down_list)
         # Loop to travel up and down through the list.
         while True:
             key = self.inner_left_window.getch()
@@ -437,7 +437,7 @@ class Interface:
                 self.inner_left_window.addstr(
                     0, 0, "You selected {}".format(answer))
                 break
-            self.highlight_selection(active_row_idx, drop_down_list)
+            self.__highlight_selection(active_row_idx, drop_down_list)
         self.inner_left_window.refresh()
         return answer
 
