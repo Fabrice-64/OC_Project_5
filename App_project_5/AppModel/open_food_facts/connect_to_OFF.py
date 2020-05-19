@@ -190,14 +190,3 @@ class ConnectToOFF:
             """
         product_location = str(coff.OFF_PRODUCT_ADDRESS + code_product)
         webbrowser.open(product_location, new=1)
-
-
-if __name__ == "__main__":
-    test = ConnectToOFF()
-    print("OK")
-    out, ok, items = test.import_products_list('Snacks')
-    
-    print(out)
-    print(ok)
-    for item in items:
-        print(item)
