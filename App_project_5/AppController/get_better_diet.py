@@ -618,8 +618,8 @@ class UserDialog:
             current_DTG: current date and time formatted for SQL DB
 
             """
-        date_time = datetime.now()
-        date_time = date_time.strftime('%Y-%m-%d %H:%M:%S')
+        current_DTG = datetime.now()
+        current_DTG = current_DTG.strftime('%Y-%m-%d %H:%M:%S')
         return current_DTG
 
 
