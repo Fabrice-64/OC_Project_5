@@ -176,7 +176,7 @@ class UserDialog:
                 create_DB = True
             if create_DB:
                 # Creation of the DB through a method hosted in this module
-                self.initialize_DB()
+                self.__initialize_DB()
                 break
         self.itf.title_bar(cfg.TITLE_2)
         # Display a drop down menu to navigate in the application
@@ -190,6 +190,11 @@ class UserDialog:
         while True:
             # Open a session with the ORM iot work with the DB.
             self.queries.open_session()
+            result = self.queries.total_items()
+            # check that the DB is not empty
+            if result == 0:
+                self.itf.right_display_info(cfg.EMPTY_DB, "warning")
+                answer = cfg.OPERATE_ON_DB[2]
             # Look for a product !!
             if answer == cfg.OPERATE_ON_DB[0]:
                 self.itf.title_bar(cfg.TITLE_3)
@@ -205,7 +210,7 @@ class UserDialog:
                     self.itf.left_display_string(y, cfg.KEYPAD_INSTRUCTION_1)
                     y += 1
                     answer_category, y = self.__check_valid_answer(y, 1, 3,
-                        cfg.SELECT_CATEGORY, rank_categories_dict)
+                            cfg.SELECT_CATEGORY, rank_categories_dict)
                     # Input the parameters to search for a food item.
                     answer_name, y = self.itf.display_string_textpad(
                         y, 1, 25, cfg.ITEM_NAME)
@@ -329,6 +334,7 @@ class UserDialog:
                     # Inform the user that he has no best product yet
                     self.itf.right_display_info(
                         cfg.WARNING_MESSAGE_3, "warning")
+                    no_further_check = True
                 # Return to the main menu, end of this loop.
                 if no_further_check:
                     self.itf.clear_window()

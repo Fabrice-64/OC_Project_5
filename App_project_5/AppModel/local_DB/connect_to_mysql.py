@@ -65,7 +65,8 @@ import mysql.connector
 from datetime import datetime
 
 from sqlalchemy import Table, Column, Integer, DateTime, String, Index, \
-    ForeignKeyConstraint, ForeignKey, select, and_, func, asc, desc, create_engine
+    ForeignKeyConstraint, ForeignKey, select, and_, func, asc, \
+        desc, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, aliased
 
@@ -73,6 +74,7 @@ from sqlalchemy.orm import sessionmaker, aliased
 import AppView
 import AppController.config as cfg
 
+import time
 Base = declarative_base()
 
 CREATE_DB = "CREATE DATABASE get_better_diet CHARACTER SET utf8mb4"
@@ -232,8 +234,8 @@ class StoreProduct (Base):
 class ProductComparrison (Base):
     """
         Inherits from Base, in order to connect with the local DB.
-        As a join table, is a child of product table. 
-        To be noticed: this table refers twice to product table: once as for 
+        As a join table, is a child of product table.
+        To be noticed: this table refers twice to product table: once as for\
         the best_product, the other for the reference product, named ref_prod.
 
         Methods:
@@ -244,9 +246,11 @@ class ProductComparrison (Base):
 
         id_prod_comp: id determined by the local DB. Is the primary key.
 
-        code_best_prod: take over the id of each product to join with table product.
+        code_best_prod: take over the id of each product to join \
+            with table product.
 
-        code_ref_prod: take over the product code in order to join with table product.
+        code_ref_prod: take over the product code in order to join \
+            with table product.
 
         date_best: date and time where the best product has been selectd.
 
@@ -257,12 +261,14 @@ class ProductComparrison (Base):
     id_prod_comp = Column(Integer(), primary_key=True, autoincrement=True,
                           nullable=False)
     code_best_prod = Column(String(13),
-                            ForeignKey('product.code', name='FK_code_product_best',
+                            ForeignKey('product.code',
+                                       name='FK_code_product_best',
                                        onupdate='CASCADE', ondelete='CASCADE'),
                             nullable=False)
     code_ref_prod = Column(String(13),
-                           ForeignKey('product.code', name='FK_code_product_ref',
-                                      onupdate='CASCADE', ondelete='CASCADE'),
+                           ForeignKey('product.code',
+                           name='FK_code_product_ref',
+                           onupdate='CASCADE', ondelete='CASCADE'),
                            nullable=False)
     date_best = Column(DateTime(), nullable=False)
 
@@ -270,7 +276,7 @@ class ProductComparrison (Base):
 class CategoryController:
     """
 
-        Manage the connection with the Controller for the categories. 
+        Manage the connection with the Controller for the categories.
         Each and every category to be
         displayed is instantiated through this very class.
 
@@ -293,8 +299,9 @@ class CategoryController:
 class ProductController:
     """
 
-        Manage the connection with the Controller for the products. 
-        Each and every product to be displayed is instantiated through this very class.
+        Manage the connection with the Controller for the products.
+        Each and every product to be displayed is instantiated through \
+            this very class.
 
         Methods:
 
@@ -472,8 +479,7 @@ class ORMConnection:
             """
         with open(cfg.DB_PARAMETERS) as file:
             connection_parameters = file.read()
-        self.__engine = create_engine(connection_parameters,
-                                    echo=False)
+        self.__engine = create_engine(connection_parameters, echo=False)
         self.__engine.connect()
 
     def create_database(self):
@@ -494,8 +500,7 @@ class ORMConnection:
         # Create a new and empty database
         with open(cfg.DB_PARAMETERS) as file:
             connection_parameters = file.read()
-        self.__engine = create_engine(connection_parameters,
-                                    echo=False)
+        self.__engine = create_engine(connection_parameters, echo=False)
         # Activate the Database to subsequently create the tables
         connection = self.__engine.connect()
         connection.execute(COMMIT)
@@ -503,6 +508,8 @@ class ORMConnection:
         connection.close()
         # Add the name of the database to the parameters file for further use
         connection_parameters = connection_parameters + cfg.DB_NAME
+        print (connection_parameters)
+        time.sleep(5)
         with open(cfg.DB_PARAMETERS, "w") as file:
             file.write(connection_parameters)
         # Add the tables to the new database
