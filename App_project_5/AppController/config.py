@@ -22,6 +22,7 @@ DB_NAME = '/get_better_diet'
 DB_CONNEXION_STRING = "mysql+mysqlconnector://{}:{}@localhost{}"
 DB_PARAMETERS = "AppModel/local_DB/db_parameters.py"
 
+
 # Message displayed when launching the programm.
 WELCOME_MESSAGE = "WELCOME TO 'GET A BETTER DIET' APP \n"
 TITLE_0 = "Initial Window"

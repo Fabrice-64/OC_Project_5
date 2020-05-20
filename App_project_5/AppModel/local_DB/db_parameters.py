@@ -1,1 +1,1 @@
-mysql+mysqlconnector://root:@localhost/get_better_diet
+mysql+mysqlconnector://root:test@localhost/get_better_diet

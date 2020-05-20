@@ -162,7 +162,6 @@ class UserDialog:
 
             """
         # Check whether a local DB has already been created.
-        create_DB = False
         while True:
             try:
                 # Check whether a connection with an existing local DB is OK.
@@ -173,11 +172,8 @@ class UserDialog:
                 self.itf.clear_window("right")
                 self.itf.right_display_info(cfg.WARNING_MESSAGE_4, "warning")
                 self.__create_cnx_parameters()
-                create_DB = True
-            if create_DB:
                 # Creation of the DB through a method hosted in this module
                 self.__initialize_DB()
-                break
         self.itf.title_bar(cfg.TITLE_2)
         # Display a drop down menu to navigate in the application
         self.itf.clear_window()
@@ -408,12 +404,14 @@ class UserDialog:
         self.itf.display_guide(cfg.USER_GUIDE)
         y = 0
         # Ask for the connection parameters. Default value in config.py
+        """
         self.itf.left_display_string(y, cfg.DB_INITIAL_INFO)
         user, y = self.itf.display_string_textpad(1, 1, 15,
                                                   cfg.DB_USER_INVITE)
         user = self.__ascii_to_string(user)
         if user != '':
             cfg.DB_USER = user
+        """
         password, y = self.itf.display_string_textpad(y, 1, 20,
                                                       cfg.DB_PASSWORD_INVITE)
         password = self.__ascii_to_string(password)
