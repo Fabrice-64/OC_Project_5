@@ -1,1 +1,0 @@
-mysql+mysqlconnector://root:test@localhost/get_better_diet
