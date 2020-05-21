@@ -403,26 +403,18 @@ class UserDialog:
         self.itf.clear_window("left")
         self.itf.display_guide(cfg.USER_GUIDE)
         y = 0
-        while True:
-            # Ask for the connection parameters. Default value in config.py
-            password, y = self.itf.display_string_textpad(y, 1, 20,
-                                                        cfg.DB_PASSWORD_INVITE)
-            password = self.__ascii_to_string(password)
-            if password != '':
-                cfg.DB_PASSWORD = password
-            connection_string = cfg.DB_CONNEXION_STRING.format(
-                cfg.DB_USER, cfg.DB_PASSWORD, "")
-            with open(cfg.DB_PARAMETERS, "w") as file:
-                file.write(connection_string)
-            try:
-                # Test parameters before recording.
-                self.queries = sql.ORMConnection()
-                break
-            except Exception:
-                self.itf.right_display_info(cfg.WARNING_MSG_5, "warning")
-                y = 0
+        # Ask for the connection parameters. Default value in config.py
+        password, y = self.itf.display_string_textpad(y, 1, 20,
+                                                      cfg.DB_PASSWORD_INVITE)
+        password = self.__ascii_to_string(password)
+        if password != '':
+            cfg.DB_PASSWORD = password
+        connection_string = cfg.DB_CONNEXION_STRING.format(
+            cfg.DB_USER, cfg.DB_PASSWORD, "")
         # Connection parameters are saved in a separate file to be reused.
-        
+        with open(cfg.DB_PARAMETERS, "w") as file:
+            file.write(connection_string)
+
     def __check_valid_answer(self, y, height, length, instruction, items_dict):
         """
             Check whether the number given by the user belongs to the keys of

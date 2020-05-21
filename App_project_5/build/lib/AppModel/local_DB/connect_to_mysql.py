@@ -508,6 +508,8 @@ class ORMConnection:
         connection.close()
         # Add the name of the database to the parameters file for further use
         connection_parameters = connection_parameters + cfg.DB_NAME
+        print(connection_parameters)
+        time.sleep(5)
         with open(cfg.DB_PARAMETERS, "w") as file:
             file.write(connection_parameters)
         # Add the tables to the new database

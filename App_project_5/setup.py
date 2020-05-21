@@ -1,17 +1,18 @@
 """
-    
-    Purpose of this module is to provide some basic information about the project
+
+    Purpose of this module is to provide \
+        some basic information about the project
 
     Classes:
 
     NIL.
-        
+
     Exceptions:
 
     NIL.
-        
+
     Functions:
-    
+
     NIL.
 
     """

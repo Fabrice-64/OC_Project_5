@@ -10,7 +10,9 @@ like protection of the DB against injections, etc**
 
 **Notice: a dedicated script, embedded in the application, 
 guides the user along the creation of a local DB in order to be able to use it. 
-However, the prerequisite remains that he has installed mySQL.**
+However, the prerequisite remains that mySQL is installed under the "root"
+folder.**
+
 
 ## Detailed information on this project
 Detailed documentation can be found in a Wiki, set up in order to help the readers 
@@ -26,6 +28,7 @@ modules.
 * Requests
 * SQLALchemy
 * MySQL-connector
+* mysql-connector-python
 
 ## How to launch the App
 * Set the Terminal on the folder App_project_5
