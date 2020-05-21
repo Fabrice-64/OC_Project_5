@@ -14,7 +14,7 @@
 
     Exceptions:
 
-    NIL.
+    When creating the database. They are not characterized.
 
     Functions:
 
