@@ -421,8 +421,7 @@ class UserDialog:
             except Exception:
                 self.itf.right_display_info(cfg.WARNING_MSG_5, "warning")
                 y = 0
-        # Connection parameters are saved in a separate file to be reused.
-        
+
     def __check_valid_answer(self, y, height, length, instruction, items_dict):
         """
             Check whether the number given by the user belongs to the keys of
