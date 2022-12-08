@@ -2,7 +2,7 @@ appdirs==1.4.3
 attrs==19.3.0
 autopep8==1.5
 black==19.10b0
-certifi==2019.11.28
+certifi==2022.12.7
 chardet==3.0.4
 click==7.1.1
 -e git+https://github.com/Fabrice-64/OC_Project_5.git@5df5a30c25a2117b93769eb9466de00efe476217#egg=get_better_diet&subdirectory=App_project_5
